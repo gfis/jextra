@@ -1,0 +1,42 @@
+<html>
+	<body>
+<pre>
+Example 4.2.1-1:
+
+    [axiom = S
+    .S = A a | B b | d A b | d B a
+    .A = c
+    .B = c
+    ]
+
+LALR(1) produces the following transition graph for this grammar:
+
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3 
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c ->  8 a =: A,1
+    |                   | a =: B,1 
+    |                   | b =: A,1 
+    |                   | b =: B,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     ->  8 ... 
+
+State 8 has conflicts for 'a' and 'b', but we could replace
+it by two conflict-free states 8' and 8":
+ 
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3 
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c -> 8' b =: A,1
+    |                   | a =: B,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     -> 8" a =: A,1
+                | b =: B,1
+ 
+</pre>
+</body>
+</html>

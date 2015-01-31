@@ -1,0 +1,65 @@
+ALONG		Item.shiftToEOP
+ASSERT		info
+BLODAT		storage - init
+CLEARE		Table.purgeItems
+DELTA		State.delta
+DIRECT		storage
+EMITT		?
+  RECEIVE	?
+EXTRA		?
+GRAMAR		ProtoParser
+HAMAP		SymbolList.map
+INFOUT		info
+ITEALL		
+  ITEFRE	State.removeItem(item)
+  ITEACT	Item.action
+ITEINS		State.addItem(item) + State.hasMarkedSymbol(symbol)
+LAGET		Table.getLookAheadSymbols
+  LAGAR		Table.purgeLokkAheadSymbols
+  LAPUT		Table.putLookAheadSymbols
+LILINK		?
+LINEXT		LineReader
+LRDUMP		info, output parser table
+LROPEN		?
+  LRCLOS	not used
+  LRINIT	not used
+  LRAXIO	not used
+OUTSTA		?
+PARASK		Parm
+PARSER		Parser
+PREINS		State.addPredecessor(state)
+  PREDEL	State.removePredecessor(state)
+PREPAR		?
+PROCHA		Production.add .remove
+PUTCON		info on conflicts
+PUTSYM		?
+REORG		?
+SCAN		Scanner
+SEMANT		z.T. in SemAction
+SEMARI		?
+SEMCLO		?
+SEMWRI		?
+SEPANT		?
+SEPUSH		(State|Symbol)Queue.push
+  SETFRE	(State|Symbol)Queue.clear
+SPAINI		?
+SPEMAP		SymbolList.mapSpecial
+STAALL		Table.allocate
+  STAFRE	  ?
+STACLO		State.addClosure
+STAGAR		Table.purgeStates
+STASEA		?
+STASUC		Table.determineSuccessorStates?
+SYMINS		Table.insertSymbols
+  staclh	closeSymbolQueue
+SYMNUM		Symbol
+TARPUT		?
+TRACCU		?
+TRAFOR		?
+TRAOUT		?
+TRAPEN		?
+TREGET		?
+TREXPA		?
+ZZCC		java.lang
+ZZTC		java.lang
+ZZWC		java.lang

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="US-ASCII" ?>
+<!--
+    ant-buildfile for commandline, web application and web service
+    @(#) $Id: build.xml 427 2010-06-01 09:08:17Z gfis $
+    2007-04-30: copied from dbat
+-->
+<!--
+ * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<project name="jextra" default="dist" basedir=".">
+    <property name="app.name"           value="jextra"/>
+    <property name="app.version"        value="2.0"/>
+    <property name="app.main-class"     value="org.teherba.jextra.Translator"/>
+    <import file="build-import.xml" />
+    
+    <target name="generate">
+        <copy todir="${src.home}/org/teherba/xtrans">
+            <fileset dir="../xtrans/src/main/java/org/teherba/xtrans">
+                <include name="BaseTransformer.java"/>
+                <include name="CharTransformer.java"/>
+                <include name="XMLTransformer.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${src.home}/org/teherba/xtrans/grammar">
+            <fileset dir="../xtrans/src/main/java/org/teherba/xtrans/grammar">
+                <include name="ExtraTransformer.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${lib.home}">
+            <fileset dir="../xtrans/lib">
+                <include name="serializer.jar"/>
+            </fileset>
+        </copy>
+    </target>                                               
+
+    <target name="test" depends="deploy,run.command,run.servlet,run.service" />
+    <target name="run.command"><!-- run the program from the commandline -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.gener.Generator" />
+            <param name="args"  value="'select count(*) from words'" />
+        </antcall>
+    </target>
+    <target name="run.servlet"><!-- call the web page -->
+        <exec executable="lynx">
+            <arg line="-dump http://localhost/jextra/" />
+        </exec>
+    </target>
+    <target name="run.service"><!-- call the webservice -->
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.gener.Generator"  />
+            <param name="args"  value="'select count(*) from forge'"/>
+        </antcall>
+    </target>
+
+    <target name="test.line">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.scan.LineReader"  />
+            <param name="args"  value="-l test/meta.grm"/>
+        </antcall>
+    <!--
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.scan.LineReader"  />
+            <param name="args"  value="-c test/meta.grm"/>
+        </antcall>
+    -->
+    </target>
+
+    <target name="test.scan">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.scan.Scanner"  />
+            <param name="args"  value="test/meta.grm"/>
+        </antcall>
+    </target>
+
+    <target name="test.symlist">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.scan.SymbolList"  />
+            <param name="args"  value="test/SymbolList.dat"/>
+        </antcall>
+    </target>
+
+    <target name="test.sasb">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.Translator"  />
+            <param name="args"  value="-xml -gener test/sasb.grm.xml"/>
+        </antcall>
+    </target>
+
+    <target name="test.gener">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.Translator"  />
+            <param name="args"  value="-xml -gener test/notLALR.grm.xml"/>
+        </antcall>
+    </target>
+
+    <target name="test.pager">
+        <antcall target="run">
+            <param name="class" value="org.teherba.jextra.Translator"  />
+            <param name="args"  value="-xml -gener test/pager_g2.grm.xml"/>
+        </antcall>
+    </target>
+
+</project>

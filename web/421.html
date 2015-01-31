@@ -1,0 +1,198 @@
+<html>
+<body>
+<h2>Non-LALR(1), example 4.2.1-1, Diss. page 73</h2>
+Aho and Ullman [1972] give an example (7.27) for a grammar which
+is LR(1) but not LALR(1):
+<pre>
+[Axiom = S
+.S = A a | B b | d A b | d B a
+.A = c
+.B = c
+]
+--------------------------------------------
+expand all productions backwards and propagate LA sets:
+
+2^1 Hyper = Axiom @ {eof} =. 
+	1:  Hyper = @ Axiom {eof} Axiom -> 2; push 4
+
+	4^1 Axiom = S @ {eof} =: Axiom,1
+		1:  Axiom = @ S {eof} S -> 4; push 6,7,8,9
+
+	6^1 S = A a @ {eof} =: S,2
+		10^1 S = A @ a {eof} a -> 6
+			1: S = @ A a {a} A -> 10; push 12
+
+	7^1 S = B b @ {eof} =: S,2
+		13^1 S = B @ b {eof} b -> 7
+			1: S = @ B b {b} B -> 13; push 15
+
+	8^1 S = d A b @ {eof} =: S,3
+		16^1 S = d A @ b {eof} b -> 8
+			17^1 S = d @ A b {b} A -> 16; push 18
+				1: S = @ d A b {b} d -> 17
+
+	9^1 S = d B a @ {eof} =: S,3
+		20^1 S = d B @ a {eof} a -> 9
+			21^1 S = d @ B a {a} B -> 20; push 23
+				1: S = @ d B a {a} d -> 21
+
+	12^1 A = c @ {a} =: A,1
+		1: A = @ c {a} c -> 12
+
+	15^1 B = c @ {b} =: B,1
+		1: B = @ c {b} c -> 15
+
+	18^17 A = c @ {b} =: A,1
+		17: A = @ c {b} c -> 18
+
+	23^21 B = c @ {a} =: B,1
+		21: B = @ c {a} c -> 23
+
+--------------------------------------------
+sequences reverted:
+
+1:  Hyper = @ Axiom {eof} Axiom -> 2; push 4
+	2^1 Hyper = Axiom @ {eof} =. 
+
+1:  Axiom = @ S {eof} S -> 4; push 6,7,8,9
+	4^1 Axiom = S @ {eof} =: Axiom,1
+
+1: S = @ A a {a} A -> 10; push 12
+	10^1 S = A @ a {eof} a -> 6
+		6^1 S = A a @ {eof} =: S,2
+
+1: S = @ B b {b} B -> 13; push 15
+	13^1 S = B @ b {eof} b -> 7
+		7^1 S = B b @ {eof} =: S,2
+
+1: S = @ d A b {b} d -> 17
+	17^1 S = d @ A b {b} A -> 16; push 18
+		16^1 S = d A @ b {eof} b -> 8
+			8^1 S = d A b @ {eof} =: S,3
+
+1: S = @ d B a {a} d -> 21
+	21^1 S = d @ B a {a} B -> 20; push 23
+		20^1 S = d B @ a {eof} a -> 9
+			9^1 S = d B a @ {eof} =: S,3
+
+1: A = @ c {a} c -> 12
+	12^1 A = c @ {a} =: A,1
+
+1: B = @ c {b} c -> 15
+	15^1 B = c @ {b} =: B,1
+
+17: A = @ c {b} c -> 18
+	18^17 A = c @ {b} =: A,1
+
+21: B = @ c {a} c -> 23
+	23^21 B = c @ {a} =: B,1
+--------------------------------------------
+shift with same symbol to same state:
+
+1:  Hyper = @ Axiom {eof} Axiom -> 2; push 4
+	2^1 Hyper = Axiom @ {eof} =. 
+
+1:  Axiom = @ S {eof} S -> 4; push 6,7,8,9
+	4^1 Axiom = S @ {eof} =: Axiom,1
+
+1: S = @ A a {a} A -> 10; push 12
+	10^1 S = A @ a {eof} a -> 6
+		6^1 S = A a @ {eof} =: S,2
+
+1: S = @ B b {b} B -> 13; push 15
+	13^1 S = B @ b {eof} b -> 7
+		7^1 S = B b @ {eof} =: S,2
+
+1: S = @ d A b {b} d -> 17
+	17^1 S = d @ A b {b} A -> 16; push 18
+		16^1 S = d A @ b {eof} b -> 8
+			8^1 S = d A b @ {eof} =: S,3
+
+1: S = @ d B a {a} d -> 17
+	17^1 S = d @ B a {a} B -> 20; push 23
+		20^1 S = d B @ a {eof} a -> 9
+			9^1 S = d B a @ {eof} =: S,3
+
+1: A = @ c {a} c -> 12
+	12^1 A = c @ {a} =: A,1
+
+1: B = @ c {b} c -> 12
+	12^1 B = c @ {b} =: B,1
+
+17: A = @ c {b} c -> 18
+	18^17 A = c @ {b} =: A,1
+
+17: B = @ c {a} c -> 18
+	18^17 B = c @ {a} =: B,1
+--------------------------------------------
+final PDA with 14 states:
+
+1: Hyper = @ Axiom {eof} Axiom -> 2; push 4
+1: Axiom = @ S {eof} S -> 4; push 6,7,8,9
+1: S = @ A a {a} A -> 10; push 12
+1: S = @ B b {b} B -> 13; push 15
+1: S = @ d A b {b} d -> 17
+1: S = @ d B a {a} d -> 17
+1: A = @ c {a} c -> 12
+1: B = @ c {b} c -> 12
+
+2^1 Hyper = Axiom @ {eof} =. 
+
+4^1 Axiom = S @ {eof} =: Axiom,1
+
+10^1 S = A @ a {eof} a -> 6
+	6^1 S = A a @ {eof} =: S,2
+
+13^1 S = B @ b {eof} b -> 7
+	7^1 S = B b @ {eof} =: S,2
+
+17^1 S = d @ A b {b} A -> 16; push 18
+17^1 S = d @ B a {a} B -> 20; push 23
+17: A = @ c {b} c -> 18
+17: B = @ c {a} c -> 18
+
+18^17 A = c @ {b} =: A,1
+18^17 B = c @ {a} =: B,1
+
+16^1 S = d A @ b {eof} b -> 8
+	8^1 S = d A b @ {eof} =: S,3
+
+20^1 S = d B @ a {eof} a -> 9
+	9^1 S = d B a @ {eof} =: S,3
+
+12^1 A = c @ {a} =: A,1
+12^1 B = c @ {b} =: B,1
+
+reordered:
+<proto id=" 3" father=" 1" prod="HYPER_AXIOM = @ axiom EOF"     la="EOF" follow="2" />
+  <proto id=" 2" father=" 1" prod="HYPER_AXIOM = axiom @ EOF"     la="EOF" />
+<proto id=" 5" father=" 1" prod="axiom = @ S"   la="EOF" follow="4" />
+  <proto id=" 4" father=" 1" prod="axiom = S @"   la="EOF" />
+<proto id="14" father=" 1" prod="S = @ A a"     la="a" follow="10" />
+  <proto id="10" father=" 1" prod="S = A @ a"     la="a" follow="6" />
+    <proto id=" 6" father=" 1" prod="S = A a @"     la="EOF" />
+<proto id="16" father=" 1" prod="S = @ B b"     la="b" follow="11" />
+  <proto id="11" father=" 1" prod="S = B @ b"     la="b" follow="7" />
+    <proto id=" 7" father=" 1" prod="S = B b @"     la="EOF" />
+<proto id="22" father=" 1" prod="A = @ c"       la="c" follow="15" />
+<proto id="23" father=" 1" prod="B = @ c"       la="c" follow="17" />
+  <proto id="15" father=" 1" prod="A = c @"       la="a" />
+  <proto id="17" father=" 1" prod="B = c @"       la="b" />
+<proto id="24" father=" 1" prod="S = @ d A b"   la="d" follow="18" />
+<proto id="26" father=" 1" prod="S = @ d B a"   la="d" follow="20" />
+  <proto id="18" father=" 1" prod="S = d @ A b"   la="b" follow="12" />
+    <proto id="12" father=" 1" prod="S = d A @ b"   la="b" follow="8" />
+      <proto id=" 8" father=" 1" prod="S = d A b @"   la="EOF" />
+  <proto id="25" father="18" prod="A = @ c"       la="c" follow="19" />
+    <proto id="19" father="18" prod="A = c @"       la="b" />
+  <proto id="20" father=" 1" prod="S = d @ B a"   la="a" follow="13" />
+    <proto id="13" father=" 1" prod="S = d B @ a"   la="a" follow="9" />
+      <proto id=" 9" father=" 1" prod="S = d B a @"   la="EOF" />
+  <proto id="27" father="20" prod="B = @ c"       la="c" follow="21" />
+    <proto id="21" father="20" prod="B = c @"       la="a" />
+    	
+shift into same:
+
+</pre>
+</body>
+</html>

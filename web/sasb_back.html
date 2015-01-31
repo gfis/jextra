@@ -1,0 +1,261 @@
+<html>
+<body>
+<h2>NQLALR(1), example 2.5-5, Diss. page 39</h2>
+<pre>
+[Axiom = S
+.S = S a S b
+.S =
+]
+--------------------------------------------
+expand all productions backwards and propagate LA sets:
+
+	[2] Hyper = Axiom @ {eof} =. 
+		[3] Hyper = @ Axiom {eof} Axiom -> [2]; push [4]
+
+	[4] Axiom = S @ {eof} =: Axiom,1
+		[5] Axiom = @ S {eof} S -> [4]; push [6],[7]
+
+	[6] S = S a S b @ {eof} =: S,4
+		[8] S = S a S @ b {eof} b -> [6]
+			[9] S = S a @ S b {b} S -> [8]; push [10],[11]
+				[12] S = S @ a S b {a} a -> [9]
+					[13] S = @ S a S b {a} S -> [12]; push [14],[15]
+				[14] S = S a S b @ {a} =: S,4 ...> [6]
+				[15] S = @ {a} =: S,0 ...> [7]
+		[10] S = S a S b @ {b} =: S,4 ...> [6]
+		[11] S = @ {b} =: S,0 ...> [7]
+
+	[7] S = @ {eof} =: S,0
+--------------------------------------------
+with "...>": same reduce operation, maybe different LA sets
+LA sets merged into previous state with same reduce operation:
+
+	[2] Hyper = Axiom @ {eof} =. 
+		[3] Hyper = @ Axiom {eof} Axiom -> [2]; push [4]
+
+	[4] Axiom = S @ {eof} =: Axiom,1
+		[5] Axiom = @ S {eof} S -> [4]; push [6],[7]
+
+	[6] S = S a S b @ {a,b,eof} =: S,4
+		[8] S = S a S @ b {eof} b -> [6]
+			[9] S = S a @ S b {b} S -> [8]
+				[12] S = S @ a S b {a} a -> [9]
+					[13] S = @ S a S b {a} S -> [12]
+
+	[7] S = @ {a,b,eof} =: S,0
+
+--------------------------------------------
+sequences reverted to forward parser flow:
+
+	[3] Hyper = @ Axiom {eof} Axiom -> [2]; push [4]
+		[2] Hyper = Axiom @ {eof} =. 
+
+	[5] Axiom = @ S {eof} S -> [4]; push [6],[7]
+		[4] Axiom = S @ {eof} =: Axiom,1
+
+	[13] S = @ S a S b {a} S -> [12]
+		[12] S = S @ a S b {a} a -> [9]
+			[9] S = S a @ S b {b} S -> [8]
+				[8] S = S a S @ b {eof} b -> [6]
+					[6] S = S a S b @ {a,b,eof} =: S,4
+
+	[7] S = @ {a,b,eof} =: S,0
+
+--------------------------------------------
+combined:
+
+	[3] Hyper = @ Axiom {eof} Axiom -> [2]
+			[2] Hyper = Axiom @ {eof} =. 
+	    Axiom = @ S {eof} S -> [4]
+			[4] Axiom = S @ {eof} =: Axiom,1
+	    S = @ S a S b {a} S -> [12]
+			[12] S = S @ a S b {a} a -> [9]
+				[9] S = S a @ S b {b} S -> [8]
+					[8] S = S a S @ b {eof} b -> [6]
+						[6] S = S a S b @ {a,b,eof} =: S,4
+	    S = @ {a,b,eof} =: S,0
+
+--------------------------------------------
+identify [12] and [4] since they are reached from [3] by the same symbol:
+
+	[3] Hyper = @ Axiom {eof} Axiom -> [2]
+			[2] Hyper = Axiom @ {eof} =. 
+	    Axiom = @ S {eof} S -> [4]
+	    S = @ S a S b {a} S -> [4]
+			[4] Axiom = S @ {eof} =: Axiom,1
+			[4] S = S @ a S b {a} a -> [9]
+				[9] S = S a @ S b {b} S -> [8]
+					[8] S = S a S @ b {eof} b -> [6]
+						[6] S = S a S b @ {a,b,eof} =: S,4
+	    S = @ {a,b,eof} =: S,0
+
+</pre>
+<proto id=" 2" home=" 1" prod="HYPER_AXIOM = S @ EOF"   la="EOF" />
+<proto id=" 3" home=" 1" prod="HYPER_AXIOM = @ S EOF"   la="EOF" follow="2" />
+<proto id=" 4" home=" 1" prod="S = S a S b @"   la="EOF" />
+<proto id=" 5" home=" 1" prod="S = @"   		la="EOF" />
+<proto id=" 6" home=" 1" prod="S = S a S @ b"   la="b" follow="4" />
+<proto id=" 7" home=" 1" prod="S = S a @ S b"   la="b" follow="6" />
+<proto id=" 8" home=" 7" prod="S = S a S b @"   la="b" />
+<proto id=" 9" home=" 7" prod="S = @"   		la="b" />
+<proto id="10" home=" 1" prod="S = S @ a S b"   la="a" follow="7" />
+<proto id="11" home=" 7" prod="S = S a S @ b"   la="b" follow="8" same="6" />
+<proto id="12" home=" 1" prod="S = @ S a S b"   la="a" follow="10" />
+<proto id="13" home=" 1" prod="S = S a S b @"   la="a" />
+<proto id="14" home=" 1" prod="S = @"   		la="a" />
+<proto id="15" home=" 1" prod="S = S a S @ b"   la="b" follow="13" />
+<proto id="16" home=" 1" prod="S = S a @ S b"   la="b" follow="15" same="7" />
+<proto id="17" home="16" prod="S = S a S b @"   la="b" same="8" />
+<proto id="18" home="16" prod="S = @"   		la="b" same="9" />
+
+--------
+state 3:
+<proto id=" 3" home=" 1" prod="HYPER_AXIOM = @ S EOF"   la="EOF" follow="2" />
+<proto id=" 5" home=" 1" prod="S = @"   		la="EOF" />
+<proto id="14" home=" 1" prod="S = @"   		la="a" />
+<proto id="12" home=" 1" prod="S = @ S a S b"   la="a" follow="10" />
+S -> 2; EOF,a =: S,0; 10==2
+
+state 2:
+<proto id=" 2" home=" 1" prod="HYPER_AXIOM = S @ EOF"   la="EOF" />
+<proto id="10" home=" 1" prod="S = S @ a S b"   la="a" follow="7" />
+EOF =: HYPER_AXIOM,2; a -> 7
+
+state 7:
+<proto id=" 7" home=" 1" prod="S = S a @ S b"   la="b" follow="6" />
+<proto id=" 9" home=" 7" prod="S = @"  		 	la="b" />
+b -> 8
+
+<proto id=" 4" home=" 1" prod="S = S a S b @"   la="EOF" />
+<proto id=" 5" home=" 1" prod="S = @"   		la="EOF" />
+<proto id=" 6" home=" 1" prod="S = S a S @ b"   la="b" follow="4" />
+<proto id=" 8" home=" 7" prod="S = S a S b @"   la="b" />
+<proto id="11" home=" 7" prod="S = S a S @ b"   la="b" follow="8" same="6" />
+<proto id="13" home=" 1" prod="S = S a S b @"   la="a" />
+<proto id="15" home=" 1" prod="S = S a S @ b"   la="b" follow="13" />
+<proto id="16" home=" 1" prod="S = S a @ S b"   la="b" follow="15" same="7" />
+<proto id="17" home="16" prod="S = S a S b @"   la="b" same="8" />
+<proto id="18" home="16" prod="S = @"   		la="b" same="9" />
+		
+<h2>Non-LALR(1), example 4.2.1-1, Diss. page 73</h2>
+Aho and Ullman [1972] give an example (7.27) for a grammar which
+is LR(1) but not LALR(1):
+<pre>
+[Axiom = S
+.S = A a | B b | d A b | d B a
+.A = c
+.B = c
+]
+--------------------------------------------
+expand all productions backwards and propagate LA sets:
+
+2^0 Hyper = Axiom @ {eof} =. 
+	3^0 Hyper = @ Axiom {eof} Axiom -> 2; push 4
+
+	4^3 Axiom = S @ {eof} =: Axiom,1
+		5^3 Axiom = @ S {eof} S -> 4; push 6,7,8,9
+
+	6^4 S = A a @ {eof} =: S,2
+		10^4 S = A @ a {eof} a -> 6
+			11^4 S = @ A a {a} A -> 10; push 12
+
+	7^4 S = B b @ {eof} =: S,2
+		13^4 S = B @ b {eof} b -> 7
+			14^4 S = @ B b {b} B - 13; push 15
+
+	8^4 S = d A b @ {eof} =: S,3
+		16^4 S = d A @ b {eof} b -> 8
+			17^4 S = d @ A b {b} A -> 16; push 18
+				19^4 S = @ d A b {b} d -> 17
+
+	9^4 S = d B a @ {eof} =: S,3
+		20^4 S = d B @ a {eof} a -> 21
+			21^4 S = d @ B a {a} B -> 22; push 23
+				24^4 S = @ d B a {a} d -> 21
+
+	12^11 A = c @ {a} =: A,1
+		25 A = @ c {a} c -> 12
+
+	15^14 B = c @ {b} =: B,1
+		26 B = @ c {b} c -> 15
+
+	18^17 A = c @ {b} =: A,1
+		27 A = @ c {b} c -> 18
+
+	23^21 B = c @ {a} =: B,1
+		27 B = @ c {a} c -> 23
+
+--------------------------------------------
+sequences reverted:
+
+3^0 Hyper = @ Axiom {eof} Axiom -> 2; push 4
+	2^0 Hyper = Axiom @ {eof} =. 
+
+	5^3 Axiom = @ S {eof} S -> 4; push 6,7,8,9
+		4^3 Axiom = S @ {eof} =: Axiom,1
+
+	11^4 S = @ A a {a} A -> 10; push 12
+		10^4 S = A @ a {eof} a -> 6
+			6^4 S = A a @ {eof} =: S,2
+
+	7^4 S = B b @ {eof} =: S,2
+		13^4 S = B @ b {eof} b -> 7
+			14^4 S = @ B b {b} B - 13; push 15
+
+	19^4 S = @ d A b {b} d -> 17
+		17^4 S = d @ A b {b} A -> 16; push 18
+			16^4 S = d A @ b {eof} b -> 8
+				8^4 S = d A b @ {eof} =: S,3
+
+	24^4 S = @ d B a {a} d -> 21
+		21^4 S = d @ B a {a} B -> 22; push 23
+			20^4 S = d B @ a {eof} a -> 21
+				9^4 S = d B a @ {eof} =: S,3
+
+	25^11 A = @ c {a} c -> 12
+		12^11 A = c @ {a} =: A,1
+
+	26^14 B = @ c {b} c -> 15
+		15^14 B = c @ {b} =: B,1
+
+	27^17 A = @ c {b} c -> 18
+		18^17 A = c @ {b} =: A,1
+
+	28^21 B = @ c {a} c -> 23
+		23^21 B = c @ {a} =: B,1
+
+--------------------------------------------
+combined 
+
+3^0 Hyper = @ Axiom {eof} Axiom -> 2; push 4
+	2^0 Hyper = Axiom @ {eof} =. 
+3^0 Axiom = @ S {eof} S -> 4; push 6,7,8,9
+	4^3 Axiom = S @ {eof} =: Axiom,1
+3^4 S = @ A a {a} A -> 10; push 12
+	10^4 S = A @ a {eof} a -> 6
+		6^4 S = A a @ {eof} =: S,2
+3^11 A = @ c {a} c -> 12
+	12^11 A = c @ {a} =: A,1
+3^4 S = @ B b {b} B - 13; push 15
+	13^4 S = B @ b {eof} b -> 7
+		7^4 S = B b @ {eof} =: S,2
+3^14 B = @ c {b} c -> 15
+	15^14 B = c @ {b} =: B,1
+3^4 S = @ d A b {b} d -> 17
+3^4 S = @ d B a {a} d -> 17
+	17^4 S = d @ A b {b} A -> 16; push 18
+	17^17 A = @ c {b} c -> 18
+	17^21 B = @ c {a} c -> 18
+		18^17 A = c @ {b} =: A,1
+		18^21 B = c @ {a} =: B,1
+
+		16^4 S = d A @ b {eof} b -> 8
+			8^4 S = d A b @ {eof} =: S,3
+	17^4 S = d @ B a {a} B -> 22; push 23
+		20^4 S = d B @ a {eof} a -> 21
+			9^4 S = d B a @ {eof} =: S,3
+
+
+</pre>
+</body>
+</html>

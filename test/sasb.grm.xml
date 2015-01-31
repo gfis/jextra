@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<grammar>
+<sym>EOF</sym>
+<sym>IDENTIFIER</sym>
+<sym>NUMBER</sym>
+<sym>STRING</sym>
+<sym>;</sym>
+<comment>	Test grammar, example 2.5-5, page 39				</comment>
+<comment>	Show the abbreviated/linearized state diagram		</comment>
+<comment>	Dr. Georg Fischer 1980-08-01                        </comment>
+<comment>------------------------------------------------------</comment>
+<rule>
+<left>S</left>
+<prod>
+<sym>S</sym>
+<sym>a</sym>
+<sym>S</sym>
+<sym>b</sym>
+</prod>
+</rule>
+<rule>
+<left>S</left>
+<prod>
+</prod>
+</rule>
+</grammar>
