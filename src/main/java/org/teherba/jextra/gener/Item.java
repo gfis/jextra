@@ -243,4 +243,4 @@ public class Item implements Comparable {
      */     
     public static void main (String args[]) { 
     } // main
-}
+} // Item

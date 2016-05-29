@@ -1,6 +1,7 @@
 /*  Attributes of parser symbols (identifiers, number, strings ...)
     of the (programming) language
     @(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2005-01-24, Georg Fischer: copied from LineReader.java
 */
 /*
@@ -60,7 +61,7 @@ public class Symbol implements Comparable {
     
     /** set of states reached by this symbol
      */
-    private TreeSet reachedStates;
+    private TreeSet<State> reachedStates;
 
     /** rule with this symbol as the left side (for nonterminals,
      *  null for terminals)
@@ -264,4 +265,5 @@ public class Symbol implements Comparable {
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // Symbol

@@ -561,21 +561,21 @@ public class Scanner {
      */
     public int size() {
         return symbolList.size();
-    }
+    } // size
     
     /** Gets the index of the next free symbol
      *  @return number of symbols allocated so far
      */
     public int getFreeSymbol() {
         return symbolList.size();
-    }
+    } // getFreeSymbol
     
     /** Gets the symbol list of this scanner object
      *  @return symbol list
      */
     public SymbolList getSymbolList() {
         return symbolList;
-    }
+    } // getSymbolList
     
     /** Gets a symbol from the symbol list
      *  @param index index of the symbol
@@ -583,20 +583,20 @@ public class Scanner {
      */
     public Symbol getSymbol(int index) {
         return symbolList.get(index);
-    }
+    } // getSymbol
     
     /** Tells whether the scanner has reached the End Of File
      *  @return true if scanner is at EOF, false otherwise 
      */
     public boolean isAtEof() {
         return lineReader.isAtEof();
-    }
+    } // isAtEof
 
     /** Destructor - Terminate the scanner, close its source file
      */
     public void terminate() {
         lineReader.close();
-    }
+    } // terminate
     
     /** Print a list of all symbols for debugging purposes
      */
@@ -611,7 +611,7 @@ public class Scanner {
                         );
             } // for index
         } // DEBUG          
-    }
+    } // dumpSymbols
 
     /** Test Frame: read lines and print them
      */     
@@ -625,4 +625,5 @@ public class Scanner {
         scanner.dumpSymbols();
         scanner.terminate();
     } // main
-}
+    
+} // Scanner

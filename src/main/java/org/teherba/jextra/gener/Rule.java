@@ -1,5 +1,6 @@
 /*  Rule (set of productions) of the grammar
     @(#) $Id: Rule.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2005-02-10, Georg Fischer: copied from Symbol.java
 */
 /*
@@ -42,13 +43,13 @@ public class Rule {
     
     /** list of productions (empty for terminal left side)
      */
-    private ArrayList productions;
+    private ArrayList<Production> productions;
     
     /** No-args Constructor - creates a new rule
      */
     public Rule() {
         this(new Symbol());
-    }
+    } // Constructor()
     
     /** Constructor - creates a new, empty rule
      *  for left side <em>symbol</em>
@@ -57,8 +58,8 @@ public class Rule {
     public Rule(Symbol symbol) {
         leftSide    = symbol;
         leftSide.setRule(this);
-        productions = new ArrayList(8);
-    }
+        productions = new ArrayList<Production>(8);
+    } // Constructor(Symbol>
     
     /** Gets the left hand side (number of nonterminal symbol) 
      *  of the production
@@ -66,14 +67,14 @@ public class Rule {
      */
     public Symbol getLeftSide() {
         return leftSide;
-    }
+    } // getLeftSide
 
     /** Sets the left hand side of the production
      *  @param nonterminal symbol on the left side 
      */
     public void setLeftSide(Symbol nonterminal) {
         leftSide = nonterminal;
-    }
+    } // setLeftSide
 
     /** Gets all productions in this rule 
      *  @return productions for the same left side
@@ -81,21 +82,21 @@ public class Rule {
 /*
     public ArrayList getProductions() {
         return productions;
-    }
+    } // getProductions
 */
     /** Returns an iterator over all productions of the rule.
      *  @return productions for the same left side
      */
-    public Iterator iterator() {
+    public Iterator<Production> iterator() {
         return productions.iterator();
-    }
+    } // iterator
 
     /** Returns the number of productions for this rule
      *  @return number of productions for the same left side
      */
     public int size() {
         return productions.size();
-    }
+    } // size
 
     /** Appends a production to the internal list
      *  @param prod production to be appended
@@ -106,7 +107,7 @@ public class Rule {
             Parm.alert(200);
         }
         productions.add(prod);
-    }
+    } // add
 */
     /** Inserts a production in the internal list
      *  @param prod production to be inserted
@@ -130,7 +131,7 @@ public class Rule {
         }
         System.out.println("iprod left=" + leftSide.getEntity() + ", ruleSize=" + size());
         return found;
-    }
+    } // insert
 
     /** Removes a production from the internal list
      *  @param prod production to be removed
@@ -154,7 +155,7 @@ public class Rule {
                     // throw rule, turn symbol into terminal
         }
         return found;
-    }
+    } // delete
 
     /** Returns a human readable representation of the object
      *  @return dot, leftSide, equals, list of productions separated by bars
@@ -174,7 +175,7 @@ public class Rule {
             index ++;
         }
         return result;
-    }
+    } // legible
 
     /** Returns an XML description of the object
      *  @return list of XML elements representing the productions
@@ -191,11 +192,12 @@ public class Rule {
         Parm.decrIndent();
         result += Parm.getIndent() + "</rule>";
         return result;
-    }
+    } // toString
 
     //------------------------------------------------------------
     /** Test Frame
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // Rule

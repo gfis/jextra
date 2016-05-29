@@ -1,5 +1,6 @@
 /*  LR(1) Parser - recognizes the language of a context-free grammar
     @(#) $Id: LR1Parser.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2005-02-25, Georg Fischer
     Copyright (c) 1980 Georg Fischer
 */
@@ -41,7 +42,7 @@ public class LR1Parser extends BaseParser {
     public final static String CVSID = "@(#) $Id: LR1Parser.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** push-down stack for states */
-    protected ArrayList stack = new ArrayList(128);
+    protected ArrayList<State> stack;
 
     /** Constructor - central LR(1) parsing algorithm
      *  utilizing a push-down stack of states
@@ -50,16 +51,16 @@ public class LR1Parser extends BaseParser {
      */
     public LR1Parser(Table tab, String fileName) {
         super(tab, fileName);
-        stack = new ArrayList(128);
+        stack = new ArrayList<State>(128);
         state = table.getStartState();
-    }
+    } // Constructor(Table, String)
 
     /** Constructor - allocate new <em>Table</em>, <em>Grammar</em> and <em>Scanner</em> objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public LR1Parser(String fileName) {
         super(fileName);
-    }
+    } // Constructor(String)
 
     /** Determines the next state of the parser. 
      *  This dummy version reads over all symbols without 
@@ -95,7 +96,7 @@ public class LR1Parser extends BaseParser {
                 break;
         } // switch action
         return accepted;
-    }
+    } // transition
     
     /** Test Frame: read a sentence of the grammar 
      *  and print its structure tree
@@ -109,4 +110,5 @@ public class LR1Parser extends BaseParser {
         parser.parse();
         System.out.println(parser.getGrammar().legible());
     } // main
-}
+
+} // LR1Parser

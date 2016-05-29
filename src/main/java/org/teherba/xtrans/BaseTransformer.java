@@ -58,14 +58,14 @@ import  java.util.Properties;
 import  java.util.prefs.Preferences;
 import  java.util.Stack;
 import  javax.xml.transform.Result;
-import 	javax.xml.transform.Templates;
-import 	javax.xml.transform.Transformer;
-import 	javax.xml.transform.TransformerFactory;
-import 	javax.xml.transform.sax.SAXResult;
-import 	javax.xml.transform.sax.SAXSource;
-import 	javax.xml.transform.sax.SAXTransformerFactory;
-import 	javax.xml.transform.sax.TransformerHandler;
-import 	javax.xml.transform.stream.StreamSource;
+import  javax.xml.transform.Templates;
+import  javax.xml.transform.Transformer;
+import  javax.xml.transform.TransformerFactory;
+import  javax.xml.transform.sax.SAXResult;
+import  javax.xml.transform.sax.SAXSource;
+import  javax.xml.transform.sax.SAXTransformerFactory;
+import  javax.xml.transform.sax.TransformerHandler;
+import  javax.xml.transform.stream.StreamSource;
 import  org.xml.sax.Attributes;
 import  org.xml.sax.ContentHandler;
 import  org.xml.sax.DTDHandler;
@@ -88,34 +88,34 @@ import  org.apache.log4j.Logger;
  *  defining common properties and methods.
  *  All Xtrans transformer transformer classes are derived from this class.
  *  A <em>transformer</em> is divided in two parts: 
- *	<ul>
- *	<li>the <em>generator</em> which reads some external file format and fires SAX events,</li>
- *	<li>the <em>serializer</em> which accepts SAX events and writes the same external output file format.</li>
- *	</ul> 
- *	<p>
- *	Some of the transformers implement general formats for all types of SAX events,
- *	among them the {@link XMLTransformer} and the {@link org.teherba.xtrans.general.PYXTransformer PYXTransformer}.
- *	For the programming language formats, the {@link org.teherba.xtrans.proglang.TokenTransformer TokenTransformer} 
- *	implements a common, tabular representation.
+ *  <ul>
+ *  <li>the <em>generator</em> which reads some external file format and fires SAX events,</li>
+ *  <li>the <em>serializer</em> which accepts SAX events and writes the same external output file format.</li>
+ *  </ul> 
+ *  <p>
+ *  Some of the transformers implement general formats for all types of SAX events,
+ *  among them the {@link XMLTransformer} and the {@link org.teherba.xtrans.general.PYXTransformer PYXTransformer}.
+ *  For the programming language formats, the {@link org.teherba.xtrans.proglang.TokenTransformer TokenTransformer} 
+ *  implements a common, tabular representation.
  *  <p>
  *  Except for some members of the <em>org.teherba.xtrans.pseudo</em> subpackage, the transformers will
- *	reproduce the input file if their serializer receives the SAX events fired by their generator.
- *	This is tested by a sequence of the form:
- *	<blockquote>input file -&gt; XYZ generator -&gt; XML serializer 
- *		-&gt; XML file -&gt; XML generator -&gt; XYZ serializer -&gt; output file,
- *	</blockquote>
+ *  reproduce the input file if their serializer receives the SAX events fired by their generator.
+ *  This is tested by a sequence of the form:
+ *  <blockquote>input file -&gt; XYZ generator -&gt; XML serializer 
+ *      -&gt; XML file -&gt; XML generator -&gt; XYZ serializer -&gt; output file,
+ *  </blockquote>
  *  where the input and the output file do not differ (sometimes except for whitespace).
  *  <p>
  *  XML processing pipes can be built with some transformer's generator at the start and 
- *	another (or the same) transformer's serializer at the end. In between, XSLT transformations
- *	can be performed, or the stream of SAX events may be modified by filters.
+ *  another (or the same) transformer's serializer at the end. In between, XSLT transformations
+ *  can be performed, or the stream of SAX events may be modified by filters.
  * 
  *  @author Dr. Georg Fischer
  */
 public class BaseTransformer 
         extends DefaultHandler2
         implements XMLFilter, TransformerHandler, Locator {
-        	
+            
     public final static String CVSID = "@(#) $Id: BaseTransformer.java 855 2012-01-11 06:59:36Z gfis $";
     
     /** log4j logger (category) */
@@ -217,14 +217,14 @@ public class BaseTransformer
         setFileExtensions("xml");
     } // constructor
 
-	/** Initializes the (quasi-constant) global structures and variables.
-	 *  This method is called by the {@link XtransFactory} once for the
-	 *  selected generator and serializer.
-	 *  All heavy-weight initialization should be done here and in the
-	 *  derived methods. All derived constructors must be kept aa leightweight as possible,
-	 *	since they are all called in the constructor of {@link org.teherba.xtrans.XtransFactory}. 
-	 */
-	public void initialize() {
+    /** Initializes the (quasi-constant) global structures and variables.
+     *  This method is called by the {@link XtransFactory} once for the
+     *  selected generator and serializer.
+     *  All heavy-weight initialization should be done here and in the
+     *  derived methods. All derived constructors must be kept aa leightweight as possible,
+     *  since they are all called in the constructor of {@link org.teherba.xtrans.XtransFactory}. 
+     */
+    public void initialize() {
         mustAmpEscape = true; // used in XMLTransformer
         setSourceEncoding("UTF-8"); // ASCII + Western European 
         setResultEncoding("UTF-8"); // for XML
@@ -246,10 +246,10 @@ public class BaseTransformer
         resultReplaceMap    = new HashMap/*<1.5*/<String, String>/*1.5>*/(MAX_MAP);
         tagStack            = new Stack/*<1.5*/<String>/*1.5>*/();
         newline             = System.getProperty("line.separator");
-        rootTag				= "document";
-		// putEntityReplacements();
-	} // initialize
-	
+        rootTag             = "document";
+        // putEntityReplacements();
+    } // initialize
+    
     /*==========*/
     /*  Utility */
     /*==========*/
@@ -403,8 +403,8 @@ public class BaseTransformer
      *  @param uri Universal Resource Identifier for the namespace, or empty String
      */
     public void setNamespace(String prefix, String uri) {
-    	this.namespacePrefix = prefix;
-    	this.namespace       = prefix.replaceAll(":", "");
+        this.namespacePrefix = prefix;
+        this.namespace       = prefix.replaceAll(":", "");
         this.namespaceURI    = uri;
     } // setNamespace
 
@@ -429,56 +429,56 @@ public class BaseTransformer
         try {
             // log.debug("openFile(" + isBinary + ", " + ifile + ", " + fileName + ");");
             switch (ifile) {
-            	case 0: // open input  from file
-	                // log.debug("sourceEncoding = " + sourceEncoding + ";");
-	                if (! isBinary) { // character mode
-	                    if (charReader != null) {
-	                        charReader.close();
-	                    }
-	                    ReadableByteChannel channel = (fileName != null)
-	                            ? (new FileInputStream (fileName)).getChannel()
-	                            : Channels.newChannel(System.in);
-	                    charReader = new BufferedReader(Channels.newReader(channel, sourceEncoding));
-	                } else { // byte mode
-	                    if (byteReader != null) {
-	                        byteReader.close();
-	                    }
-	                    if (fileName == null) {
-	                        byteReader = new BufferedInputStream(System.in);
-	                    }
-	                    else {
-	                        byteReader = new BufferedInputStream(new FileInputStream(fileName));
-	                    }
-	                } // byte input file
-	                break;
-	            case 1:
-            	default: // open output into file
-	                // log.debug("resultEncoding = " + resultEncoding + ";");
-	                if (! isBinary) { // character mode
-						if (fileName == null) { // stdout
-		                    if (charWriter == null) {
-		        	            charWriter = new PrintWriter(Channels.newWriter(Channels.newChannel(System.out), resultEncoding));
-	    	                } // else leave stdout open, close it with main program
-						} else { // not stdout
-		                    if (charWriter != null) {
-		                        charWriter.close();
-	    	                }
-		                    WritableByteChannel channel = (new FileOutputStream (fileName, append)).getChannel();
-	        	            charWriter = new PrintWriter(Channels.newWriter(channel, resultEncoding));
-	                	} // not stdout
-	                } else { // byte mode
-	                    if (fileName == null) { // stdout
-		                    if (byteWriter == null) {
-		                        byteWriter = new BufferedOutputStream(System.out);
-		                    } // else leave stdout open, close it with main program
-	                    } else { // not stdout
-		                    if (byteWriter != null) {
-		                        byteWriter.close();
-	    	                }
-	                        byteWriter = new BufferedOutputStream(new FileOutputStream(fileName, append));
-	                    } // not stdout
-	                } // byte output
-	                break;
+                case 0: // open input  from file
+                    // log.debug("sourceEncoding = " + sourceEncoding + ";");
+                    if (! isBinary) { // character mode
+                        if (charReader != null) {
+                            charReader.close();
+                        }
+                        ReadableByteChannel channel = (fileName != null)
+                                ? (new FileInputStream (fileName)).getChannel()
+                                : Channels.newChannel(System.in);
+                        charReader = new BufferedReader(Channels.newReader(channel, sourceEncoding));
+                    } else { // byte mode
+                        if (byteReader != null) {
+                            byteReader.close();
+                        }
+                        if (fileName == null) {
+                            byteReader = new BufferedInputStream(System.in);
+                        }
+                        else {
+                            byteReader = new BufferedInputStream(new FileInputStream(fileName));
+                        }
+                    } // byte input file
+                    break;
+                case 1:
+                default: // open output into file
+                    // log.debug("resultEncoding = " + resultEncoding + ";");
+                    if (! isBinary) { // character mode
+                        if (fileName == null) { // stdout
+                            if (charWriter == null) {
+                                charWriter = new PrintWriter(Channels.newWriter(Channels.newChannel(System.out), resultEncoding));
+                            } // else leave stdout open, close it with main program
+                        } else { // not stdout
+                            if (charWriter != null) {
+                                charWriter.close();
+                            }
+                            WritableByteChannel channel = (new FileOutputStream (fileName, append)).getChannel();
+                            charWriter = new PrintWriter(Channels.newWriter(channel, resultEncoding));
+                        } // not stdout
+                    } else { // byte mode
+                        if (fileName == null) { // stdout
+                            if (byteWriter == null) {
+                                byteWriter = new BufferedOutputStream(System.out);
+                            } // else leave stdout open, close it with main program
+                        } else { // not stdout
+                            if (byteWriter != null) {
+                                byteWriter.close();
+                            }
+                            byteWriter = new BufferedOutputStream(new FileOutputStream(fileName, append));
+                        } // not stdout
+                    } // byte output
+                    break;
             } // switch ifile
         } catch (Exception exc) {
             log.error(exc.getMessage(), exc);
@@ -499,32 +499,32 @@ public class BaseTransformer
         setResultEncoding(getOption("enc2", "UTF-8"));
         try {
             switch (ifile) {
-            	case 0: // open input  from stream
-	                if (! isBinary) { // character mode
-	                    if (charReader != null) {
-	                        charReader.close();
-	                    }
-	                    charReader = new BufferedReader(new InputStreamReader ((InputStream)  stream, sourceEncoding));
-	                } else { // byte mode
-	                    if (byteReader != null) {
-	                        byteReader.close();
-	                    }
+                case 0: // open input  from stream
+                    if (! isBinary) { // character mode
+                        if (charReader != null) {
+                            charReader.close();
+                        }
+                        charReader = new BufferedReader(new InputStreamReader ((InputStream)  stream, sourceEncoding));
+                    } else { // byte mode
+                        if (byteReader != null) {
+                            byteReader.close();
+                        }
                         byteReader = new BufferedInputStream                  ((InputStream)  stream);
-	                } // byte input file
-	                break;
-            	default: // open output into stream
-	                if (! isBinary) { // character mode
-	                    if (charWriter != null) {
-	                        charWriter.close();
-	                    }
-	                    charWriter = new PrintWriter   (new OutputStreamWriter((OutputStream) stream, resultEncoding));
-	                } else { // byte mode
-	                    if (byteWriter != null) {
-	                        byteWriter.close();
-	                    }
+                    } // byte input file
+                    break;
+                default: // open output into stream
+                    if (! isBinary) { // character mode
+                        if (charWriter != null) {
+                            charWriter.close();
+                        }
+                        charWriter = new PrintWriter   (new OutputStreamWriter((OutputStream) stream, resultEncoding));
+                    } else { // byte mode
+                        if (byteWriter != null) {
+                            byteWriter.close();
+                        }
                         byteWriter = new BufferedOutputStream                 ((OutputStream) stream);
-	                } // byte output
-	                break;
+                    } // byte output
+                    break;
             } // switch ifile
         } catch (Exception exc) {
             log.error(exc.getMessage());
@@ -541,14 +541,14 @@ public class BaseTransformer
                 charReader.close();
             }
             if (charWriter != null) {
-            	charWriter.flush();
+                charWriter.flush();
                 charWriter.close();
             }
             if (byteReader != null) {
                 byteReader.close();
             }
             if (byteWriter != null) {
-            	byteWriter.flush();
+                byteWriter.flush();
                 byteWriter.close();
             }
         } catch (Exception exc) {
@@ -558,34 +558,34 @@ public class BaseTransformer
     } // closeAll
     
     /** Closes open input and output files except for stdin and stdout.
-     *	@param fileNames names of the input and output file, or null
+     *  @param fileNames names of the input and output file, or null
      */
     public void closeAll(String[] fileNames) {
         try {
-			if (fileNames[0] != null) {
-	            if (charReader != null) {
-    	            charReader.close();
-        	    }
-            	if (byteReader != null) {
-                	byteReader.close();
-	            }
-	        } // not stdin
-			if (fileNames[1] != null) {
-	            if (charWriter != null) {
-    	            charWriter.close();
-        	    }
-            	if (byteWriter != null) {
-                	byteWriter.close();
-	            }
-	            // not stdout
-	        } else { // stdout
-	            if (charWriter != null) {
-    	            charWriter.flush();
-        	    }
-            	if (byteWriter != null) {
-                	byteWriter.flush();
-	            }
-	        }
+            if (fileNames[0] != null) {
+                if (charReader != null) {
+                    charReader.close();
+                }
+                if (byteReader != null) {
+                    byteReader.close();
+                }
+            } // not stdin
+            if (fileNames[1] != null) {
+                if (charWriter != null) {
+                    charWriter.close();
+                }
+                if (byteWriter != null) {
+                    byteWriter.close();
+                }
+                // not stdout
+            } else { // stdout
+                if (charWriter != null) {
+                    charWriter.flush();
+                }
+                if (byteWriter != null) {
+                    byteWriter.flush();
+                }
+            }
         } catch (Exception exc) {
             System.err.println(exc.getMessage());
             exc.printStackTrace();
@@ -823,7 +823,7 @@ public class BaseTransformer
         setNamespaceURI("http://org.teherba.xtrans/2006");
         String nsp = getOption("nsp" , "");
         if (! nsp.equals("")) {
-        	setNamespace(nsp, getNamespaceURI());
+            setNamespace(nsp, getNamespaceURI());
         }
         // log.debug("evaluateOptions();");
     } // evaluateOptions
@@ -860,7 +860,7 @@ public class BaseTransformer
             } else if (entity.startsWith("&#")) { // decimal
                 result = Character.toString((char) Integer.parseInt(entity.substring(2)));
             } else {
-            	// leave degree - strange unique character 
+                // leave degree - strange unique character 
             }
         } catch (Exception exc) {
         }
@@ -874,56 +874,56 @@ public class BaseTransformer
      */
     public static String replaceEntities(String source) {
         StringBuffer result = new StringBuffer(128);
-    	int start = 0;
-    	int ampos = source.indexOf('&', start);
-    	if (ampos < 0) {
-    		ampos = source.length();
-    	}
-   		result.append(source.substring(start, ampos));
-    	while (ampos < source.length()) {
-   			start = ampos + 1;
-    		int sempos = source.indexOf(';', start);
-    		if (sempos < 0) { // no semicolon found, do not evaluate
-    			result.append('&');
-    			sempos = ampos;
-    		} else { // evaluate source.substring(start = ampos+1, sempos)
-   				String name = source.substring(start, sempos);
-    			if (false) {
-    			} else if (name.startsWith("#x") || name.startsWith("#u")) { // &#x or &#u + hex character code
-    				try {
-            			result.append((char) Integer.parseInt(name.substring(2), 16));
-            		} catch (Exception exc) { // invalid character in hex number
-            			result.append(source.substring(ampos, sempos + 1)); // unchanged
-            		}
-    			} else if (name.startsWith("#", start)) { // &# + decimal character code
-    				try {
-            			result.append((char) Integer.parseInt(name.substring(1), 10));
-            		} catch (Exception exc) { // invalid character in decimal number
-            			result.append(source.substring(ampos, sempos + 1)); // unchanged
-            		}
-    			} else { // no '#'
-    				if (false) {
-    				} else if (name.equals("lt")) {
-    					result.append('<');
-    				} else if (name.equals("gt")) {
-    					result.append('>');
-    				} else if (name.equals("amp")) {
-    					result.append('&');
-    				} else if (name.equals("apos")) {
-    					result.append('\'');
-    				} else if (name.equals("quot")) {
-    					result.append('"');
-    				} else { // unknown entity, do not evaluate
-    					result.append(source.substring(ampos, sempos + 1)); // unchanged
-    				}
-    			} // no '#'
-    		} // sempos >= 0
-	    	start = sempos + 1;
-    		ampos = source.indexOf('&', start);
-    		if (ampos < 0) {
-    			ampos = source.length();
-    		} // no '&' found
-   			result.append(source.substring(start, ampos)); // append rest of source string
+        int start = 0;
+        int ampos = source.indexOf('&', start);
+        if (ampos < 0) {
+            ampos = source.length();
+        }
+        result.append(source.substring(start, ampos));
+        while (ampos < source.length()) {
+            start = ampos + 1;
+            int sempos = source.indexOf(';', start);
+            if (sempos < 0) { // no semicolon found, do not evaluate
+                result.append('&');
+                sempos = ampos;
+            } else { // evaluate source.substring(start = ampos+1, sempos)
+                String name = source.substring(start, sempos);
+                if (false) {
+                } else if (name.startsWith("#x") || name.startsWith("#u")) { // &#x or &#u + hex character code
+                    try {
+                        result.append((char) Integer.parseInt(name.substring(2), 16));
+                    } catch (Exception exc) { // invalid character in hex number
+                        result.append(source.substring(ampos, sempos + 1)); // unchanged
+                    }
+                } else if (name.startsWith("#", start)) { // &# + decimal character code
+                    try {
+                        result.append((char) Integer.parseInt(name.substring(1), 10));
+                    } catch (Exception exc) { // invalid character in decimal number
+                        result.append(source.substring(ampos, sempos + 1)); // unchanged
+                    }
+                } else { // no '#'
+                    if (false) {
+                    } else if (name.equals("lt")) {
+                        result.append('<');
+                    } else if (name.equals("gt")) {
+                        result.append('>');
+                    } else if (name.equals("amp")) {
+                        result.append('&');
+                    } else if (name.equals("apos")) {
+                        result.append('\'');
+                    } else if (name.equals("quot")) {
+                        result.append('"');
+                    } else { // unknown entity, do not evaluate
+                        result.append(source.substring(ampos, sempos + 1)); // unchanged
+                    }
+                } // no '#'
+            } // sempos >= 0
+            start = sempos + 1;
+            ampos = source.indexOf('&', start);
+            if (ampos < 0) {
+                ampos = source.length();
+            } // no '&' found
+            result.append(source.substring(start, ampos)); // append rest of source string
         } // while ampos
         return result.toString();
     } // replaceEntities
@@ -1120,8 +1120,8 @@ public class BaseTransformer
         while (iter.hasNext()) {
             key = (String) iter.next();
             if (! key.equals(AMP_AMP)) {
-	            result = result.replaceAll("\\" + key, (String) resultReplaceMap.get(key));
-    		}
+                result = result.replaceAll("\\" + key, (String) resultReplaceMap.get(key));
+            }
         } // while iter
         
         key = AMP_AMP;
@@ -1638,19 +1638,19 @@ public class BaseTransformer
         }
     } // parse
 
-	/**	Report a fatal XML parsing error. 
-	 *	The default implementation throws a SAXParseException. 
-	 *	Application writers may override this method in a subclass 
-	 *	if they need to take specific actions for each fatal error 
-	 *	(such as collecting all of the errors into a single report): 
-	 *	in any case, the application must stop all regular processing 
-	 *	when this method is invoked, since the document is no longer reliable, 
-	 *	and the parser may no longer report parsing events.
-	 *	@param exc exception reproted by the parser
-	 */
-	public void fatalError(SAXParseException exc) throws SAXException {
-		log.error("BaseTransformer: " + exc.getMessage());
-	} // fatalError
+    /** Report a fatal XML parsing error. 
+     *  The default implementation throws a SAXParseException. 
+     *  Application writers may override this method in a subclass 
+     *  if they need to take specific actions for each fatal error 
+     *  (such as collecting all of the errors into a single report): 
+     *  in any case, the application must stop all regular processing 
+     *  when this method is invoked, since the document is no longer reliable, 
+     *  and the parser may no longer report parsing events.
+     *  @param exc exception reproted by the parser
+     */
+    public void fatalError(SAXParseException exc) throws SAXException {
+        log.error("BaseTransformer: " + exc.getMessage());
+    } // fatalError
 
     //////////////////////////////////////////////////////////////////////////
     // Methods which turn an XMLReader in an XMLFilter
@@ -1680,7 +1680,7 @@ public class BaseTransformer
     // Default implementations of Locator methods
     //////////////////////////////////////////////////////////////////////////
 
-	/** system id for the locator */
+    /** system id for the locator */
     private String systemId;
 
     /** current line number in character file starting with 1, or -1 if not known */
@@ -1725,9 +1725,9 @@ public class BaseTransformer
     //////////////////////////////////////////////////////////////////////////
     // Implementation of interface TransformerHandler
     //////////////////////////////////////////////////////////////////////////
-	/** local handle for the result of this TransformerHandler */
-	protected Result result;
-	
+    /** local handle for the result of this TransformerHandler */
+    protected Result result;
+    
     /** Set the Result associated with this TransformerHandler to be used for the transformation.
      *  @param result - A Result instance, should not be null. 
      *  @throws IllegalArgumentException - if result is invalid for some reason.
@@ -1744,8 +1744,8 @@ public class BaseTransformer
     } // getResult
 
     /** Get the Transformer associated with this handler, 
-     *	which is needed in order to set parameters and output properties.
-	 *  @return Transformer associated with this TransformerHandler.
+     *  which is needed in order to set parameters and output properties.
+     *  @return Transformer associated with this TransformerHandler.
      */
     public Transformer getTransformer() {
         return null;
@@ -1755,7 +1755,7 @@ public class BaseTransformer
      *  @param systemId - Base URI for the source tree.
      */
     public void setSystemId(String systemId) {
-     	this.systemId = systemId;
+        this.systemId = systemId;
     } // getSystemId
 
     //////////////////////////////////////////////////////////////////////////
@@ -1918,120 +1918,120 @@ public class BaseTransformer
         return attrs;
     } // toAttributes(ArrayList)
         
-	/** Converts a leading string of whitespace characters to a 
-	 *	description and returns the rest of the string starting with some
-	 *	non-whitespace character.
-	 *  @param line string with leading whitespace
-	 *	@return a string array {descr, rest} consisting of
-	 *	<ol>
-	 *	<li>a description to be attached to some XML element as a "w" attribute,
-	 *	consisting of numbers (count) and the letters "t" for tab, "s" for space,
-	 *	for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" will be omitted)
-	 *	</li>
-	 *	<li>the rest of the string behind the whitespace</li>
-	 *	</ol>
-	 */
-	public static String whitespaceToCode(String line) {
-		StringBuffer code = new StringBuffer(32);
-		int count = 0;
-		int pos = 0;
-		char coch = 's'; // assume space at the beginning
-		if (true) { 
-			boolean busy = true;
-			while (! busy && pos < line.length()) {
-				char ch = line.charAt(pos ++);
-				switch (ch) {
-					case ' ': 
-						if (coch == 't') { // switch from spaces to tabs
-							code.append(Integer.toString(count));
-							code.append(coch);
-							count = 1;
-							coch = 's';
-						} else { // coch == 's'
-							count ++;
-						}
-						break;
-					case '\t': 
-						if (coch == 's') { // switch from tabs to spaces
-							code.append(Integer.toString(count));
-							code.append(coch);
-							count = 1;
-							coch = 't';
-						} else { // coch == 's'
-							count ++;
-						}
-						break;
-					default: // first non-whitespace, break loop
-						busy = false;
-						pos --; // back on the non-whitespace
-						break;
-				} // switch ch
-			} // while busy && pos
-			if (count > 0) { // last sequence of whitespace chars
-				code.append(Integer.toString(count));
-				if (coch != 's') { // omit trailing 's'
-					code.append(coch);
-				}
-			} // last sequence
-		} // true
-		return code.toString();
-	} // whitespaceToCode
+    /** Converts a leading string of whitespace characters to a 
+     *  description and returns the rest of the string starting with some
+     *  non-whitespace character.
+     *  @param line string with leading whitespace
+     *  @return a string array {descr, rest} consisting of
+     *  <ol>
+     *  <li>a description to be attached to some XML element as a "w" attribute,
+     *  consisting of numbers (count) and the letters "t" for tab, "s" for space,
+     *  for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" will be omitted)
+     *  </li>
+     *  <li>the rest of the string behind the whitespace</li>
+     *  </ol>
+     */
+    public static String whitespaceToCode(String line) {
+        StringBuffer code = new StringBuffer(32);
+        int count = 0;
+        int pos = 0;
+        char coch = 's'; // assume space at the beginning
+        if (true) { 
+            boolean busy = true;
+            while (! busy && pos < line.length()) {
+                char ch = line.charAt(pos ++);
+                switch (ch) {
+                    case ' ': 
+                        if (coch == 't') { // switch from spaces to tabs
+                            code.append(Integer.toString(count));
+                            code.append(coch);
+                            count = 1;
+                            coch = 's';
+                        } else { // coch == 's'
+                            count ++;
+                        }
+                        break;
+                    case '\t': 
+                        if (coch == 's') { // switch from tabs to spaces
+                            code.append(Integer.toString(count));
+                            code.append(coch);
+                            count = 1;
+                            coch = 't';
+                        } else { // coch == 's'
+                            count ++;
+                        }
+                        break;
+                    default: // first non-whitespace, break loop
+                        busy = false;
+                        pos --; // back on the non-whitespace
+                        break;
+                } // switch ch
+            } // while busy && pos
+            if (count > 0) { // last sequence of whitespace chars
+                code.append(Integer.toString(count));
+                if (coch != 's') { // omit trailing 's'
+                    code.append(coch);
+                }
+            } // last sequence
+        } // true
+        return code.toString();
+    } // whitespaceToCode
 
-	/** Get a string of spaces and tabs from the "w" attribute.
-	 *  @param attrs attributes attached to some XML element, with a coded "w" attribute
-	 *	consisting of numbers (count) and the letters "t" for tab, "s" for space,
-	 *	for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" may be omitted). 
-	 *	@return string with space and/or tab characters, or the empty string
-	 */
-	public static String attrToWhitespace(Attributes attrs) {
-		return attrToWhitespace(attrs, "w");
-	} // attrToWhitespace()
-	
-	/** Get a string of spaces and tabs from an attribute.
-	 *  @param attrs attributes attached to some XML element, with a coded attribute
-	 *	consisting of numbers (count) and the letters "t" for tab, "s" for space,
-	 *	for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" may be omitted).
-	 *	@param attrName name of the whitespace attribute 
-	 *	@return string with space and/or tab characters, or the empty string
-	 */
-	public static String attrToWhitespace(Attributes attrs, String attrName) {
-		StringBuffer result = new StringBuffer(32);
-		String wsAttr = attrs.getValue("w");
-		if (wsAttr == null) {
-			wsAttr = attrs.getValue("s"); // for compatibility
-		}
-		if (wsAttr != null) { // with "w" attribute
-			int count = 0;
-			int pos = 0;
-			while (pos < wsAttr.length()) {
-				char ch = wsAttr.charAt(pos ++);
-				switch (ch) {
-					case 's': 
-						while (count > 0) {
-							result.append(' ');
-							count --;
-						} 
-						break;
-					case 't': 
-						while (count > 0) {
-							result.append('\t');
-							count --;
-						} 
-						break;
-					default:
-						if (Character.isDigit(ch)) {
-							count = count * 10 + Character.digit(ch, 10);
-						}
-						break;
-				} // switch
-			} // while pos
-			while (count > 0) { // no following letter => spaces
-				result.append(' ');
-				count --;
-			} 
-		} // with "w" attribute
-		return result.toString();
-	} // attrToWhitespace(,)
+    /** Get a string of spaces and tabs from the "w" attribute.
+     *  @param attrs attributes attached to some XML element, with a coded "w" attribute
+     *  consisting of numbers (count) and the letters "t" for tab, "s" for space,
+     *  for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" may be omitted). 
+     *  @return string with space and/or tab characters, or the empty string
+     */
+    public static String attrToWhitespace(Attributes attrs) {
+        return attrToWhitespace(attrs, "w");
+    } // attrToWhitespace()
+    
+    /** Get a string of spaces and tabs from an attribute.
+     *  @param attrs attributes attached to some XML element, with a coded attribute
+     *  consisting of numbers (count) and the letters "t" for tab, "s" for space,
+     *  for example "4t2s" = 4 tabs followed by 2 spaces (a trailing "s" may be omitted).
+     *  @param attrName name of the whitespace attribute 
+     *  @return string with space and/or tab characters, or the empty string
+     */
+    public static String attrToWhitespace(Attributes attrs, String attrName) {
+        StringBuffer result = new StringBuffer(32);
+        String wsAttr = attrs.getValue("w");
+        if (wsAttr == null) {
+            wsAttr = attrs.getValue("s"); // for compatibility
+        }
+        if (wsAttr != null) { // with "w" attribute
+            int count = 0;
+            int pos = 0;
+            while (pos < wsAttr.length()) {
+                char ch = wsAttr.charAt(pos ++);
+                switch (ch) {
+                    case 's': 
+                        while (count > 0) {
+                            result.append(' ');
+                            count --;
+                        } 
+                        break;
+                    case 't': 
+                        while (count > 0) {
+                            result.append('\t');
+                            count --;
+                        } 
+                        break;
+                    default:
+                        if (Character.isDigit(ch)) {
+                            count = count * 10 + Character.digit(ch, 10);
+                        }
+                        break;
+                } // switch
+            } // while pos
+            while (count > 0) { // no following letter => spaces
+                result.append(' ');
+                count --;
+            } 
+        } // with "w" attribute
+        return result.toString();
+    } // attrToWhitespace(,)
 
     //------------------------------------------------
     // ContentHandler Methods
@@ -2046,14 +2046,14 @@ public class BaseTransformer
      */
     public void startDocument() 
             throws SAXException {
-		SAXResult saxResult = (SAXResult) getResult();
-		if (saxResult != null) {
-			filterHandler = saxResult.getHandler(); 
-		} else { // no parent set - assume XML serializer as default
-			// System.err.println("BaseTransformer.startDocument: no parent set");
-			XMLTransformer xmlTransformer = new XMLTransformer();
-			xmlTransformer.setCharWriter(getCharWriter()); 
-        	filterHandler = (new SAXResult(xmlTransformer)).getHandler();
+        SAXResult saxResult = (SAXResult) getResult();
+        if (saxResult != null) {
+            filterHandler = saxResult.getHandler(); 
+        } else { // no parent set - assume XML serializer as default
+            // System.err.println("BaseTransformer.startDocument: no parent set");
+            XMLTransformer xmlTransformer = new XMLTransformer();
+            xmlTransformer.setCharWriter(getCharWriter()); 
+            filterHandler = (new SAXResult(xmlTransformer)).getHandler();
         } // default 
     } // startDocument
     
@@ -2155,10 +2155,10 @@ public class BaseTransformer
         try {
             contentHandler.endElement("", tag, namespace + tag);
         } catch (Exception exc) {
-        	System.out.println("contentHandler=" + contentHandler
-        			+ ", tag=" + tag 
-        			+ ", namespace=" + namespace
-        			);
+            System.out.println("contentHandler=" + contentHandler
+                    + ", tag=" + tag 
+                    + ", namespace=" + namespace
+                    );
             log.error(exc.getMessage(), exc);
         }
     } // fireEndElement
@@ -2214,7 +2214,7 @@ public class BaseTransformer
     /** Writes an XML processing instruction.
      *  @param target the processing instruction target
      *  @param data the processing instruction data, or null if none was supplied. 
-     *	The data does not include any whitespace separating it from the target 
+     *  The data does not include any whitespace separating it from the target 
      */
     public void fireProcessingInstruction(String target, String data) {
         try {
@@ -2232,11 +2232,11 @@ public class BaseTransformer
      */
     public void fireStartRoot(String tag) {
         if (namespaceURI.length() > 0) {
-        	String nsp = getNamespacePrefix();
+            String nsp = getNamespacePrefix();
             fireStartElement(tag, toAttribute("xmlns" 
-            		+ (nsp.equals("") ? "" : (":" + nsp))
-            		, getNamespaceURI())
-            		);
+                    + (nsp.equals("") ? "" : (":" + nsp))
+                    , getNamespaceURI())
+                    );
         } else {
             fireStartElement(tag);
         }
@@ -2357,16 +2357,16 @@ public class BaseTransformer
      *  @param hex whether the value is a string of hexadecimal digits
      */
     public void putLSB(String value, int len, boolean hex) {
-    	byte bytes[] = new byte[8];
-    	try {
-    		long number = Long.parseLong(value, hex ? 16 : 10);
-    		int ind = 0;
-    		while (ind < len) {
-    			bytes[ind] = (byte) (number & 0xff);
-    			number >>= 8;
-    			ind ++;
-    		} // while ind
-    		byteWriter.write(bytes, 0, len);
+        byte bytes[] = new byte[8];
+        try {
+            long number = Long.parseLong(value, hex ? 16 : 10);
+            int ind = 0;
+            while (ind < len) {
+                bytes[ind] = (byte) (number & 0xff);
+                number >>= 8;
+                ind ++;
+            } // while ind
+            byteWriter.write(bytes, 0, len);
         } catch (Exception exc) {
             log.error(exc.getMessage() + "; invalid value " + value, exc);
         }

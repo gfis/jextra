@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="US-ASCII" ?>
-<!--
-    ant-buildfile for commandline, web application and web service
-    @(#) $Id: build.xml 427 2010-06-01 09:08:17Z gfis $
-    2007-04-30: copied from dbat
--->
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
  * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
  *
@@ -19,98 +14,96 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
+<!--
+    ant-buildfile for commandline and web application
+    @(#) $Id: bfb160b42e4807f6c45c2e455d983904452f16ff $
+    2016-05-29: copied from Dbat
+    2014-11-11: tomcat.base|home extracted from build-import.xml
+    2014-11-08: app.version=9
+    2011-04-05: copy xtrans/XMLTransformer and associated classes
+    2008-04-09: targets run.* renamed to test.*
+    2007-02-16: use ant file build-import.xml
+    2005-11-15: copied from checkdig
+-->
 
 <project name="jextra" default="dist" basedir=".">
-    <property name="app.name"           value="jextra"/>
-    <property name="app.version"        value="2.0"/>
-    <property name="app.main-class"     value="org.teherba.jextra.Translator"/>
+    <!-- the 5 needed for build-import.xml -->
+    <property name="app.name"           value="JExtra" />
+    <property name="app.version"        value="3" />
+    <property name="app.main-class"     value="org.teherba.jextra.parse.LR1Parser" />
+    <property name="tomcat.base"        value="/var/lib/tomcat" />
+    <property name="tomcat.home"        value="/usr/share/tomcat" />
     <import file="build-import.xml" />
-    
+
+    <property name="test"               value="%" />
+
     <target name="generate">
+    <!--
         <copy todir="${src.home}/org/teherba/xtrans">
             <fileset dir="../xtrans/src/main/java/org/teherba/xtrans">
                 <include name="BaseTransformer.java"/>
+                <include name="BaseRecord.java"/>
+                <include name="BasicFactory.java"/>
+                <include name="ByteRecord.java"/>
+                <include name="CharRecord.java"/>
                 <include name="CharTransformer.java"/>
+                <include name="Field.java"/>
+                <include name="pseudo/LevelFilter.java"/>
                 <include name="XMLTransformer.java"/>
+                <include name="XtransFactory.java"/>
             </fileset>
         </copy>
-        <copy todir="${src.home}/org/teherba/xtrans/grammar">
-            <fileset dir="../xtrans/src/main/java/org/teherba/xtrans/grammar">
-                <include name="ExtraTransformer.java"/>
+        <copy todir="${src.home}/org/teherba/xtrans/general">
+            <fileset dir="../xtrans/src/main/java/org/teherba/xtrans/general">
+                <include name="PYXTransformer.java"/>
             </fileset>
         </copy>
-        <copy todir="${lib.home}">
-            <fileset dir="../xtrans/lib">
-                <include name="serializer.jar"/>
-            </fileset>
-        </copy>
-    </target>                                               
-
-    <target name="test" depends="deploy,run.command,run.servlet,run.service" />
-    <target name="run.command"><!-- run the program from the commandline -->
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.gener.Generator" />
-            <param name="args"  value="'select count(*) from words'" />
-        </antcall>
-    </target>
-    <target name="run.servlet"><!-- call the web page -->
-        <exec executable="lynx">
-            <arg line="-dump http://localhost/jextra/" />
-        </exec>
-    </target>
-    <target name="run.service"><!-- call the webservice -->
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.gener.Generator"  />
-            <param name="args"  value="'select count(*) from forge'"/>
-        </antcall>
-    </target>
-
-    <target name="test.line">
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.scan.LineReader"  />
-            <param name="args"  value="-l test/meta.grm"/>
-        </antcall>
-    <!--
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.scan.LineReader"  />
-            <param name="args"  value="-c test/meta.grm"/>
-        </antcall>
     -->
     </target>
 
-    <target name="test.scan">
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.scan.Scanner"  />
-            <param name="args"  value="test/meta.grm"/>
-        </antcall>
+    <target name="not_yet_generate">
+    <!--
+        generate content.xml and a fragment for web.xml from *.properties, as described in
+        http://stackoverflow.com/questions/162079/how-to-merge-jsp-pre-compiled-web-xml-fragment-with-main-web-xml-using-ant
+    -->
+        <loadfile property="generated.web.xml.fragment" srcFile="${generated.fragment.file}" />
+        <copy file="${orig-web-content.dir}/WEB-INF/web.xml" toFile="${generated-web-content.dir}/WEB-INF/web.xml">
+            <filterset>
+                <filter token="JDBC_MAP" value=" --&gt; ${generated.web.xml.fragment} &lt;!-- " />
+            </filterset>
+        </copy>
     </target>
 
-    <target name="test.symlist">
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.scan.SymbolList"  />
-            <param name="args"  value="test/SymbolList.dat"/>
-        </antcall>
+    <target name="regression" depends="regression_mysql" /><!-- run a regression test -->
+    <target name="regression_mysql">
+        <java classname="org.teherba.common.RegressionTester" classpathref="compile.classpath" fork="true">
+            <jvmarg value="-Djdk.net.registerGopherProtocol=true" /><!-- strange, but gopher is usually disabled because of a security problem -->
+            <arg value="test/mysql.tests" />
+            <arg value="${test}" />
+        </java>
     </target>
 
-    <target name="test.sasb">
+    <target name="test" depends="deploy,test.command,test.servlet" />
+    <target name="test.command"><!-- run the program from the commandline -->
         <antcall target="run">
-            <param name="class" value="org.teherba.jextra.Translator"  />
-            <param name="args"  value="-xml -gener test/sasb.grm.xml"/>
+            <param name="class" value="org.teherba.dbat.Dbat" />
+            <param name="args"  value="-c worddb 'select count(*) from words'" />
         </antcall>
     </target>
-
-    <target name="test.gener">
+    <target name="test.xml"><!-- run the program from the commandline -->
         <antcall target="run">
-            <param name="class" value="org.teherba.jextra.Translator"  />
-            <param name="args"  value="-xml -gener test/notLALR.grm.xml"/>
+            <param name="class" value="org.teherba.dbat.Dbat" />
+            <param name="args"  value="-c worddb -m xml -d words" />
+        </antcall>
+        <antcall target="run">
+            <param name="class" value="org.teherba.dbat.Dbat" />
+            <param name="args"  value="-c worddb -m xml -e ISO-8859-1 -i words" />
         </antcall>
     </target>
-
-    <target name="test.pager">
-        <antcall target="run">
-            <param name="class" value="org.teherba.jextra.Translator"  />
-            <param name="args"  value="-xml -gener test/pager_g2.grm.xml"/>
-        </antcall>
+    <target name="test.servlet"><!-- call the web page -->
+        <exec executable="lynx">
+            <arg line="-dump http://localhost:8080/dbat/servlet?spec=spec1" />
+        </exec>
     </target>
 
 </project>

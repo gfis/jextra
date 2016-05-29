@@ -1,5 +1,6 @@
 /*  Pseudo-abstract Queue for objects to be processed recursively
     @(#) $Id: Queue.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2007-05-08: with iterator()
     2005-03-01, Georg Fischer: copied from Rule.java
 */
@@ -47,7 +48,7 @@ public abstract class Queue {
     /** index of first object not yet processed */
     protected int head;
     /** array of objects to be processed */
-    protected ArrayList elements;
+    protected ArrayList<Object> elements;
     /** Bit used to mark the queued elements: 1, 2, 4, 8, 16, etc.
      *  This implementation assumes a maximum of 31 total queues,
      *  whether they store symbols or states. 
@@ -60,19 +61,19 @@ public abstract class Queue {
      */
     protected Queue() {
         this(128);
-    }
+    } // COnstructor
     
     /** Constructor - creates a queue with specified 
      *  initial size
      *  @param initSize estimate of the number of elements in the queue
      */
     protected Queue(int initSize) {
-        elements = new ArrayList(initSize);
+        elements = new ArrayList<Object>(initSize);
         // set = new HashSet(initSize);
         head = 0;
         markBit = newMarkBit;
         newMarkBit <<= 1; 
-    }
+    } // Constructor(int)
     
     /** Constructor - creates a queue with specified name
      *  @param descr description of the queue for debugging
@@ -80,7 +81,7 @@ public abstract class Queue {
     public Queue(String descr) {
         this();
         setName(descr);
-    }
+    } // Constructor(String)
     
     /** Constructor - creates a queue with specified initial size and name
      *  @param initSize estimate of the number of elements in the queue
@@ -89,49 +90,49 @@ public abstract class Queue {
     public Queue(int initSize, String descr) {
         this(initSize);
         setName(descr);
-    }
+    } // Constructor(int, String)
     
     /** Gets the pointer to the first element not yet processed
      *  @return head of the queue
      */
     public int getHead() {
         return head;
-    }
+    } // getHead
 
     /** Gets the pointer to the first element not yet processed
      *  @return head of the queue
      */
     public int getBit() {
         return markBit;
-    }
+    } // getBit
 
     /** Gets the name of the queue
      *  @return string describing the queue's contents
      */
     public String getName() {
         return name;
-    }
+    } // getName
 
     /** Sets the name of the queue
      *  @param descr string describing the queue's contents
      */
     public void setName(String descr) {
         name = descr;
-    }
+    } // setName
 
     /** Gets the next element to be processed
      *  @return whether there are still some elements not yet processed
      */
     public boolean hasNext() {
         return head < elements.size();
-    }
+    } // hasNext
 
     /** Gets the size of the queue 
      *  @return number of occupied elements
      */
     public int size() {
         return elements.size();
-    }
+    } // size
 
     /** Gets the next element to be processed
      *  @return object from the queue
@@ -139,7 +140,7 @@ public abstract class Queue {
 /*
     public Object next() {
         return elements.get(head ++);
-    }
+    } // next
 */
     /** Gets an iterator for ALL elements of the queue
      * 	(in contrast to the elements yet to be processed)
@@ -147,7 +148,7 @@ public abstract class Queue {
      */
     public Iterator iterator() {
         return elements.iterator();
-    }
+    } // iterator
 
     /** Appends an element to the queue without checking whether the 
      *  queue already contains that element
@@ -155,7 +156,7 @@ public abstract class Queue {
      */
     protected void add(Object elem) {
         elements.add(elem);
-    }
+    } // add
 
     /** Removes all elements from the queue
      */
@@ -163,5 +164,6 @@ public abstract class Queue {
         elements.clear();
         // set.clear();
         head = 0;
-    }
-}
+    } // clear
+
+} // Queue

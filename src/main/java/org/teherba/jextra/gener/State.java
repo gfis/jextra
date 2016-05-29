@@ -1,5 +1,6 @@
 /*  A State of the LR(1) Push-Down Automaton
     @(#) $Id: State.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2005-02-17, Georg Fischer: copied from Rule.java
 */
 /*
@@ -45,9 +46,9 @@ public class State implements Comparable {
     /** the state was reached by this symbol */
     private Symbol reachingSymbol;
     /** set of states which reach this state */
-    private TreeSet predecessors;
+    private TreeSet<State> predecessors;
     /** set of items in this state */
-    private TreeSet items;
+    private TreeSet<Item> items;
     /** mark bits for set manipulation */
     private int markBits;
     /** a unique number assigned to each incarnation */
@@ -59,7 +60,7 @@ public class State implements Comparable {
      */
     public State() {
         this(null);
-    }
+    } // Constructor()
     
     /** Constructor - creates a new state 
      *  which is reached by the specified <em>symbol</em>
@@ -67,32 +68,32 @@ public class State implements Comparable {
      */
     public State(Symbol symbol) {
         id              = ident ++;
-        items           = new TreeSet();
+        items           = new TreeSet<Item>();
         markBits        = 0;
-        predecessors    = new TreeSet();
+        predecessors    = new TreeSet<State>();
         reachingSymbol  = symbol;
-    }
+    } // Constructor(symbol>
     
     /** Gets the unique identification of the state
      *  @return unique sequential number of the state
      */
     public int getId() {
         return id;
-    }
+    } // getId
 
     /** Gets the accessing symbol of the state
      *  @return the state is reached when this symbol shifted
      */
     public Symbol getReachingSymbol() {
         return reachingSymbol;
-    }
+    } // getReachingSymbol
 
     /** Sets the accessing symbol of the state
      *  @param symbol number of the symbol which reaches the state
      */
     public void setReachingSymbol(Symbol symbol) {
         reachingSymbol = symbol;
-    }
+    } // setReachingSymbol
 
     /** Gets the set of items of this state
      *  @return a sorted set of items
@@ -100,8 +101,8 @@ public class State implements Comparable {
 /*
     public TreeSet getItems() {
         return items;
-    }
-*/
+    } // getItems
+*/    
     /** Appends an item to the internal list of this state
      *  @param item item to be appended
      *  @return the number of such items previously contained in the state
@@ -109,7 +110,7 @@ public class State implements Comparable {
     public int addItem(Item item) {
         item.setState(this);
         return items.add(item) ? 0 : 1;
-    }
+    } // addItem(Item)
 
     /** Appends an item to the internal list of this state.
      *  Former name was ITEINS.
@@ -121,7 +122,7 @@ public class State implements Comparable {
         Item item = new Item(pos, prod);
         item.setState(this);
         return items.add(item) ? 0 : 1;
-    }
+    } // addItem(int, Production)
 
     /** Removes an item from the internal list of this state
      *  @param item item to be removed
@@ -129,14 +130,14 @@ public class State implements Comparable {
      */
     public int removeItem(Item item) {
         return items.remove(item) ? 1 : 0;
-    }
+    } // removeItem(Item)
 
     /** Iterates over all predecessor states
      *  @return Iterator for all predecessors of this state
      */
-    public Iterator itemIterator() {
+    public Iterator<Item> itemIterator() {
         return items.iterator();
-    }
+    } // itemIterator
 
     /** Marks the element as being appended to some queue
      *  @param queue append the element to this queue
@@ -150,7 +151,7 @@ public class State implements Comparable {
             markBits += bit;
         }
         return result;
-    }
+    } // mark
 
     /** Unmarks the element when it is removed from some queue
      *  @param queue remove the element from this queue
@@ -164,7 +165,7 @@ public class State implements Comparable {
             markBits -= bit;
         }
         return result;
-    }
+    } // unmark
 
     /** Appends a predecessor state to the internal list
      *  @param pred state to be appended
@@ -172,7 +173,7 @@ public class State implements Comparable {
      */
     public int addPredecessor(State pred) {
         return predecessors.add(pred) ? 0 : 1;
-    }
+    } // addPredecessor
 
     /** Removes a predecessor state from the internal list
      *  @param pred state to be removed
@@ -180,14 +181,14 @@ public class State implements Comparable {
      */
     public int removePredecessor(State pred) {
         return predecessors.remove(pred) ? 1 : 0;
-    }
+    } // removePredecessor
 
     /** Iterates over all predecessor states
      *  @return Iterator for all predecessors of this state
      */
-    public Iterator predIterator() {
+    public Iterator<State> predIterator() {
         return predecessors.iterator();
-    }
+    } // predIterator
 
     /** Determines whether the state contains an item
      *  which has the specified marked symbol.
@@ -202,7 +203,7 @@ public class State implements Comparable {
             result = ((Item) iter.next()).getMarkedSymbol().equals(symbol);
         } // while iterator
         return result;
-    }
+    } // hasMarkedSymbol
 
     /** Adds the closure of a set of symbols to a state, and creates
      *  corresponding new items in the state. 
@@ -224,7 +225,7 @@ public class State implements Comparable {
             } // while productions
         } // while queue not processed
         symbols.clear(); // free the entire queue, reset all marked bits
-    }
+    } // addClosure
 
     /** Computes the transition-function of the pushdown-automaton;  
      *  used by <em>Generator</em> and by <em>Parser</em>.
@@ -246,7 +247,7 @@ public class State implements Comparable {
             result = new Item(symbol, 0, Item.ERROR, this, null);
         }
         return result;
-    }
+    } // delta
     
     /** Searches for a compatible state.
      *  @param itema first item with symbol 'syma' in 'statea' = 'this'.
@@ -293,7 +294,7 @@ public class State implements Comparable {
             result = new Item(syma, 0, Item.ERROR, this, null); // ??? symbol
         }
         return stateb;
-    }
+    } // searchCOmpatibleState
     
     /** Compares this object (state1) with the specified object (state2).
      *  Ordering is by reaching symbol, item set.
@@ -316,7 +317,7 @@ public class State implements Comparable {
             }
         } // discriminate by item sets
         return result;
-    }
+    } // compareTo
     
     /** Returns a human readable description of the object
      *  @return state number and list of all items
@@ -328,7 +329,7 @@ public class State implements Comparable {
             result += "\t" + ((Item) iter.next()).legible();
         } // while hasNext
         return result;
-    }
+    } // legible
 
     /** Returns an XML description of the object
      *  @return XML element representing the item
@@ -350,10 +351,11 @@ public class State implements Comparable {
         Parm.decrIndent();
         result += Parm.getIndent() + "</state>" + Parm.getNewline();
         return result;
-    }
+    } // toString
 
     /** Test Frame
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // State

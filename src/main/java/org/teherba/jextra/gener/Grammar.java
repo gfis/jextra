@@ -1,5 +1,6 @@
 /*  LR(1) Grammar of a language and corresponding parser table
     @(#) $Id: Grammar.java 427 2010-06-01 09:08:17Z gfis $
+    2016-05-29: Java generics
     2007-05-08: relaunch with prototype states
     2005-02-10, Georg Fischer: copied from Symbol.java
 */
@@ -55,7 +56,7 @@ public class Grammar {
     /** a special nonterminal symbol which is the starting point of the grammar */
     public Symbol axiom;
     /** Maps a left side to the corresponding rule (set of productions) */
-    private HashMap ruleMap;
+    private HashMap<Symbol, Rule> ruleMap;
     /** underlying scanner with symbol table */
     private Scanner scanner;
     /** the top-most production for a fictious hyper-axiom */
@@ -64,7 +65,7 @@ public class Grammar {
     private SymbolList symbolList;
 
     /** List of generated LR(1) parser states */
-    private ArrayList states;
+    private ArrayList<State> states;
     /** the parser starts in this state */
     private State state2;
     /** the parser finishes in this state */
@@ -81,7 +82,7 @@ public class Grammar {
      */
     public Grammar() {
         this(new Scanner());
-    }
+    } // Constructor()
 
     /** Constructor - creates a new grammar with an associated scanner
      */
@@ -89,10 +90,10 @@ public class Grammar {
         scanner     = scan;
         symbolList  = scanner.getSymbolList();
         // axiom       = symbolList.put("axiom");
-        ruleMap     = new HashMap(512);
-        states      = new ArrayList(1024);
+        ruleMap     = new HashMap<Symbol, Rule>(512);
+        states      = new ArrayList<State>(1024);
         protos      = new ProtoQueue(2048);
-    }
+    } // COnstructor(Scanner)
     
     /** Allocates a minimal initial configuration with one production:
      *  <ul>
@@ -119,24 +120,24 @@ public class Grammar {
         proto0 = new ProtoState();
         proto2 = new ProtoState(proto0, prod1, prod1.size() - 1, eof, null);
         protos.push(proto2);
-    }
+    } // initializeTable
     
     /** Generates all states of the LR(1) parser PDA.
      */ 
     public void generateStates() {
-    	ProtoState result = null;
+        ProtoState result = null;
         while (protos.hasNext()) { // process every element of the queue
             ProtoState proto1 = protos.next();
             // System.out.print("qproc: " + proto1.toString());
             int pos1 = proto1.getMarkerPos() - 1; // move leftwards
             if (proto1.getSame() != null) { 
-            	// do not re-evaluate
+                // do not re-evaluate
             } else if (pos1 >= 0) { // still not before 1st member
                 Production prod1 = proto1.getProduction();
                 ProtoState proto2 = new ProtoState
                         (proto1.getHome(), prod1, pos1, proto1.getLookAhead(), proto1);
                 result = protos.merge(proto2);
-				proto1.setLeft(result);
+                proto1.setLeft(result);
                 System.out.print("push2: " + proto2.toString());
                 Symbol markedSymbol = prod1.getMember(pos1);
                 // System.out.println("markd: " + markedSymbol.toString());
@@ -153,8 +154,8 @@ public class Grammar {
                     while (iter.hasNext()) {
                         Production prodm = (Production) iter.next();
                         ProtoState protom = new ProtoState
-                        		((pos1 == 0 ? proto1.getHome() : proto2)
-								, prodm, prodm.size(), proto1.getLookAhead(), null);
+                                ((pos1 == 0 ? proto1.getHome() : proto2)
+                                , prodm, prodm.size(), proto1.getLookAhead(), null);
                         protos.merge(protom);
                         System.out.print("pushm: " + protom.toString());
                     } // while left side
@@ -164,49 +165,49 @@ public class Grammar {
             } else { // before 1st member
             }
         } // while processing queue
-    }
+    } // generateStates
     
     /** Gets the starting state for the parser
      *  @return initial state to start the parser with
      */
     public State getStartState() {
         return state2;
-    }
+    } // getStartState
 
     /** Gets the axiom (root symbol) of the grammar
      *  @return symbol for the axiom of the grammar
      */
     public Symbol getAxiom() {
         return axiom;
-    }
+    } // getAxiom
 
     /** Sets the axiom (root symbol) of the grammar
      *  @param nonterminal symbol for the axiom 
      */
     public void setAxiom(Symbol nonterminal) {
         axiom = nonterminal;
-    }
+    } // setAxiom
 
     /** Gets the scanner associated with the grammar
      *  @return scanner associated with the grammar
      */
     public Scanner getScanner() {
         return scanner;
-    }
+    } // getScanner
 
     /** Gets the symbol list of this grammar object
      *  @return symbol list
      */
     public SymbolList getSymbolList() {
         return symbolList;
-    }
+    } // getSymbolList
     
     /** Checks whether the grammar has a rule for a nonterminal
      *  @param leftSide symbol to be checked
      */
     public boolean isTerminal(Symbol leftSide) {
         return ruleMap.get(leftSide) != null;
-    }
+    } // isTerminal
 
     /** Gets the set of productions for a nonterminal
      *  @param leftSide symbol on the left side of the rule
@@ -214,7 +215,7 @@ public class Grammar {
      */
     public Rule getRule(Symbol leftSide) {
         return (Rule) ruleMap.get(leftSide);
-    }
+    } // getRule
 
     /** Inserts or replaces a rule in the set of rules;
      *  there is no check whether the rule was already stored
@@ -223,7 +224,7 @@ public class Grammar {
     public void insert(Rule rule) {
         ruleMap.put(rule.getLeftSide(), rule);
         System.out.println("irule: " + rule.getLeftSide().getEntity() + ", size=" + rule.size());
-    }
+    } // insert
 
     /** Removes all productions for a nonterminal, and thereby 
      *  transforms it into a terminal 
@@ -240,7 +241,7 @@ public class Grammar {
             ruleMap.remove(leftSide);
         }
         return found;
-    }
+    } // removeRule
 */
 
     /** Adds a production to the grammar; 
@@ -258,7 +259,7 @@ public class Grammar {
             ruleMap.put(leftSide, rule);
         }
         return rule.insert(prod);
-    }
+    } // insert(prod)
 
     /** Removes a production from the grammar;
      *  checks whether the production was already stored, and prints
@@ -275,7 +276,7 @@ public class Grammar {
             found = rule.delete(prod);
         }
         return found;
-    }
+    } // delete(prod)
 
     /** Adds a state to the table.
      *  Former name was STAALL.
@@ -287,7 +288,7 @@ public class Grammar {
         states.add(result);
         // symbol.addReachedState(result);
         return result;
-    }
+    } // allocate
 
     /** Returns a human readable representation of the object
      *  @return lines with all rules, prefixed by dots
@@ -306,7 +307,7 @@ public class Grammar {
             index ++;
         } // while hasNext
         return result + Parm.newline() + "]";
-    }
+    } // legible
 
     /** Returns an XML description of the object
      *  @return list of XML elements representing the rules
@@ -353,11 +354,12 @@ public class Grammar {
         Parm.decrIndent();
         result += Parm.getIndent() + "</grammar>" + Parm.getNewline();
         return result;
-    }
+    } // toString
 
     /**
      *  Test Frame
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // Grammar
