@@ -33,21 +33,21 @@ public class SymbolQueue extends Queue {
      */
     public SymbolQueue() {
         super();
-    }
+    } // Constructor()
     
     /** Constructor - creates a queue with specified initial size
      *  @param initSize estimate of the number of elements in the queue
      */
     public SymbolQueue(int initSize) {
         super(initSize);
-    }
+    } // Constructor(int)
     
     /** Constructor - creates a queue with specified name
      *  @param descr description of the queue for debugging
      */
     public SymbolQueue(String descr) {
         super(descr);
-    }
+    } // Constructor(String)
     
     /** Constructor - creates a queue with specified initial size and name
      *  @param initSize estimate of the number of elements in the queue
@@ -55,14 +55,14 @@ public class SymbolQueue extends Queue {
      */
     public SymbolQueue(int initSize, String descr) {
         super(initSize, descr);
-    }
+    } // Constructor(int, String)
     
     /** Gets the next element to be processed
      *  @return object from the queue
      */
     public Symbol next() {
         return (Symbol) elements.get(head ++);
-    }
+    } // next
 
     /** Appends an element to the queue if it is not yet contained in the queue
      *  @param elem element to be appended
@@ -76,7 +76,7 @@ public class SymbolQueue extends Queue {
             found = 1;
         }
         return found;
-    }
+    } // push
 
     /** Deletes the entire queue (set) after unmarking all elements 
      */
@@ -87,7 +87,7 @@ public class SymbolQueue extends Queue {
             symbol.unmark(this);
         }
         super.clear();
-    }
+    } // clear
 
     /** Test Frame
      */     

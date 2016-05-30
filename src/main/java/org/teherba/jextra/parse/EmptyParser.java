@@ -20,14 +20,14 @@
  */
 
 package org.teherba.jextra.parse;
+import  org.teherba.jextra.parse.BaseParser;
 import  org.teherba.jextra.Parm;
 import  org.teherba.jextra.gener.Table;
 import  org.teherba.jextra.gener.Grammar;
-import  org.teherba.jextra.parse.BaseParser;
 import  org.teherba.jextra.scan.Scanner;
 
 /** Test parser which reads over all symbols found,
- *  without any state transition
+ *  without any state transition-
  *  @author Dr. Georg Fischer
  */
 public class EmptyParser extends BaseParser {
@@ -39,7 +39,8 @@ public class EmptyParser extends BaseParser {
      */
     public EmptyParser(Table tab, String fileName) {
         super(tab, fileName);
-    }
+        table.initialize();
+    } // Constructor(Table, String)
 
     /**
      *  Constructor - allocate new <em>Table</em>, <em>Grammar</em> and <em>Scanner</em> objects
@@ -47,7 +48,8 @@ public class EmptyParser extends BaseParser {
      */
     public EmptyParser(String fileName) {
         super(fileName);
-    }
+        table.initialize();
+    } // Constructor(String)
 
     /**
      *  Decides whether a scanned symbol is not ignored.
@@ -55,7 +57,7 @@ public class EmptyParser extends BaseParser {
      */
     protected boolean relevant() {
         return true;
-    }
+    } // relevant
     
     /** Test Frame: read symbols, whitespace, comments and print them
      *  @param args command line arguments: 
@@ -67,4 +69,5 @@ public class EmptyParser extends BaseParser {
         EmptyParser parser = new EmptyParser(args[0]);
         parser.parse();
     } // main
-}
+
+} // EmptyParser

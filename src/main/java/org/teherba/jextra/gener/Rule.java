@@ -129,7 +129,7 @@ public class Rule {
         if (found == 0) {
             productions.add(prod);
         }
-        System.out.println("iprod left=" + leftSide.getEntity() + ", ruleSize=" + size());
+        // System.out.println("iprod left=" + leftSide.getEntity() + ", ruleSize=" + size());
         return found;
     } // insert
 

@@ -89,11 +89,11 @@ public class Grammar {
     public Grammar(Scanner scan) {
         scanner     = scan;
         symbolList  = scanner.getSymbolList();
-        // axiom       = symbolList.put("axiom");
+        axiom       = symbolList.put("axiom");
         ruleMap     = new HashMap<Symbol, Rule>(512);
         states      = new ArrayList<State>(1024);
         protos      = new ProtoQueue(2048);
-    } // COnstructor(Scanner)
+    } // Constructor(Scanner)
     
     /** Allocates a minimal initial configuration with one production:
      *  <ul>

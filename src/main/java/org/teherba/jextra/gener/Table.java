@@ -39,7 +39,7 @@ public class Table {
     public final static String CVSID = "@(#) $Id: Table.java 427 2010-06-01 09:08:17Z gfis $";
     
     /** List of generated LR(1) parser states */
-    private ArrayList states;
+    private ArrayList<State> states;
     /** States which shift a symbol */
     private HashMap shiftingStates;
     /** underlying grammar */
@@ -55,37 +55,35 @@ public class Table {
      */
     public Table() {
         this(new Grammar());
-    }
+    } // Constructor()
 
     /** Constructor - creates a new state table,
      *  and allocate a tiny initial configuration
      */
     public Table(Grammar gram) {
         grammar             = gram;
-        states              = new ArrayList(1024);
+        states              = new ArrayList<State>(1024);
         shiftingStates      = new HashMap  (1024);
         closeSymbolQueue    = new SymbolQueue();
     } // Constructor(Grammar)
 
-    /** Allocates a minimal initial configuration with one production:
+    /** Allocates a minimal initial configuration with:
      *  <ul>
      *  <li>one production: [hyperAxiom = eof axiom eof EOP]
      *  <li>a start state 2 which has the marker before the axiom
      *  <li>a final state 3 which has the marker behind the axiom and accepts it
      *  </ul>
+     *  State 1 is reserved and not used (for historical reasons)
      */ 
     public void initialize() {
         Symbol eof = grammar.getScanner().endOfFile;
-        Symbol hyperAxiom = new Symbol(grammar.getScanner()
-                .identifier.getCategory(), "HYPER_AXIOM");
+        Symbol hyperAxiom = new Symbol(grammar.getScanner().identifier.getCategory(), "HYPER_AXIOM");
         Production prod1 = new Production(hyperAxiom);
         prod1.addMember(eof);
         prod1.addMember(grammar.axiom);
         prod1.addMember(eof);
         prod1.closeMembers();
-        grammar.insert(prod1);  
-        
-        // state1 is reserved and not used (for historical reasons)
+        grammar.insert(prod1);        
         state2 = allocate(eof);
         state3 = allocate(eof);
         state3.addPredecessor(state2);
@@ -98,14 +96,14 @@ public class Table {
      */
     public State getStartState() {
         return state2;
-    }
+    } // getStartState
 
     /** Gets the grammar associated with the table
      *  @return grammar associated with the table
      */
     public Grammar getGrammar() {
         return grammar;
-    }
+    } // getGrammar
 
     /** Adds a state to the table.
      *  Former name was STAALL.
@@ -114,12 +112,10 @@ public class Table {
      */
     public State allocate(Symbol symbol) {
         State result = new State(symbol);
-    /* ???
         states.add(result);
         symbol.addReachedState(result);
-    */
         return result;
-    }
+    } // allocate
 
     /** Gets a state from the table
      *  @param id internal number of the state
@@ -127,7 +123,7 @@ public class Table {
      */
     public State get(int id) {
         return (State) states.get(id);
-    }
+    } // get
 
     // parser table generation methods -----------------------
 
@@ -148,31 +144,33 @@ public class Table {
             }
         } // while iter
         
-        if (operation > 0) {
+        if (false) {
+        } else if (operation > 0) {
             if (! found) { // may insert it
                 Symbol leftSide = prod1.getLeftSide();
                 // ??? if (rules.
             } else { // insert, but already there
                 Parm.alert(16);
             }
-        } // insertion
-        else if (operation < 0) {
+            // insertion
+        } else if (operation < 0) {
             if (found) { // may delete it
                 // ??? deletion not yet
             } else { // delete, but not there
                 Parm.alert(54);
             }
-        } // deletion
+            // deletion
+        } 
         // else operation == 0 -> wrong call
         return found;
-    }
+    } // changeProduction
     
     /** Determines the look-ahead symbols 
      *  for all productions of all states in the queue
      */
     public void getLookAheadSymbols() {
         // nyi ???
-    }
+    } // getLookAheadSymbols
     
     /** (Re-)computes all successors of a set of states
      *  @param states compute the successors for the states in this set
@@ -207,7 +205,7 @@ public class Table {
             } // while reached States
         } // while symbols
     */
-    }
+    } // recomputeSuccessorStates
     
     /** Deletes an item from a state
      *  @param state state from which the item should be deleted
@@ -219,7 +217,7 @@ public class Table {
         boolean result = false; // assume failure
         // nyi ???
         return result;
-    }
+    } // deleteItem
 
     /** Inserts an item in a state.
      *  Former name was ITEINS.
@@ -232,7 +230,7 @@ public class Table {
         boolean result = false; // assume failure
         // nyi ???
         return result;
-    }
+    } // insertItem
 
     /** Insert all (new) productions of a symbol in the table.
      *  Former name was SYMINS.
@@ -267,31 +265,31 @@ public class Table {
             } // while reached States
         } // while symbols
         return changed;
-    }
+    } // insertSymbols
 
     /** Propagate the symbols of all states in the queue 
      */
     public void putLookAheadSymbols() {
         // nyi ???
-    }
+    } // putLookAheadSymbols
     
     /** Garbage collection for items
      */
     public void purgeItems() {
         // nyi ???
-    }
+    } // purgeItems
 
     /** Garbage collection for states
      */
     public void purgeStates() {
         // nyi ???
-    }
+    } // purgeStates
 
     /** Garbage collection for look-ahead symbols
      */
     public void purgeLookAheadSymbols() {
         // nyi ???
-    }
+    } // purgeLookAheadSymbols
     
     /** Tries to resolve conflicts
      *  @return number of remaining conflicts
@@ -300,7 +298,7 @@ public class Table {
         int result = 0;
         // nyi ???
         return result;
-    }
+    } // resolveConflicts
     
     // generic methods ----------------------------------------------
     /** Returns a human readable description of the object
@@ -318,7 +316,7 @@ public class Table {
             exc.printStackTrace();
         } // try - catch
         return result;
-    }
+    } // legible
 
     /** Returns an XML description of the object
      *  @return list of XML elements representing the states
@@ -338,10 +336,11 @@ public class Table {
         Parm.decrIndent();
         result += Parm.getIndent() + "</table>";
         return result;
-    }
+    } // toString
 
     /** Test Frame
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // Table

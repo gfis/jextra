@@ -63,7 +63,7 @@ public class BaseParser {
         table   = tab;
         grammar = table.getGrammar();
         scanner = grammar.getScanner();
-    }
+    } // Constructor(Table, String)
 
     /** Constructor - allocate new <em>Table</em>, <em>Grammar</em> and <em>Scanner</em> objects
      *  @param fileName path/name of the source file, "" = STDIN
@@ -72,22 +72,21 @@ public class BaseParser {
         scanner = new Scanner(Scanner.LANG_BNF, fileName); 
         grammar = new Grammar(scanner);
         table   = new Table(grammar);
-    }
+    } // Constructor(String)
 
     /** Gets the grammar associated with the parser's table
-     *  @return grammar associated with the parser's table
+     *  @return  grammar associated with the parser's table
      */
     public Grammar getGrammar() {
         return grammar;
-    }
+    } // getGrammar
 
     /** Gets the parser's table
      *  @return table with state set and grammar
      */
     public Table getTable() {
         return table;
-    }
-
+    } // getTable
     
     /** Reads from input and 
      *  parses the (next) sentence of the grammar's language.
@@ -110,19 +109,19 @@ public class BaseParser {
             System.out.println(Parm.getIndent() + "</Parser>");
         }
         return accepted;
-    }
+    } // parse
     
     /** May initialize the parser, for example by reading
      *  a scanner interface
      */
     protected void initialize() {   
         symbol = scanner.scan(); // terminal or (later) also: nonterminal
-    }
+    } // initialize
     
     /** Terminates the parser
      */
     protected void terminate() {    
-    }
+    } // terminate
     
     /** Reads the input file and parses all symbols;
      *  assumes that the first symbol is already read in.
@@ -152,7 +151,7 @@ public class BaseParser {
             &&  category != scanner.space.getCategory()
             &&  category != scanner.endOfLine.getCategory()
             ;
-    }
+    } // relevant
     
     /** Determines the next state of the parser. 
      *  This dummy version reads over all symbols without 
@@ -161,15 +160,21 @@ public class BaseParser {
      *  was (not yet) accepted  
      */
     protected boolean transition() {
-        if (Parm.isDebug(3)) {
-                System.out.println(Parm.getIndent()
-                        + "<scan state=\"" + state.getId() 
-                        + "\">" 
-                        + symbol.toString()
-                        + "</scan>");
-        }
+        try {
+            if (Parm.isDebug(3)) {
+                    System.out.println(Parm.getIndent()
+                            + "<scan state=\"" + state.getId() 
+                            + "\">" 
+                            + symbol.toString()
+                            + "</scan>");
+            }
+        } catch (Exception exc) {
+            System.err.println("BaseParser.transition: state=" + state + ", symbol=" + symbol);
+            System.err.println(exc.getMessage());
+            exc.printStackTrace();
+        } // try - catch
         return false;
-    }
+    } // transition
     
     /** Issues a parser error message
      *  @param stateId number of the state which doesn't expect this symbol
@@ -179,6 +184,6 @@ public class BaseParser {
         System.out.println("<error state=\"" + state.getId() 
                 + "\" sym=\"" + symbol.getEntity() + "\" />"
                 + Parm.getNewline());
-    }
+    } // error
 
-}
+} // BaseParser

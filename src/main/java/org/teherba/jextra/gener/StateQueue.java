@@ -36,7 +36,7 @@ public class StateQueue extends Queue {
      */
     public StateQueue() {
         super();
-    }
+    } // Constructor()
     
     /**
      *  Constructor - creates a queue with specified initial size
@@ -44,7 +44,7 @@ public class StateQueue extends Queue {
      */
     public StateQueue(int initSize) {
         super(initSize);
-    }
+    } // Constructor(int)
 
     /**
      *  Constructor - creates a queue with specified name
@@ -52,7 +52,7 @@ public class StateQueue extends Queue {
      */
     public StateQueue(String descr) {
         super(descr);
-    }
+    } // Constructor(String)
     
     /**
      *  Constructor - creates a queue with specified initial size and name
@@ -61,7 +61,7 @@ public class StateQueue extends Queue {
      */
     public StateQueue(int initSize, String descr) {
         super(initSize, descr);
-    }
+    } // Constructor(int, String)
         
     /**
      *  Gets the next element to be processed
@@ -69,7 +69,7 @@ public class StateQueue extends Queue {
      */
     public State next() {
         return (State) elements.get(head ++);
-    }
+    } // next
 
     /**
      *  Appends an element to the queue if it is not yet contained in the queue
@@ -80,12 +80,11 @@ public class StateQueue extends Queue {
         int found = 0;
         if (elem.mark(this) == 0) { // not found
             add(elem);
-        }
-        else {
+        } else {
             found = 1;
         }
         return found;
-    }
+    } // push
 
     /**
      *  Deletes the entire queue (set) after unmarking all elements 
@@ -95,9 +94,9 @@ public class StateQueue extends Queue {
         while (hasNext()) { // unmark all elements 
             State state = next();
             state.unmark(this);
-        }
+        } // while
         super.clear();
-    }
+    } // clear
 
     //------------------------------------------------------------
     /**
@@ -105,15 +104,16 @@ public class StateQueue extends Queue {
      */     
     public static void main (String args[]) { 
         Table table = new Table();
+        // table.initialize();
         StateQueue queue = new StateQueue("test");
         for (int index = 0; index < 8; index ++) {
             String entity = "S" + index;
             Symbol elem = new Symbol(entity);
-            System.out.println("push " + entity + ": " 
-                    + queue.push(table.allocate(elem))
-                    + " @ " + queue.getHead()
-                    );
-        }
+            State state = table.allocate(elem);
+            int found   = queue.push(state);
+            System.out.println("enqueue symbol " + entity + ": " + found + " @ " + queue.getHead());
+        } // for index
+    /*
         for (int index = 0; index < 8; index += 4) {
             State state = table.get(index);
             System.out.println("push2 " 
@@ -126,5 +126,7 @@ public class StateQueue extends Queue {
             System.out.println("next elem: " 
                     + queue.next().getReachingSymbol().getEntity());
         }
+    */
     } // main
-}
+
+} // StateQueue

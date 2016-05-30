@@ -21,17 +21,16 @@
  */
 
 package org.teherba.jextra.parse;
+import  org.teherba.jextra.parse.BaseParser;
 import  org.teherba.jextra.Parm;
 import  org.teherba.jextra.gener.Grammar;
 import  org.teherba.jextra.gener.Item;
 import  org.teherba.jextra.gener.Production;
 import  org.teherba.jextra.gener.State;
 import  org.teherba.jextra.gener.Table;
-import  org.teherba.jextra.parse.BaseParser;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
 import  org.teherba.jextra.trans.SemAction;
-
 import  java.util.ArrayList;
 
 /** LR(1) Parser - recognizes the language of a context-free

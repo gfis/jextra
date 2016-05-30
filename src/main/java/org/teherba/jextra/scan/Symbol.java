@@ -90,7 +90,7 @@ public class Symbol implements Comparable {
         entity          = ent;
         index           = 0;
         markBits        = 0;
-        reachedStates   = null;
+        reachedStates   = new TreeSet<State>();
         rule            = null;
     } // Constructor(int, String)
     

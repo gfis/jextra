@@ -1,0 +1,65 @@
+#!java -cp dist/jextra.jar org.teherba.common.RegressionTester
+
+# Collection of Testcases for JExtra
+# @(#) $Id: all.tca 955 2012-06-05 07:22:59Z gfis $
+# 2016-05-30, Dr. Georg Fischer
+#-----------------------------------
+# Caution:
+# 
+#======================================================================
+PACKAGE=org.teherba.jextra.scan
+
+ECHO 000
+
+TEST SL1 SymbolList
+DATA
+ The
+ word
+ der
+ gets
+ symbol number
+ 2
+ .
+ Dies
+ ist
+ der
+ Test
+ der
+ Klasse
+ SymbolList
+ der
+ die
+ korrekte
+ Speicherung
+ der
+ Symbole
+ in
+ der
+ SymbolList
+ zeigt
+ .
+CALL SymbolList $(DATA)
+
+TEST SC1 Scanner
+CALL Scanner data/meta.grm
+
+#======================================================================
+PACKAGE=org.teherba.jextra.gener
+
+TEST SQ1 SymbolQueue
+CALL SymbolQueue
+
+TEST SQ2 StateQueue
+CALL StateQueue
+#======================================================================
+PACKAGE=org.teherba.jextra.parse
+
+TEST PP1 ProtpParser metagrammar
+DATA
+CALL ProtoParser data/meta.grm
+
+TEST PP2 ProtoParser sasb
+CALL ProtoParser data/sasb.grm
+
+TEST EP1 EmptyParser metagrammar
+CALL EmptyParser data/meta.grm

@@ -58,7 +58,7 @@ public class State implements Comparable {
     
     /** No-args Constructor - creates a new state
      */
-    public State() {
+    private State() {
         this(null);
     } // Constructor()
     
@@ -109,6 +109,7 @@ public class State implements Comparable {
      */
     public int addItem(Item item) {
         item.setState(this);
+        // System.err.println("State#addItem, item=" + item);
         return items.add(item) ? 0 : 1;
     } // addItem(Item)
 
