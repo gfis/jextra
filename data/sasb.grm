@@ -1,0 +1,8 @@
+/* Test grammar, example 2.5-5, page 39           */
+/* Show the abbreviated/linearized state diagram  */
+/* Dr. Georg Fischer 1980-08-01                   */
+/*------------------------------------------------*/  
+EOF IDENTIFIER NUMBER STRING ;
+[S = S a S b
+   | 
+]

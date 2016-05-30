@@ -198,13 +198,12 @@ public class Item implements Comparable {
      */
     public int compareTo(Object obj2) {
         Item item2 = (Item) obj2;
-        int result = this.getMarkedSymbol().compareTo(item2.getMarkedSymbol()); 
-                // order 1 by marked symbols
+        int result = this.getMarkedSymbol().compareTo(item2.getMarkedSymbol()); // order 1 by marked symbols
         if (result == 0) {
-            result = this.production.compareTo(item2.getProduction()); 
-                    // order 2 by productions
+            result = this.production.compareTo(item2.getProduction()); // order 2 by productions
             if (result == 0) { // order 3 by position
-                if (this.position < item2.getPosition()) {
+                if (false) {
+                } else if (this.position < item2.getPosition()) {
                     result = -1;
                 } else if (this.position > item2.getPosition()) {
                     result =  1;
@@ -213,7 +212,7 @@ public class Item implements Comparable {
             } // discriminate by positions
         } // discriminate by productions
         return result;
-    }
+    } // compareTo
     
     /** Returns a human readable description of the object
      *  @return "@ symbol -> successor" or "@ symbol =: leftside" 
@@ -243,4 +242,5 @@ public class Item implements Comparable {
      */     
     public static void main (String args[]) { 
     } // main
+    
 } // Item

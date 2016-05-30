@@ -150,7 +150,7 @@ public class ProtoState implements Comparable {
     }
 
     /** Sets the lookahead symbol of the prototype state
-     *  @param lookAhead set this lookahead symbol
+     *  @param symbol set this lookahead symbol
      */
     public void setLookAhead(Symbol symbol) {
         lookAhead = symbol;
@@ -218,26 +218,26 @@ public class ProtoState implements Comparable {
      *  @return -1 | 0 | +1 if protoState1 < | = | > protoState2
      */
     public int compareTo(Object obj2) {
-    	ProtoState proto2 = (ProtoState) obj2;
+        ProtoState proto2 = (ProtoState) obj2;
         Production prod2 = proto2.getProduction();
         int result = prod.compareTo(prod2); 
         if (result == 0) {
-        	// System.out.print(" prod=");
+            // System.out.print(" prod=");
             int pos2 = proto2.getMarkerPos();
             if (markerPos == pos2) {
-	        	// System.out.print(" markerPos=");
+                // System.out.print(" markerPos=");
                 result = lookAhead.getEntity().compareTo(proto2.getLookAhead().getEntity());
-				if (result == 0) {
-		        	// System.out.print(" lookAhead=");
-		        	result = home.getHome().getId() - proto2.getHome().getHome().getId();
-				}				
+                if (result == 0) {
+                    // System.out.print(" lookAhead=");
+                    result = home.getHome().getId() - proto2.getHome().getHome().getId();
+                }               
             } else if (markerPos < pos2) {
                 result = -1;
             } else {
                 result = 1;
             } // else result == 0
         } else {
-        	// System.out.print(" prod<>");
+            // System.out.print(" prod<>");
         }
         // System.out.println();
         return result;
@@ -277,4 +277,5 @@ public class ProtoState implements Comparable {
      */     
     public static void main (String args[]) { 
     } // main
-}
+
+} // ProtoState

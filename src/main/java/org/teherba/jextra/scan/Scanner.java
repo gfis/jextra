@@ -26,7 +26,7 @@ import  org.teherba.jextra.scan.SymbolList;
 import  java.util.ArrayList;
 
 /** Reads lines from the input source file,
- *  and return individual terminal symbols to the parser
+ *  and returns individual terminal symbols to the parser
  *  @author Dr. Georg Fischer
  */
 public class Scanner {
@@ -56,7 +56,7 @@ public class Scanner {
         symbolList  = new SymbolList();
         initSpecial();
         initCategories();
-    }
+    } // Constructor()
 
     /**	Constructor - initializes the Scanner
      *  @param lang source file programming language
@@ -68,7 +68,7 @@ public class Scanner {
         symbolList  = new SymbolList();
         initSpecial();
         initCategories();
-    }
+    } // Constructor(String, String)
     /*----------------------------------------------------------------*/
     /** Character class of the current character */
     private byte code;
@@ -101,7 +101,7 @@ public class Scanner {
             char ch = (char) (0xff & str.charAt(pos));
             codeTable[ch] = code;
         } // for pos
-    }
+    } // assignCode
 
     /**
      *  Initializes the code table
@@ -119,7 +119,7 @@ public class Scanner {
                             +   "_");
         assignCode (QUOTE,      "\'");
         assignCode (DOUBLE_QUOTE,   "\"");
-    }
+    } // initCode
     /*----------------------------------------------------------------*/
     /** Symbols for interpunctuation, with fixed entities */
     public Symbol arrow     ; // before transformation
@@ -167,7 +167,7 @@ public class Scanner {
         slashStar   = symbolList.putSpecial("/*");
         starSlash   = symbolList.putSpecial("*/");
         slashSlash  = symbolList.putSpecial("//");
-    } 
+    } // initSpecial
     /*----------------------------------------------------------------*/
     /** Category of the current symbol */
     private int category;
@@ -194,7 +194,7 @@ public class Scanner {
         identifier  = symbolList.put("IDENTIFIER");
         number      = symbolList.put("NUMBER");
         string      = symbolList.put("STRING");
-    } 
+    } // initCategories
     /*----------------------------------------------------------------*/
     /** Current state of the Finite State Automaton */
     private int state;

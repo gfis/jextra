@@ -40,7 +40,7 @@ import  java.util.TreeSet;
 public class Symbol implements Comparable {
     public final static String CVSID = "@(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $";
     
-    /** category of symbol: identfier, number, string, nonterminal 
+    /** category of the symbol: identfier, number, string, nonterminal 
      *  (that is the index of another symbol which was previously 
      *  allocated)
      */
@@ -72,14 +72,14 @@ public class Symbol implements Comparable {
      */
     public Symbol() {
         this(0, "");
-    }
+    } // Constructor()
     
     /** Constructor - creates a new symbol with entity
      *  @param ent entity (string) of the symbol
      */
     public Symbol(String ent) {
         this(0, ent);
-    }
+    } // Constructor(String)
     
     /** Constructor - creates a new symbol with entity and category
      *  @param ent entity (string) of the symbol
@@ -92,49 +92,49 @@ public class Symbol implements Comparable {
         markBits        = 0;
         reachedStates   = null;
         rule            = null;
-    }
+    } // Constructor(int, String)
     
     /** Gets the category of the symbol: identifier, number etc.
      *  @return codes for identifier, number, string etc.
      */
     public int getCategory() {
         return category;
-    }
+    } // getCategory
 
     /** Sets the category of the symbol: identifier, number etc.
      *  @param value category to be set
      */
     public void setCategory(int value) {
         category = value;
-    }
+    } // setCategory
 
     /** Gets the entity (string) of the symbol
      *  @return string, content, name of the symbol
      */
     public String getEntity() {
         return entity;
-    }
+    } // getEntity
 
     /** Sets the entity (string) of the symbol
      *  @param value string, content, name of the symbol
      */
     public void setEntity(String value) {
         entity = value;
-    }
+    } // setEntity
 
     /** Gets the symbol's internal number in a symbol table
      *  @return index in symbol table
      */
     public int getId() {
         return index;
-    }
+    } // getId
 
     /** Sets the symbol's internal number in a symbol table
      *  @param id index to be assigned
      */
     public void setId(int id) {
         index = id;
-    }
+    } // setId
 
     /** Marks the element as being appended to some queue
      *  @param queue append the element to this queue
@@ -148,7 +148,7 @@ public class Symbol implements Comparable {
             markBits += bit;
         }
         return result;
-    }
+    } // mark
 
     /** Unmarks the element when it is removed from some queue
      *  @param queue remove the element from this queue
@@ -162,7 +162,7 @@ public class Symbol implements Comparable {
             markBits -= bit;
         }
         return result;
-    }
+    } // unmark
 
     /** Gets rule for which the nonterminal is the left side,
      *  or null if it is a terminal
@@ -170,7 +170,7 @@ public class Symbol implements Comparable {
      */
     public Rule getRule() {
         return rule;
-    }
+    } // getRule
 
     /** Sets rule for which the nonterminal is the left side,
      *  (or null if it is a terminal)
@@ -178,7 +178,7 @@ public class Symbol implements Comparable {
      */
     public void setRule(Rule rule) {
         this.rule = rule;
-    }
+    } // setRule
 
     /** Gets the numerical value from an entities name
      *  @return numerical value of the entity
@@ -193,7 +193,7 @@ public class Symbol implements Comparable {
             result = 0;
         } 
         return result;
-    }
+    } // getNumericValue
 
     /** Appends a reached state to the internal set
      *  @param state state to be appended
@@ -201,7 +201,7 @@ public class Symbol implements Comparable {
      */
     public int addReachedState(State state) {
         return reachedStates.add(state) ? 0 : 1;
-    }
+    } // addReachedState
 
     /** Removes a reached state from the internal set
      *  @param state state to be removed
@@ -209,14 +209,14 @@ public class Symbol implements Comparable {
      */
     public int removeReachedState(State state) {
         return reachedStates.remove(state) ? 1 : 0;
-    }
+    } // removeReachedState
 
     /** Iterates over all reached states
      *  @return Iterator for states reached by this symbol
      */
     public Iterator reachedIterator() {
         return reachedStates.iterator();
-    }
+    } //reachedIterator
 
     /** Compares this object (symbol1) with the specified object (symbol2)
      *  @param obj2 symbol on the right side
@@ -236,21 +236,21 @@ public class Symbol implements Comparable {
             // else 'return' is already 0
         } // discriminate by categories
         return result;
-    }
+    } // compareTo
     
     /** Gets the length of the symbol's entity (string)
      *  @return length of string
      */
     public int length() {
         return entity.length();
-    }
+    } // length
 
     /** Returns a human readable representation of the object
      *  @return the entity of the symbol, for strings enclosed in single quotes
      */
     public String legible() {
         return entity.replaceAll("\n", "\\\\n");
-    }
+    } // legible
 
     /** Returns an XML description of the object
      *  @return XML string representing the object
@@ -259,7 +259,7 @@ public class Symbol implements Comparable {
         return "<sym id=\"" + index + "\""
                 + " cat=\"" + category + "\""
                 + " ent=\"" + entity.replaceAll("\n", "\\\\n") + "\" />";
-    }
+    } // toString
 
     /** Test Frame
      */     

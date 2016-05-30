@@ -65,7 +65,7 @@ public class Table {
         states              = new ArrayList(1024);
         shiftingStates      = new HashMap  (1024);
         closeSymbolQueue    = new SymbolQueue();
-    }
+    } // Constructor(Grammar)
 
     /** Allocates a minimal initial configuration with one production:
      *  <ul>
@@ -89,9 +89,9 @@ public class Table {
         state2 = allocate(eof);
         state3 = allocate(eof);
         state3.addPredecessor(state2);
-        state2.addItem(new Item(grammar.axiom, 1, Item.SHIFT , state3, null ));
-        state3.addItem(new Item(eof          , 2, Item.ACCEPT, null,   prod1));     
-    }
+        state2.addItem(new Item(grammar.axiom, 1, Item.SHIFT , state3,   prod1));     // prod1 was null
+        state3.addItem(new Item(eof          , 2, Item.ACCEPT, state3,   prod1));     // state3 was null
+    } // initialize
     
     /** Gets the starting state for the parser
      *  @return initial state to start the parser with

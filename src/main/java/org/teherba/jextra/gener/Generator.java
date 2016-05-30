@@ -47,22 +47,20 @@ public class Generator {
     private Table table;
 
     /** No-args Constructor - creates a new generator for a grammar
-     *  @param gram operate on this <em>Grammar</em> and 
-     *  correpsonding parser table
      */
     public Generator() {
         grammar = new Grammar();
         table = new Table(grammar);
-    }
+    } // Constructor()
 
     /** Constructor - creates a new generator for a grammar
      *  @param gram operate on this <em>Grammar</em> and 
-     *  correpsonding parser table
+     *  corresponding parser table
      */
     public Generator(Grammar gram) {
         grammar = gram;
         table = new Table(grammar);
-    }
+    } // Constructor(Grammar)
 
     /** Reorganizes the parser table after a change of a set of 
      *  productions
@@ -83,7 +81,7 @@ public class Generator {
         table.putLookAheadSymbols();
         table.purgeItems();
         table.resolveConflicts();
-    }
+    } // reorganize
 
     //------------------------------------------------------------
     /**

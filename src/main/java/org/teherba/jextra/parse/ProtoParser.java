@@ -70,7 +70,7 @@ public class ProtoParser extends BaseParser {
      */
     public ProtoParser(String fileName) {
         super(fileName);
-    }
+    } // Constructor(String)
 
     /** Initialize the parser by reading
      *  a scanner interface
@@ -94,7 +94,7 @@ public class ProtoParser extends BaseParser {
         prod = new Production();
         leftSide = symbol; 
         state = LEFT_SIDE; 
-    }
+    } // initialize
 
     /** Determines the next state of the parser. 
      *  @return true (false) if the sentence of the language 
@@ -184,7 +184,7 @@ public class ProtoParser extends BaseParser {
         System.out.println(Parm.getIndent()
                 + "<store prev=\"" + grammar.insert(prod) + "\" />"
                 );
-    }
+    } // store
     
     /** Test Frame: read a grammar and print all productions
      *  @param args command line arguments: 
@@ -198,4 +198,5 @@ public class ProtoParser extends BaseParser {
         System.out.println(parser.getGrammar().legible());
         System.out.println(parser.getTable().legible());
     } // main
-}
+
+} // ProtoParser

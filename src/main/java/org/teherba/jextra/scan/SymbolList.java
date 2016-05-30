@@ -265,7 +265,7 @@ public class SymbolList {
         try {
             String line = lineReader.nextLine();
             while (! lineReader.isAtEof()) { // read 1 symbol per line
-                symbolList.append(line);
+                symbolList.append(line.trim());
                 Symbol symbol = symbolList.map(0);
                 System.out.print (symbol.toString());
                 if (line.length() > 0
