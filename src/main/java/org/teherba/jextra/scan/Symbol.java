@@ -45,27 +45,17 @@ public class Symbol implements Comparable {
      *  allocated)
      */
     private int category;
-
     /** denotes the symbol: identifier, nonterminal's name, number value,
      *  string of interpunctuation characters
      */
     private String entity;
-    
-    /** internal number of the symbol in a symbol table
-     */
+    /** internal number of the symbol in a symbol table */
     private int index;
-    
-    /** mark bits for set manipulation 
-     */
+    /** mark bits for set manipulation */
     private int markBits;
-    
-    /** set of states reached by this symbol
-     */
+    /** set of states reached by this symbol*/
     private TreeSet<State> reachedStates;
-
-    /** rule with this symbol as the left side (for nonterminals,
-     *  null for terminals)
-     */
+    /** rule with this symbol as the left side (for nonterminals, null for terminals) */
     private Rule rule;
     
     /** No-args Constructor - creates a new symbol
@@ -249,7 +239,13 @@ public class Symbol implements Comparable {
      *  @return the entity of the symbol, for strings enclosed in single quotes
      */
     public String legible() {
-        return entity.replaceAll("\n", "\\\\n");
+        String result = entity
+                .replaceAll("\n", "\\\\n") 
+                .replaceAll("&", "&amp;") 
+                .replaceAll("<", "&lt;") 
+                .replaceAll(">", "&gt;") 
+                ;
+        return Character.isLetterOrDigit(result.charAt(0)) ? result : "\'" + result + "\'";
     } // legible
 
     /** Returns an XML description of the object
@@ -257,8 +253,13 @@ public class Symbol implements Comparable {
      */
     public String toString() {
         return "<sym id=\"" + index + "\""
-                + " cat=\"" + category + "\""
-                + " ent=\"" + entity.replaceAll("\n", "\\\\n") + "\" />";
+                + " cat=\"" + category + "\">"
+                + entity
+                .replaceAll("\n", "\\\\n") 
+                .replaceAll("&", "&amp;") 
+                .replaceAll("<", "&lt;") 
+                .replaceAll(">", "&gt;") 
+                + "</sym>";
     } // toString
 
     /** Test Frame

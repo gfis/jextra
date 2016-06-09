@@ -1,5 +1,6 @@
 /*  Parm.java - System Parameters
     @(#) $Id: Parm.java 427 2010-06-01 09:08:17Z gfis $
+    2016-06-08: fixed NEWLINE; Franzi = 2
     2007-05-04: incrIndent and decrIndent can be used in string expressions
     2005-02-16, Georg Fischer
 */
@@ -36,7 +37,7 @@ public class Parm {
     /** type of operating system
      */
     private static int operatingSystem; 
-    private static final int UNIX = 1;
+    private static final int UNIX    = 1;
     private static final int WINDOWS = 2;
 
     /** level of indenting for XML output */
@@ -59,14 +60,14 @@ public class Parm {
             System.err.println(exc.getMessage());
             exc.printStackTrace();
         }
-    }
+    } // static
 
     /** Returns the version number of the system
      *  @return current version number
      */
     public static String getVersion() {
-        return "1.0";
-    }
+        return "1.1";
+    } // getVersion
 
     /** Returns the value of a parameter
      *  @param name name of parameter
@@ -78,7 +79,7 @@ public class Parm {
             result = "";
         }
         return result;
-    }
+    } // get
 
     /** Returns the integer value of a parameter
      *  @param name name of parameter
@@ -96,36 +97,35 @@ public class Parm {
             exc.printStackTrace();
         }
         return result;
-    }
+    } // getInt
 
     /** Gets the system dependant line separator string (CR/LF or LF)
      *  @return newline string, "\n" on Unix
      */
     public static String getNewline() {
         return newline();
-    }
+    } // getNewline
 
     /** Gets the system dependant line separator string (CR/LF or LF)
      *  @return newline string, "\n" on Unix
      */
     public static String newline() {
-        return System.getProperty("line.separator");
-    }
+        return "\n"; // System.getProperty("line.separator");
+    } // newline
 
     /** Gets an XML declaration
      *  @return XML declaration
      */
-    public static String getXmlDeclaration() {
-        return "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>"
-            +   getNewline();
-    }
+    public static String getXMLDeclaration() {
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
+    } // getXMLDeclaration
 
     /** Gets the leading whitespace for indented XML output 
      *  @return a sequence of tab characters
      */
     public static String getIndent() {
         return indent;
-    }
+    } // getIndent
 
     /** Increments the leading whitespace for indented XML output 
      *  @return empty string
@@ -133,7 +133,7 @@ public class Parm {
     public static String incrIndent() {
         indent += "  ";
         return "";
-    }
+    } // incrIndent
 
     /** Decrements the leading whitespace for indented XML output 
      *  @return empty string
@@ -143,15 +143,14 @@ public class Parm {
             indent = indent.substring(2); // remove 1 indentation level
         }
         return "";
-    }
+    } // decrIndent
 
     /** Prints an error message about some system assertion
      *  @param message number of the message
      */
     public static void alert(int message) {
-        System.err.println("<assert id=\"" + message + "\""
-                + " />");
-    }
+        System.err.println("<assert id=\"" + message + "\"" + " />");
+    } // alert(1)
 
     /** Prints an error message about some system assertion
      *  @param message number of the message
@@ -162,7 +161,7 @@ public class Parm {
         System.err.println("<assert id=\"" + message + "\""
                 + " parm1=\"" + parm1 + "\""
                 + " parm2=\"" + parm2 + "\" />");
-    }
+    } // alert(3)
 
     /** Determines whether a specified debugging level is in effect
      *  @param level level of debugging: 0 = none, 1 = some, 2 = more ...
@@ -175,12 +174,10 @@ public class Parm {
             if (value != null) {
                 result = Integer.parseInt(value) >= level;
             }
-        } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
+        } catch (Exception exc) { // ignore
         }
         return result;
-    }
+    } // isDebug
 
     /** Test aid: show all system parameters
      *  @param args command line arguments
@@ -190,9 +187,10 @@ public class Parm {
             System.out.println("java.version=" + System.getProperty("java.version"));
             System.out.println("os.name=" + System.getProperty("os.name"));
             
-            for (int iargs = 0; iargs < args.length; iargs ++) {
-                System.out.println(args[iargs] 
-                        + "=" + Parm.get(args[iargs]));
+            int iargs = 0; 
+            while (iargs < args.length) {
+                System.out.println(args[iargs] + "=" + Parm.get(args[iargs]));
+                iargs ++;
             } // for iargs
             System.out.println();
             Iterator iter = parameters.keySet().iterator();
@@ -204,5 +202,6 @@ public class Parm {
             System.err.println(exc.getMessage());
             exc.printStackTrace();
         }
-    }
-}
+    } // main
+    
+} // Parm

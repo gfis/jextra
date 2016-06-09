@@ -39,20 +39,7 @@ public class Production implements Comparable {
     public final static String CVSID = "@(#) $Id: Production.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** a special symbol indicating the end of a production */
-    public static final Symbol EOP = new Symbol();
-    
-    /** (number of) left hand symbol of the production (nonterminal)
-     */
-    private Symbol leftSide;
-    
-    /** list of symbols (their numbers) on the right side of the
-     *  production (maybe empty), terminated by EOP
-     */
-    private ArrayList<Symbol> members;
-    
-    /** list of semantic actions for this production
-     */
-    private ArrayList<SemAction> semantics;
+    public static final Symbol EOP = new Symbol(0, "EOP");
     
     /** No-args Constructor - creates a new production
      */
@@ -70,12 +57,50 @@ public class Production implements Comparable {
         semantics   = new ArrayList<SemAction>(16);
     } // Constructor(symbol)
     
+    //---------------------------------
+    /** sequential number */
+    private int id;
+    
+    /** Gets the sequential number
+     *  of the production
+     */
+    public int getId() {
+        return id;
+    } // getId
+    /** Sets the sequential number of the production
+     *  @param id set this int
+     */
+    public void setId(int id) {
+        this.id = id;
+    } // setId
+    //---------------------------------
+    /** (number of) left hand symbol of the production (nonterminal) */
+    private Symbol leftSide;
     /** Gets the left side (number of nonterminal symbol) 
      *  of the production
      */
     public Symbol getLeftSide() {
         return leftSide;
     } // getLeftSide
+    /** Sets the left side of the production
+     *  @param nonterminal symbol on the left side (nonterminal)
+     */
+    public void setLeftSide(Symbol nonterminal) {
+        leftSide = nonterminal;
+    } // setLeftSide
+    //---------------------------------
+    /** list of symbols (their numbers) on the right side of the
+     *  production (maybe empty), terminated by EOP
+     */
+    private ArrayList<Symbol> members;
+    
+    /** Appends a symbol to the right side of the production
+     *  @param member symbol on the right side (terminal or
+     *  nonterminal)
+     */
+    public void addMember(Symbol member) {
+        members.add(member);
+    } // addMember
 
     /** Gets a member on the right side by its position
      *  @param position index of the desired member, starting at 0,
@@ -100,21 +125,16 @@ public class Production implements Comparable {
         return getMember(0);
     } // getFirstMember
 
-    /** Sets the left side of the production
-     *  @param nonterminal symbol on the left side (nonterminal)
+    /** Terminates the right side (member list) of the production
      */
-    public void setLeftSide(Symbol nonterminal) {
-        leftSide = nonterminal;
-    } // setLeftSide
+    public void closeMembers() {
+        addMember(EOP);
+    } // closeMembers
 
-    /** Appends a symbol to the right side of the production
-     *  @param member symbol on the right side (terminal or
-     *  nonterminal)
-     */
-    public void addMember(Symbol member) {
-        members.add(member);
-    } // addMember
-
+    //---------------------------------
+    /** list of semantic actions for this production */
+    private ArrayList<SemAction> semantics;
+    
     /** Appends a semantic action
      *  @param sema semantic action to be appended
      */
@@ -122,18 +142,12 @@ public class Production implements Comparable {
         semantics.add(sema);
     } // addSemantic
 
-    /** Terminates the right side (member list) of the production
-     */
-    public void closeMembers() {
-        addMember(EOP);
-    } // closeMembers
-
     /** Terminates the list of semantic actions for the production
      */
     public void closeSemantics() {
         addSemantic(new SemAction(SemAction.EOS, 0));
-    } // clsoeSemantics
-
+    } // closeSemantics
+    //---------------------------------
     /** Compares this object (prod1) with the specified object (prod2).
      *  Ordering is by left side, common member substring and length
      *  @param obj2 production on the right side
@@ -177,30 +191,22 @@ public class Production implements Comparable {
         return members.size() - 1; // EOP is not counted
     } // size
 
-    /** Returns a human readable representation of the production
+    /** Returns a human readable representation of this {@link Production}
      *  @return string of symbols on the right side, separated and
      *  prefixed with 1 blank
      */
     public String legible() {
-        String result = leftSide.getEntity() + " =";
-        Iterator<Symbol> iter = members.iterator();
-        while (iter.hasNext()) {
-            Symbol member = iter.next();
-            if (member != EOP) {
-                result += " " + member.getEntity();
-            }
-        } // while hasNext
-        return result;
+        return legible(-1); // will never be reached as marker position
     } // legible
 
-    /** Returns a human readable representation of the production
+    /** Returns a human readable representation of this {@link Production}
      *  with a marker before a position
      *  @param position index of member to be marked (0 = first)
      *  @return string of symbols on the right side, separated and
      *  prefixed with 1 blank
      */
     public String legible(int position) {
-        String result = leftSide.getEntity() + " =";
+        String result = "";
         Iterator<Symbol> iter = members.iterator();
         int index = 0;
         while (iter.hasNext()) {
@@ -209,7 +215,7 @@ public class Production implements Comparable {
                 result += " @";
             }
             if (member != EOP) {
-                result += " " + member.getEntity();
+                result += " " + member.legible();
             }
             index ++;
         } // while hasNext

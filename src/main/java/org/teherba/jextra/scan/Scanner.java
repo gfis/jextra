@@ -122,6 +122,7 @@ public class Scanner {
     } // initCode
     /*----------------------------------------------------------------*/
     /** Symbols for interpunctuation, with fixed entities */
+    public Symbol eop       ; // dummy symbol at the end of productions
     public Symbol arrow     ; // before transformation
     public Symbol bar       ; // separates productions
     public Symbol equals    ; // between left and right side of a rule
@@ -147,6 +148,7 @@ public class Scanner {
      *  Initializes predefined, constant operator symbols
      */
     public void initSpecial() {
+        eop         = symbolList.putSpecial("EOP");
         arrow       = symbolList.putSpecial("=>");
         bar         = symbolList.putSpecial("|");
         equals      = symbolList.putSpecial("=");
@@ -171,29 +173,32 @@ public class Scanner {
     /*----------------------------------------------------------------*/
     /** Category of the current symbol */
     private int category;
+    
     /** Symbol categories - symbols which do not stand for themselves */
-    public Symbol endOfFile     ;
-    public Symbol endOfLine     ;
-    public Symbol eolComment    ;
-    public Symbol identifier    ;
-    public Symbol nestComment   ;
-    public Symbol number        ;
-    public Symbol space         ;
-    public Symbol string        ;
+//  public symbol endOfProduction;
+    public Symbol endOfFile      ;
+    public Symbol endOfLine      ;
+    public Symbol eolComment     ;
+    public Symbol identifier     ;
+    public Symbol nestComment    ;
+    public Symbol number         ;
+    public Symbol space          ;
+    public Symbol string         ;
     
     /** Initializes predefined symbols - primaries -
      *  which do not stand for themselves, 
      *  in a fixed order
      */
     public void initCategories() {
-        endOfFile   = symbolList.put("EOF");
-        endOfLine   = symbolList.put("EOL");
-        space       = symbolList.put("SPACE");
-        nestComment = symbolList.put("NESTCOM");
-        eolComment  = symbolList.put("EOLCOM");
-        identifier  = symbolList.put("IDENTIFIER");
-        number      = symbolList.put("NUMBER");
-        string      = symbolList.put("STRING");
+    //  endOfProduction = symbolList.put("EOP");
+        endOfFile       = symbolList.put("EOF");
+        endOfLine       = symbolList.put("EOL");
+        space           = symbolList.put("SPACE");
+        nestComment     = symbolList.put("NESTCOM");
+        eolComment      = symbolList.put("EOLCOM");
+        identifier      = symbolList.put("IDENTIFIER");
+        number          = symbolList.put("NUMBER");
+        string          = symbolList.put("STRING");
     } // initCategories
     /*----------------------------------------------------------------*/
     /** Current state of the Finite State Automaton */
@@ -601,29 +606,29 @@ public class Scanner {
     /** Print a list of all symbols for debugging purposes
      */
     private void dumpSymbols() {
-        if (DEBUG >= 1) {
-            for (int index = 0; index < symbolList.size(); index ++) {
-                int category = symbolList.get(index).getCategory();
-                System.out.println("Symbol " 
-                        + index 
-                        + ", category " + symbolList.get(category).getEntity()
-                        + "\t\"" + symbolList.get(index).getEntity() + "\""
-                        );
-            } // for index
-        } // DEBUG          
+        if (Parm.isDebug(1)) {
+            int index = 0; 
+            while (index < symbolList.size()) {
+                Symbol symbol = symbolList.get(index);
+                System.out.println(symbol.toString());
+                index ++;
+            } // while index
+        } // debug         
     } // dumpSymbols
 
     /** Test Frame: read lines and print them
      */     
     public static void main (String args[]) { 
+        System.out.println(Parm.getXMLDeclaration());
+        System.out.println("<mainScanner>");
         Scanner scanner = new Scanner(LANG_BNF, args[0]);
-        scanner.dumpSymbols();
         while (! scanner.isAtEof()) { // read 1 symbol per line
-            Symbol localSymbol = scanner.scan();
-            System.out.println(localSymbol.toString());
+            Symbol symbol = scanner.scan();
+            System.out.println(symbol.toString());
         } // while notEof
-        scanner.dumpSymbols();
+        System.out.println(scanner.getSymbolList().toString());
         scanner.terminate();
+        System.out.println("</mainScanner>");
     } // main
     
 } // Scanner

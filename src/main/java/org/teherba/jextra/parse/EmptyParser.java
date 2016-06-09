@@ -42,8 +42,7 @@ public class EmptyParser extends BaseParser {
         table.initialize();
     } // Constructor(Table, String)
 
-    /**
-     *  Constructor - allocate new <em>Table</em>, <em>Grammar</em> and <em>Scanner</em> objects
+    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public EmptyParser(String fileName) {
@@ -51,8 +50,7 @@ public class EmptyParser extends BaseParser {
         table.initialize();
     } // Constructor(String)
 
-    /**
-     *  Decides whether a scanned symbol is not ignored.
+    /** Decides whether a scanned symbol is not ignored.
      *  @return true (false) if the symbol is (not) relevant
      */
     protected boolean relevant() {

@@ -24,7 +24,7 @@ import  org.teherba.jextra.Parm;
 import  org.teherba.jextra.scan.LineReader; // in main, for testing
 import  org.teherba.jextra.scan.Symbol;
 import  java.util.ArrayList;
-import  java.util.HashMap;
+import  java.util.TreeMap;
 import  java.util.Iterator;
 
 /** Maintains a storage of parser symbols:
@@ -45,15 +45,12 @@ public class SymbolList {
     /** maps entities (strings) to <em>Integer</em> indexes of the 
      *  corresponding entries in <em>symbolList</em>
      */
-    private HashMap<String, Symbol> entityMap; 
+    private TreeMap<String, Symbol> entityMap; 
     
-    /** array of symbols, indexed by symbol number, stores <em>Symbol</em>s
-     */
+    /** array of symbols, indexed by symbol number, stores {@link Symbol}s */
     private ArrayList<Symbol> symbolList;
 
-    /** array of indexes of special symbols, indexed by symbol number
-     *  stores <em>Integer</em>s
-     */
+    /** array of indexes of special symbols, indexed by symbol number, stores {@link Symbol}s */
     private ArrayList<Symbol> specialList; 
     //--------------------------------------------------------- 
     /** Constructor - creates a new, empty symbol list
@@ -65,7 +62,7 @@ public class SymbolList {
             System.err.println(exc.getMessage());
             exc.printStackTrace();;
         } // catch
-        entityMap   = new HashMap<String, Symbol> (1024);
+        entityMap   = new TreeMap<String, Symbol> ();
         specialList = new ArrayList<Symbol>       (64);
         symbolList  = new ArrayList<Symbol>       (1024);
     } // Constructor()
@@ -194,8 +191,8 @@ public class SymbolList {
     } // put(category, String)
     //--------------------------------------------------------- 
     /** Stores a sequence of special characters as a new symbol, and
-     *  remembers it in the <em>specialList</em>; it will not be found
-     *  by <em>map</em>
+     *  remembers it in the {@link #specialList}; it will not be found
+     *  by {@link map}
      *  @param special string to be stored
      *  @return the new symbol
      */
@@ -207,7 +204,7 @@ public class SymbolList {
 
     /** Tries to match a prefix of the parameter with the 
      *  longest sequence of special characters
-     *  in <em>specialList</em>, and to return the index of the 
+     *  in {@link specialList}, and to return the index of the 
      *  corresponding symbol. 
      *  @param str string to be matched, may be longer as 
      *  the symbol found
@@ -250,31 +247,26 @@ public class SymbolList {
                     +  Parm.getNewline();
         } // while hasNext
         Parm.decrIndent();
-        result += Parm.getIndent() + "</symbolList>" + Parm.getNewline();
+        result += Parm.getIndent() + "</symbolList>";
         return result;
     } // toString
 
-    /** -----------------------------------------------------------
-     *  Test Frame: reads a text file with 1 symbol per line,
+    //-------------------------------------------------------
+    /** Test Frame: reads a text file with 1 symbol per line,
      *  stores and prints the symbols
      *  @param args name of text file to be read
      */     
     public static void main (String args[]) { 
         LineReader lineReader = new LineReader(args[0]); 
         SymbolList symbolList = new SymbolList();
+        System.out.println(Parm.getXMLDeclaration());
+        System.out.println("<mainSymbolList>");
         try {
             String line = lineReader.nextLine();
             while (! lineReader.isAtEof()) { // read 1 symbol per line
                 symbolList.append(line.trim());
                 Symbol symbol = symbolList.map(0);
-                System.out.print (symbol.toString());
-                if (line.length() > 0
-                    && Character.isDigit(line.charAt(0))) {
-                    System.out.print("<numerical value=\"" 
-                            + symbol.getNumericalValue()
-                            + "\" />");
-                }
-                System.out.println();
+                System.out.println(symbol.toString());
                 line = lineReader.nextLine();
             } // while notEof
             lineReader.close();
@@ -283,6 +275,7 @@ public class SymbolList {
             exc.printStackTrace();
         } // try
         System.out.println(symbolList.toString());
+        System.out.println("</mainSymbolList>");
     } // main
 
 } // SymbolList

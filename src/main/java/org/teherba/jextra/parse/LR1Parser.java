@@ -54,7 +54,7 @@ public class LR1Parser extends BaseParser {
         state = table.getStartState();
     } // Constructor(Table, String)
 
-    /** Constructor - allocate new <em>Table</em>, <em>Grammar</em> and <em>Scanner</em> objects
+    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public LR1Parser(String fileName) {

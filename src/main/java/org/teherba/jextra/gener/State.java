@@ -52,8 +52,8 @@ public class State implements Comparable {
     /** mark bits for set manipulation */
     private int markBits;
     /** a unique number assigned to each incarnation */
-    private static int ident = 2;
-    /** the unique number assigned to this object */
+    private static int currentId = 2;
+    /** the unique number assigned to <em>this</em> object */
     private int id;
     
     /** No-args Constructor - creates a new state
@@ -67,7 +67,7 @@ public class State implements Comparable {
      *  @param symbol which reaches the state
      */
     public State(Symbol symbol) {
-        id              = ident ++;
+        id              = currentId ++;
         items           = new TreeSet<Item>();
         markBits        = 0;
         predecessors    = new TreeSet<State>();

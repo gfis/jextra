@@ -306,15 +306,15 @@ public class Table {
      */
     public String legible() {
         String result = "";
-        try {
-            Iterator iter = states.iterator();
-            while (iter.hasNext()) {
-                result += ((State) iter.next()).legible() + Parm.getNewline();
-            } // while index
-        } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
-        } // try - catch
+        Iterator<State> iter = states.iterator();
+        int index = 0;
+        while (iter.hasNext()) {
+            if (index > 0) {
+                result += Parm.getNewline();
+            }
+            result += iter.next().legible();
+            index ++;
+        } // while index
         return result;
     } // legible
 

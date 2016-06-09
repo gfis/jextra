@@ -36,21 +36,21 @@ import  java.util.Iterator;
  */
 public class Rule {
     public final static String CVSID = "@(#) $Id: Rule.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** left hand symbol of the production (nonterminal)
      */
     private Symbol leftSide;
-    
+
     /** list of productions (empty for terminal left side)
      */
     private ArrayList<Production> productions;
-    
+
     /** No-args Constructor - creates a new rule
      */
     public Rule() {
         this(new Symbol());
     } // Constructor()
-    
+
     /** Constructor - creates a new, empty rule
      *  for left side <em>symbol</em>
      *  @param symbol on the left side (nonterminal)
@@ -58,10 +58,10 @@ public class Rule {
     public Rule(Symbol symbol) {
         leftSide    = symbol;
         leftSide.setRule(this);
-        productions = new ArrayList<Production>(8);
+        productions = new ArrayList<Production>(4);
     } // Constructor(Symbol>
-    
-    /** Gets the left hand side (number of nonterminal symbol) 
+
+    /** Gets the left hand side (number of nonterminal symbol)
      *  of the production
      *  @return symbol on the left side of all productions
      */
@@ -70,20 +70,19 @@ public class Rule {
     } // getLeftSide
 
     /** Sets the left hand side of the production
-     *  @param nonterminal symbol on the left side 
+     *  @param nonterminal symbol on the left side
      */
     public void setLeftSide(Symbol nonterminal) {
         leftSide = nonterminal;
     } // setLeftSide
 
-    /** Gets all productions in this rule 
+    /** Gets all productions in this rule
      *  @return productions for the same left side
      */
-/*
-    public ArrayList getProductions() {
+    public ArrayList<Production> getProductions() {
         return productions;
     } // getProductions
-*/
+
     /** Returns an iterator over all productions of the rule.
      *  @return productions for the same left side
      */
@@ -98,44 +97,40 @@ public class Rule {
         return productions.size();
     } // size
 
-    /** Appends a production to the internal list
+    /** Appends a production unconditionally to the internal list
      *  @param prod production to be appended
      */
-/*
     public void add(Production prod) {
         if (prod.getLeftSide() != leftSide) {
             Parm.alert(200);
         }
         productions.add(prod);
     } // add
-*/
-    /** Inserts a production in the internal list
+
+    /** Inserts a production in the internal list if it is not yet stored
      *  @param prod production to be inserted
      *  @return number of such productions already stored
      */
     public int insert(Production prod) {
         int found = 0; // assume none found
-    /*
         if (prod.getLeftSide() != leftSide) {
             Parm.alert(200);
         }
-        Iterator iter = productions.iterator();
-        while (iter.hasNext()) {
-            if (((Production) iter.next()).compareTo(prod) == 0) {
+        Iterator<Production> iter = productions.iterator();
+        while (iter.hasNext()) { // search
+            if (iter.next().compareTo(prod) == 0) { // already stored
                 found ++;
-            }
-        }
-    */
+            } // already stored
+        } // while searching
         if (found == 0) {
             productions.add(prod);
         }
-        // System.out.println("iprod left=" + leftSide.getEntity() + ", ruleSize=" + size());
         return found;
     } // insert
 
     /** Removes a production from the internal list
      *  @param prod production to be removed
-     *  @return number of such productions that were found
+     *  @return number of such productions which were found
      */
     public int delete(Production prod) {
         int found = 0; // assume none found
@@ -143,17 +138,16 @@ public class Rule {
             Parm.alert(200);
         }
         int index = 0;
-        while (index < productions.size()) {
-            if (((Production) productions.get(index)).compareTo(prod) == 0) {
+        while (index < productions.size()) { // search
+            if (productions.get(index).compareTo(prod) == 0) {
                 found ++;
                 productions.remove(index); // there might be several ones
-            }
+            } // found
             index ++;
-        }
+        } // while searching
         if (productions.size() == 0) { // no productions left
-            leftSide.setRule(null); 
-                    // throw rule, turn symbol into terminal
-        }
+            leftSide.setRule(null); // throw rule, turn symbol into terminal
+        } // none left
         return found;
     } // delete
 
@@ -164,30 +158,26 @@ public class Rule {
     public String legible() {
         String result = leftSide.getEntity() + " =" ;
         int index = 0;
-        while (index < productions.size()) {
-            if (index == 0) {
-                result += ((Production) productions.get(index)).legible();
-            } else {
-                result += "\t| " 
-                        + ((Production) productions.get(index)).legible();
+        Iterator<Production> iter = this.iterator();
+        while (iter.hasNext()) {
+            if (index > 0) {
+            	result += Parm.newline() + "\t| ";
             }
-            result += Parm.newline();
+            result += iter.next().legible();
             index ++;
-        }
+        } // while iter
         return result;
     } // legible
 
-    /** Returns an XML description of the object
+    /** Returns an XML description of this {@link Rule}
      *  @return list of XML elements representing the productions
      */
     public String toString() {
-        String newline = System.getProperty("line.separator");
-        String result = Parm.getIndent() + "<rule left=\"" + leftSide.getEntity() 
-                + "\">" + Parm.getNewline();
+        String result = Parm.getIndent() + "<rule left=\"" + leftSide.getEntity() + "\">" + Parm.getNewline();
         Parm.incrIndent();
-        Iterator iter = productions.iterator();
+        Iterator<Production> iter = this.iterator();
         while (iter.hasNext()) {
-            result += ((Production) iter.next()).toString();
+            result += iter.next().toString();
         } // while hasNext
         Parm.decrIndent();
         result += Parm.getIndent() + "</rule>";
@@ -196,8 +186,8 @@ public class Rule {
 
     //------------------------------------------------------------
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     */
+    public static void main (String args[]) {
     } // main
 
 } // Rule
