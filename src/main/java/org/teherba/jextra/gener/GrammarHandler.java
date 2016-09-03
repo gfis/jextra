@@ -45,7 +45,7 @@ public class GrammarHandler extends ExtraTransformer {
         setDescription("Parser Generator");
         setFileExtensions("grm");
         putEntityReplacements();
-    }
+    } // Constructor()
     
     //////////////////////
     // SAX event generator
@@ -58,7 +58,7 @@ public class GrammarHandler extends ExtraTransformer {
         boolean result  = false;
         log.error("GrammarHandler cannot read input files");
         return  result;
-    }
+    } // generate
 
     //////////////////////
     // SAX content handler 
@@ -74,9 +74,7 @@ public class GrammarHandler extends ExtraTransformer {
     private Symbol leftSide;
     /** whether in semantic translation part of the production */
     private boolean inTrans;
-    
-    /** underlying grammar which results from the processed SAX events
-     */
+    /** underlying grammar which results from the processed SAX events */
     private Grammar grammar;
     
     /** Gets the grammar which results from the processed SAX events
@@ -84,7 +82,7 @@ public class GrammarHandler extends ExtraTransformer {
      */
     public Grammar getGrammar() {
         return grammar;
-    }
+    } // getGrammar
     
     /** Receive notification of the beginning of the document.
      */
@@ -93,7 +91,7 @@ public class GrammarHandler extends ExtraTransformer {
         openElement = "";
         ruleCount   = 0;
         inTrans     = false;
-     }
+    } // startDocument
     
     /** Process the grammar which was built from the SAX events
      */
@@ -101,7 +99,7 @@ public class GrammarHandler extends ExtraTransformer {
         grammar.initializeTable();
         grammar.generateStates();
         System.out.println(grammar.toString());
-    }
+    } // processGrammar
     
     /** Receive notification of the start of an element.
      *  Looks for the element which contains raw lines.
@@ -141,8 +139,8 @@ public class GrammarHandler extends ExtraTransformer {
             lineBuffer.setLength(0);
             inTrans = true;
         } // else ignore unknown elements
-    }
-    
+    } // startElement
+     
     /** Receive notification of the end of an element.
      *  Looks for the element which contains raw lines.
      *  Terminates the line.
@@ -172,9 +170,9 @@ public class GrammarHandler extends ExtraTransformer {
                 rule = new Rule();
                 rule.setLeftSide(leftSide);
                 leftSide.setRule(rule);
-	            if (ruleCount <= 1) {
-    	            grammar.setAxiom(leftSide);
-        	    }
+                if (ruleCount <= 1) {
+                    grammar.setAxiom(leftSide);
+                }
             }
         } else if (qName.equals(PROD_TAG   )) { 
             prod.closeMembers();
@@ -201,7 +199,7 @@ public class GrammarHandler extends ExtraTransformer {
             sym = grammar.getSymbolList().map(lineBuffer.toString());
         } else if (qName.equals(TRANS_TAG  )) { 
         } // else ignore unknown elements
-    }
+    } // endElement
     
     /** Receive notification of character data inside an element.
      *  @param ch the characters.
@@ -222,5 +220,5 @@ public class GrammarHandler extends ExtraTransformer {
             String text = replaceInResult(new String(ch, start, len));
             lineBuffer.append(text.replaceAll("\'","\'\'"));
         } // else ignore whitespace around unknown elements
-    }
-}
+    } // characters
+} // GrammarHandler

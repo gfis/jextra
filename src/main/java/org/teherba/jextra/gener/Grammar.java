@@ -260,6 +260,7 @@ public class Grammar {
             rule.insert(prod);
         } // expand
         ruleMap.put(leftSide, rule);
+        leftSide.setRule(rule);
         return rule.insert(prod);
     } // insert(prod)
 
@@ -297,15 +298,18 @@ public class Grammar {
      */
     public String legible() {
         String result = "[";
-        Iterator<Symbol> siter = ruleMap.keySet().iterator();
+        Iterator<Symbol> siter = symbolList.iterator();
         int index = 0;
         while (siter.hasNext()) {
             Symbol leftSide = siter.next();
-            if (index > 0) {
-                result += Parm.newline() + ".";
-            }
-            result += ruleMap.get(leftSide).legible();
-            index ++;
+            Rule rule = leftSide.getRule();
+            if (rule != null) { // nonterminal
+                if (index > 0) {
+                    result += Parm.newline() + ".";
+                }
+                result += rule.legible();
+                index ++;
+            } // nonterminal
         } // while hasNext
         return result + Parm.newline() + "]";
     } // legible

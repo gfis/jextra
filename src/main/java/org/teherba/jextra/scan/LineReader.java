@@ -1,4 +1,4 @@
-/*  read source file lines
+/*  Read source file lines
     @(#) $Id: LineReader.java 427 2010-06-01 09:08:17Z gfis $
     2005-01-24, Georg Fischer: copied from CheckAccount.java
 */
@@ -28,22 +28,22 @@ import  java.io.InputStreamReader;
  */
 public class LineReader {
     public final static String CVSID = "@(#) $Id: LineReader.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** tells whether the End Of File was detected */
     boolean atEof = false;
-    
+
     /** current column in <em>line</em>, 0, 1 ... */
-    private int column = 1; // behind 'line'    
-    
+    private int column = 1; // behind 'line'
+
     /** current line from source file, or null at EOF */
     private String line = "";
-    
+
     /** sequential number of the line: 1, 2 ... */
     public int lineNumber = 0;
-    
+
     /** Reader for the source file */
-    BufferedReader reader; 
-    
+    BufferedReader reader;
+
     /** Constructor - Initialize the LineReader, open a source file
      *  @param fileName path/name of the source file, "" = STDIN
      */
@@ -52,9 +52,9 @@ public class LineReader {
         lineNumber = 0;
         column = 1; // behind 'line'
         atEof = false;
-        try { 
+        try {
             reader = new BufferedReader(
-                    (fileName == null || fileName.length() <= 0) 
+                    (fileName == null || fileName.length() <= 0 || fileName.equals("-"))
                     ? new InputStreamReader(System.in)
                     : new FileReader (fileName)
                     );
@@ -62,9 +62,9 @@ public class LineReader {
             System.err.println(exc.getMessage());
             exc.printStackTrace();;
         } // catch
-    }
+    } // Constructor(fileName)
 
-    /** Reads and returns next source line, and 
+    /** Reads and returns next source line, and
      *  increments the <em>lineNumber</em>
      *  @return source line as String
      */
@@ -80,50 +80,50 @@ public class LineReader {
             exc.printStackTrace();
         } // try
         column = 0;
-        lineNumber ++; 
+        lineNumber ++;
         return line;
-    }
+    } // nextLine
 
     /** Gets the entire current line
      *  @return source line as String
      */
     public String getLine() {
         return line;
-    }
+    } // getLine
 
     /** Gets the current column in <em>line</em>: 0, 1 ...
      *  @return column number 0, 1 ...
      */
     public int getColumn() {
         return column;
-    }
+    } // getColumn
 
     /** Sets the current column in <em>line</em>: 0, 1 ...
      *  @param col new column number
      */
     public void setColumn(int col) {
         column = col;
-    }
+    } // setColumn
 
     /** Reads (consumes) the next character from the line buffer
      */
     public void advance() {
-        column ++;      
-    }
-    
+        column ++;
+    } // advance()
+
     /** Reads (consumes) some characters from the line buffer
      *  @param columns number of characters to be consumed
      */
     public void advance(int columns) {
-        column += columns;      
-    }
-    
+        column += columns;
+    } // advance(int)
+
     /** Gets the current line number: 1, 2 ...
      *  @return line number 1, 2 ...
      */
     public int getLineNumber() {
         return lineNumber;
-    }
+    } // getLineNumber
 
     /** Gets a substring from the current <em>line</em>,
      *  starting at the current <em>column</em>
@@ -131,7 +131,7 @@ public class LineReader {
      */
     public String getSubstring() {
         return line.substring(column);
-    }
+    } // getSubstring()
 
     /** Gets a substring from the current <em>line</em>
      *  @param start first position in <em>line</em>
@@ -139,7 +139,7 @@ public class LineReader {
      */
     public String getSubstring(int start) {
         return line.substring(start);
-    }
+    } // getSubstring(int)
 
     /** Gets a substring from the current <em>line</em>
      *  @param start first position in <em>line</em>
@@ -153,7 +153,7 @@ public class LineReader {
             behind = len;
         }
         return line.substring(start, behind);
-    }
+    } // getSubstring(int, int)
 
     /** Gets the next character in the input file, '\n'
      *  at the End Of Line (also for empty lines),
@@ -164,8 +164,8 @@ public class LineReader {
         char result = lookAt();
         advance();
         return result;
-    }
-    
+    } // nextChar
+
     /** Gets the next character in the input file, '\n'
      *  at the End Of Line (also for empty lines),
      *  and possibly sets the EOF flag, but don't <em>advance</em>
@@ -176,22 +176,22 @@ public class LineReader {
         char result;
         if (column >  line.length()) { // behind line
             nextLine();
-        } 
-        
+        }
+
         if (column == line.length()) { // at EOL
             result = '\n';
-        } else { // in line 
-            result = line.charAt(column);           
+        } else { // in line
+            result = line.charAt(column);
         }
         return result;
-    }
-    
+    } // lookAt
+
     /** Tells whether the reader has reached the End Of File
-     *  @return true if reader is at EOF, false otherwise 
+     *  @return true if reader is at EOF, false otherwise
      */
     public boolean isAtEof() {
         return atEof;
-    }
+    } // isAtEof
 
     /** Destructor - Terminate the LineReader, close its source file
      */
@@ -202,22 +202,22 @@ public class LineReader {
             System.err.println(exc.getMessage());
             exc.printStackTrace();
         } // try
-    }
+    } // close
     //--------------------------------------------------------------
     /**
      *  Test Frame: read lines and print them
      *  @param args command line arguments: "{-l|-c} filename"
-     */     
-    public static void main (String args[]) { 
+     */
+    public static void main (String args[]) {
         LineReader testReader = new LineReader(args[1]);
         if (args[0].startsWith("-l")) {
-            String line; 
+            String line;
             while (! testReader.isAtEof()) {
                 line = testReader.nextLine();
                 System.out.println(testReader.getLineNumber() + "\t" + line);
             } // while
         } else { // -c
-            char char1; 
+            char char1;
             int charNumber = 0;
             while (! testReader.isAtEof()) {
                 char1 = testReader.nextChar();
@@ -226,4 +226,4 @@ public class LineReader {
             } // while
         }
     } // main
-}
+} // LineReader

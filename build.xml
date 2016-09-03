@@ -2,6 +2,7 @@
 <!--
     ant-buildfile for commandline and web application
     @(#) $Id: bfb160b42e4807f6c45c2e455d983904452f16ff $
+    2016-09-02: properties ${tomcat.*}, core.jar
     2016-05-29, Georg Fischer: copied from checkdig
 -->
 <!--
@@ -52,6 +53,17 @@
             </fileset>
         </copy>
     -->
+    </target>
+
+    <target name="core.jar">
+        <!-- without libraries, without web files 
+        <jar jarfile="${dist.home}/${ant.project.name}-core.jar"
+                basedir="${build.classes}"
+                manifest="${build.classes}/META-INF/MANIFEST.MF"
+                excludes="web/** **/web/*.class **/*Servlet.class"
+                >
+        </jar>
+        -->
     </target>
 
     <target name="test">

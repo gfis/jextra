@@ -38,25 +38,23 @@ import  java.util.Iterator;
  */
 public class SymbolList {
     public final static String CVSID = "@(#) $Id: SymbolList.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** internal temporary buffer for strings of new entities **/
     private StringBuffer buffer = new StringBuffer(1024); // usually longer than any source line
-    
-    /** maps entities (strings) to <em>Integer</em> indexes of the 
-     *  corresponding entries in <em>symbolList</em>
-     */
-    private TreeMap<String, Symbol> entityMap; 
-    
+
+    /** maps entities (strings) to the corresponding entries in {@link #symbolList} */
+    private TreeMap<String, Symbol> entityMap;
+
     /** array of symbols, indexed by symbol number, stores {@link Symbol}s */
     private ArrayList<Symbol> symbolList;
 
     /** array of indexes of special symbols, indexed by symbol number, stores {@link Symbol}s */
-    private ArrayList<Symbol> specialList; 
-    //--------------------------------------------------------- 
+    private ArrayList<Symbol> specialList;
+    //---------------------------------------------------------
     /** Constructor - creates a new, empty symbol list
      */
     public SymbolList() {
-        try { 
+        try {
             buffer.setLength(0);
         } catch (Exception exc) {
             System.err.println(exc.getMessage());
@@ -66,36 +64,36 @@ public class SymbolList {
         specialList = new ArrayList<Symbol>       (64);
         symbolList  = new ArrayList<Symbol>       (1024);
     } // Constructor()
-    //--------------------------------------------------------- 
-    /** Appends a character to the internal entity buffer 
+    //---------------------------------------------------------
+    /** Appends a character to the internal entity buffer
      *  for later mapping
      *  @param ch character to be appended
      */
     public void append(char ch) {
         buffer.append(ch);
     } // append(char)
-    
-    /** Appends a string of characters to the internal entity buffer 
+
+    /** Appends a string of characters to the internal entity buffer
      *  for later mapping
      *  @param str string to be appended
      */
     public void append(String str) {
         buffer.append(str);
     } // append(String>
-    //--------------------------------------------------------- 
+    //---------------------------------------------------------
     /** Tries to map the entity (String) in the internal buffer
      *  to one of the entities stored so far
-     *  @return index of previously stored symbol, 
+     *  @return index of previously stored symbol,
      *  or of a new symbol if not found
      */
     public Symbol map() {
         return map(0);
     } // map()
-    
+
     /** Tries to map the entity (string) in the internal buffer
      *  to one of the entities stored so far
      *  @param category category of the new symbol
-     *  @return index of previously stored symbol, 
+     *  @return index of previously stored symbol,
      *  or of a new symbol if not found
      */
     public Symbol map(int category) {
@@ -103,22 +101,22 @@ public class SymbolList {
         buffer.setLength(0); // start assembly of next entity
         return symbol;
     } // map(category)
-    
+
     /** Tries to map the parameter entity (string)
      *  to one of the entities stored so far
      *  @param str entity (identifier, number and so on) to be mapped
-     *  @return index of previously stored symbol, 
+     *  @return index of previously stored symbol,
      *  or of a new symbol if not found
      */
     public Symbol map(String str) {
         return map(0, str);
     } // map(String)
-    
+
     /** Tries to map the parameter entity (string)
      *  to one of the entities stored so far
      *  @param category category of the new symbol
      *  @param str entity (identifier, number and so on) to be mapped
-     *  @return index of previously stored symbol, 
+     *  @return index of previously stored symbol,
      *  or of a new symbol if not found
      */
     public Symbol map(int category, String str) {
@@ -137,15 +135,15 @@ public class SymbolList {
         } // not found
         return symbol;
     } // map(category, String)
-    //--------------------------------------------------------- 
-    /** Gets a symbol via its index in the symbol list
+    //---------------------------------------------------------
+    /** Gets a {@link Symbol} via its index in the symbol list
      *  @param index number of the symbol
      *  @return symbol with that index in the symbol list
      */
     public Symbol get(int index) {
         return symbolList.get(index);
     } // get
-    //--------------------------------------------------------- 
+    //---------------------------------------------------------
     /** Stores a new symbol without trying to map it to a
      *  previously stored symbol
      *  @return a new symbol
@@ -153,7 +151,7 @@ public class SymbolList {
     public Symbol put() {
         return put(0);
     } // put()
-    
+
     /** Stores a new symbol without trying to map it to a
      *  previously stored symbol
      *  @param category category of the new symbol
@@ -164,7 +162,7 @@ public class SymbolList {
         buffer.setLength(0); // start assembly of next entity
         return symbol;
     } // put(category)
-    
+
     /** Stores a new symbol without trying to map it to a
      *  previously stored symbol
      *  @param str entity to be stored
@@ -189,10 +187,10 @@ public class SymbolList {
         symbolList.add(symbol);
         return symbol;
     } // put(category, String)
-    //--------------------------------------------------------- 
+    //---------------------------------------------------------
     /** Stores a sequence of special characters as a new symbol, and
      *  remembers it in the {@link #specialList}; it will not be found
-     *  by {@link map}
+     *  by {@link #map}
      *  @param special string to be stored
      *  @return the new symbol
      */
@@ -202,11 +200,11 @@ public class SymbolList {
         return symbol;
     } // putSpecial
 
-    /** Tries to match a prefix of the parameter with the 
+    /** Tries to match a prefix of the parameter with the
      *  longest sequence of special characters
-     *  in {@link specialList}, and to return the index of the 
-     *  corresponding symbol. 
-     *  @param str string to be matched, may be longer as 
+     *  in {@link #specialList}, and to return the index of the
+     *  corresponding symbol.
+     *  @param str string to be matched, may be longer as
      *  the symbol found
      *  @return index of the special symbol, or -1 if not found
      */
@@ -225,25 +223,45 @@ public class SymbolList {
         // System.out.println ("[mapS(" + str + "):" + result.toString() + "]");
         return result;
     } // mapSpecial
-    
+
     /** Gets the number of symbols allocated so far
      *  @return number of symbols allocated so far
      */
     public int size() {
         return symbolList.size();
     } // size
-    
+
+    /** Gets an Iterator over all {@link Symbol}s in this SymbolList
+     *  @return an Iterator
+     */
+    public Iterator<Symbol> iterator() {
+        return symbolList.iterator();
+    } // iterator
+
     /** Returns a human readable description of the object
      *  @return list of XML elements representing the symbols in the list
      */
     public String toString() {
-        String 
+        String
         result = Parm.getIndent() + "<symbolList>" + Parm.getNewline();
         Parm.incrIndent();
-        Iterator<Symbol> iter = symbolList.iterator();
+        Iterator<Symbol> iter = this.iterator();
         while (iter.hasNext()) {
-            result  += Parm.getIndent() 
-                    +  iter.next().toString() 
+            Symbol symb = iter.next();
+            int category = symb.getCategory();
+            Symbol catSymb = this.get(category);
+            String catEnt  = catSymb.getEntity();
+            result += Parm.getIndent()
+                    + "<sym id=\"" + symb.getId() + "\""
+                    + " cat=\"" + String.valueOf(category) + "\""
+                    + (Character.isLetter(catEnt.charAt(0)) ? " type=\"" + catEnt + "\"" : "")
+                    + ">"
+                    + symb.getEntity()
+                        .replaceAll("\n", "\\\\n")
+                        .replaceAll("&", "&amp;")
+                        .replaceAll("<", "&lt;")
+                        .replaceAll(">", "&gt;")
+                    + "</sym>"
                     +  Parm.getNewline();
         } // while hasNext
         Parm.decrIndent();
@@ -255,9 +273,9 @@ public class SymbolList {
     /** Test Frame: reads a text file with 1 symbol per line,
      *  stores and prints the symbols
      *  @param args name of text file to be read
-     */     
-    public static void main (String args[]) { 
-        LineReader lineReader = new LineReader(args[0]); 
+     */
+    public static void main (String args[]) {
+        LineReader lineReader = new LineReader(args[0]);
         SymbolList symbolList = new SymbolList();
         System.out.println(Parm.getXMLDeclaration());
         System.out.println("<mainSymbolList>");

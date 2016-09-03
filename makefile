@@ -53,3 +53,5 @@ check_tests:
 jfind:
 	find src -iname "*.java" | xargs -l grep -H $(JF)
 #--------------------------------------
+rembak:
+	find src -iname "*.java.bak" | xargs -l rm -v

@@ -43,6 +43,14 @@ CALL SymbolList $(DATA)
 TEST SC1 Scanner
 CALL Scanner data/meta.grm
 
+TEST SC2 Scan special symbols
+DATA
+ EOF IDENTIFIER NUMBER STRING ;
+ [
+  ':'    '='   ':='  ::=      '::='  ::=  '->' ->
+ ]
+CALL Scanner $(DATA)
+
 #======================================================================
 PACKAGE=org.teherba.jextra.gener
 
@@ -54,12 +62,14 @@ CALL StateQueue
 #======================================================================
 PACKAGE=org.teherba.jextra.parse
 
+TEST EP1 EmptyParser metagrammar
+CALL EmptyParser data/meta.grm
+
 TEST PP1 ProtoParser metagrammar
-DATA
 CALL ProtoParser data/meta.grm
 
 TEST PP2 ProtoParser sasb
 CALL ProtoParser data/sasb.grm
 
-TEST EP1 EmptyParser metagrammar
-CALL EmptyParser data/meta.grm
+TEST PP4 ProtoParser non-LALR(1), but LR(1)
+CALL ProtoParser data/ex421.grm

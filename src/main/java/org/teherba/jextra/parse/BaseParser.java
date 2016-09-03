@@ -56,7 +56,7 @@ public class BaseParser {
     protected Production prod;
     /** current {@link Rule} */
     protected Rule       rule;
-    
+
     /** Constructor - central LR(1) parsing algorithm
      *  utilizing a push-down stack of states.
      *  @param tab LR(1) table of parser states
@@ -72,7 +72,7 @@ public class BaseParser {
      *  @param fileName path/name of the source file, "" = STDIN
      */
     protected BaseParser(String fileName) {
-        scanner = new Scanner(Scanner.LANG_BNF, fileName); 
+        scanner = new Scanner(Scanner.LANG_BNF, fileName);
         grammar = new Grammar(scanner);
         table   = new Table(grammar);
     } // Constructor(String)
@@ -90,14 +90,17 @@ public class BaseParser {
     public Table getTable() {
         return table;
     } // getTable
-    
+
     /** Reads from input and parses the (next) sentence of the grammar's language.
      *  @return true (false) if the sentence was (not) accepted
      */
-    protected boolean parse() { 
+    protected boolean parse() {
+        String className = this.getClass().getName(); // e.g. org.teherba.jextra.parse.ProtoParser
+        int dotPos = className.lastIndexOf('.');
+        className = className.substring(dotPos + 1);
         if (Parm.isDebug(1)) {
             System.out.println(Parm.getXMLDeclaration());
-            System.out.println("<Parser>");
+            System.out.println("<" + className + ">");
             Parm.incrIndent();
         }
         state = table.getStartState();
@@ -105,7 +108,7 @@ public class BaseParser {
         boolean accepted = loop();
         terminate();
         if (Parm.isDebug(1)) {
-            System.out.println(grammar.toString()); 
+            System.out.println(grammar.toString());
             System.out.println(Parm.getIndent() + "<legibleGrammar>");
             System.out.println(this.getGrammar().legible());
             System.out.println(Parm.getIndent() + "</legibleGrammar>");
@@ -113,30 +116,30 @@ public class BaseParser {
             System.out.println(this.getTable()  .legible());
             System.out.println(Parm.getIndent() + "</legibleTable>");
             Parm.decrIndent();
-            System.out.println(Parm.getIndent() + "</Parser>");
+            System.out.println(Parm.getIndent() + "</" + className + ">");
         }
         return accepted;
     } // parse
-    
+
     /** May initialize the parser, for example by reading
      *  a scanner interface
      */
-    protected void initialize() {   
+    protected void initialize() {
         symbol = scanner.scan(); // terminal or (later) also: nonterminal
     } // initialize
-    
+
     /** Terminates the parser
      */
-    protected void terminate() {    
+    protected void terminate() {
     } // terminate
-    
+
     /** Reads the input file and parses all symbols;
      *  assumes that the first symbol is already read in.
      *  @return true (false) if the sentence was (not) accepted
      */
-    protected boolean loop() {  
+    protected boolean loop() {
         boolean accepted = false;
-        while (! accepted && ! scanner.isAtEof()) { 
+        while (! accepted && ! scanner.isAtEof()) {
             boolean readOff = true;
             category = symbol.getCategory();
             if (relevant()) {
@@ -148,7 +151,7 @@ public class BaseParser {
         } // while scanning
         return accepted;
     } // loop
-    
+
     /** Decides whether a scanned symbol is not ignored.
      *  @return true (false) if the symbol is (not) relevant,
      *  that means it is no comment and no whitespace
@@ -160,35 +163,29 @@ public class BaseParser {
             &&  category != scanner.endOfLine  .getCategory()
             ;
     } // relevant
-    
-    /** Determines the next state of the parser. 
-     *  This dummy version reads over all symbols without 
+
+    /** Determines the next state of the parser.
+     *  This dummy version reads over all symbols without
      *  any state change.
-     *  @return true (false) if the sentence of the language 
-     *  was (not yet) accepted  
+     *  @return true (false) if the sentence of the language
+     *  was (not yet) accepted
      */
     protected boolean transition() {
-        try {
-            if (Parm.isDebug(3)) {
-                    System.out.println(Parm.getIndent()
-                            + "<scan state=\"" + state.getId() + "\">" 
-                            + symbol.toString()
-                            + "</scan>");
-            }
-        } catch (Exception exc) {
-            System.err.println("BaseParser.transition: state=" + state + ", symbol=" + symbol);
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
-        } // try - catch
+        if (Parm.isDebug(3)) {
+                System.out.println(Parm.getIndent()
+                        + "<scan state=\"" + state.getId() + "\">"
+                        + symbol.toString()
+                        + "</scan>");
+        }
         return false;
     } // transition
-    
+
     /** Issues a parser error message
      *  @param stateId number of the state which doesn't expect this symbol
      *  @param symbolEntity representation of the offending symbol
      */
-    protected void error(int stateId, String symbolEntity) {            
-        System.out.println("<error state=\"" + state.getId() 
+    protected void error(int stateId, String symbolEntity) {
+        System.out.println("<error state=\"" + state.getId()
                 + "\" sym=\"" + symbol.getEntity() + "\" />"
                 + Parm.getNewline());
     } // error

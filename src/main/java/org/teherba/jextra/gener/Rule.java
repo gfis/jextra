@@ -161,7 +161,7 @@ public class Rule {
         Iterator<Production> iter = this.iterator();
         while (iter.hasNext()) {
             if (index > 0) {
-            	result += Parm.newline() + "\t| ";
+            	result += Parm.newline() + "\t|";
             }
             result += iter.next().legible();
             index ++;

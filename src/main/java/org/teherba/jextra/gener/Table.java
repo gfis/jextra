@@ -37,7 +37,7 @@ import  java.util.Iterator;
  */
 public class Table {
     public final static String CVSID = "@(#) $Id: Table.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** List of generated LR(1) parser states */
     private ArrayList<State> states;
     /** States which shift a symbol */
@@ -50,7 +50,7 @@ public class Table {
     private State state3;
     /** set of symbols which should be processes by STACLO */
     private SymbolQueue closeSymbolQueue;
-    
+
     /** No-args Constructor - creates a new parsing table
      */
     public Table() {
@@ -74,7 +74,7 @@ public class Table {
      *  <li>a final state 3 which has the marker behind the axiom and accepts it
      *  </ul>
      *  State 1 is reserved and not used (for historical reasons)
-     */ 
+     */
     public void initialize() {
         Symbol eof = grammar.getScanner().endOfFile;
         Symbol hyperAxiom = new Symbol(grammar.getScanner().identifier.getCategory(), "HYPER_AXIOM");
@@ -83,14 +83,14 @@ public class Table {
         prod1.addMember(grammar.axiom);
         prod1.addMember(eof);
         prod1.closeMembers();
-        grammar.insert(prod1);        
+        grammar.insert(prod1);
         state2 = allocate(eof);
         state3 = allocate(eof);
         state3.addPredecessor(state2);
         state2.addItem(new Item(grammar.axiom, 1, Item.SHIFT , state3,   prod1));     // prod1 was null
         state3.addItem(new Item(eof          , 2, Item.ACCEPT, state3,   prod1));     // state3 was null
     } // initialize
-    
+
     /** Gets the starting state for the parser
      *  @return initial state to start the parser with
      */
@@ -130,7 +130,7 @@ public class Table {
     /** Edits the grammar by inserting or deleting a single production.
      *  Links to symbols and rules are inserted or deleted.
      *  Former name was PROCHA.
-     *  @param operation &gt; 0 - insert; &lt; 0 - delete the productions 
+     *  @param operation &gt; 0 - insert; &lt; 0 - delete the productions
      *  @param prod1 production to be inserted or deleted
      */
     public boolean changeProduction(int operation, Production prod1) {
@@ -143,7 +143,7 @@ public class Table {
                 prod1 = prod2;
             }
         } // while iter
-        
+
         if (false) {
         } else if (operation > 0) {
             if (! found) { // may insert it
@@ -160,18 +160,18 @@ public class Table {
                 Parm.alert(54);
             }
             // deletion
-        } 
+        }
         // else operation == 0 -> wrong call
         return found;
     } // changeProduction
-    
-    /** Determines the look-ahead symbols 
+
+    /** Determines the look-ahead symbols
      *  for all productions of all states in the queue
      */
     public void getLookAheadSymbols() {
         // nyi ???
     } // getLookAheadSymbols
-    
+
     /** (Re-)computes all successors of a set of states
      *  @param states compute the successors for the states in this set
      */
@@ -206,7 +206,7 @@ public class Table {
         } // while symbols
     */
     } // recomputeSuccessorStates
-    
+
     /** Deletes an item from a state
      *  @param state state from which the item should be deleted
      *  @param position of the marked symbol (starting at 0)
@@ -267,12 +267,12 @@ public class Table {
         return changed;
     } // insertSymbols
 
-    /** Propagate the symbols of all states in the queue 
+    /** Propagate the symbols of all states in the queue
      */
     public void putLookAheadSymbols() {
         // nyi ???
     } // putLookAheadSymbols
-    
+
     /** Garbage collection for items
      */
     public void purgeItems() {
@@ -290,7 +290,7 @@ public class Table {
     public void purgeLookAheadSymbols() {
         // nyi ???
     } // purgeLookAheadSymbols
-    
+
     /** Tries to resolve conflicts
      *  @return number of remaining conflicts
      */
@@ -299,7 +299,7 @@ public class Table {
         // nyi ???
         return result;
     } // resolveConflicts
-    
+
     // generic methods ----------------------------------------------
     /** Returns a human readable description of the object
      *  @return list of states
@@ -339,8 +339,8 @@ public class Table {
     } // toString
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     */
+    public static void main (String args[]) {
     } // main
 
 } // Table

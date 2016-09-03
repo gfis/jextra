@@ -1,5 +1,6 @@
 /*  Selects the applicable filter
     @(#) $Id: TranslatorFactory.java 427 2010-06-01 09:08:17Z gfis $
+    2016-06-10: comments; Margarete's way
     2007-04-18: NumberFilter, KontoFilter
     2007-02-27: copied from TransformerFactory
 */
@@ -32,28 +33,28 @@ import  org.apache.log4j.Logger;
  *  of all filters and their codes
  *  @author Dr. Georg Fischer
  */
-public class TranslatorFactory { 
+public class TranslatorFactory {
     public final static String CVSID = "@(#) $Id: TranslatorFactory.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** log4j logger (category) */
     private Logger log;
-    
+
     /** Set of transformers for different file formats
      */
     private BaseTransformer[] allTransformers;
-    
-    /** Empty Constructor
+
+    /** Non-args Constructor
      */
     public TranslatorFactory() {
         log = Logger.getLogger(TranslatorFactory.class.getName());
         allTransformers = new BaseTransformer[] { null // since this allows for "," on next source line
         // the order here defines the order in documentation.jsp,
         // should be: "... group by package order by package, name"
-        // -------      
+        // -------
         , new XMLTransformer            () // XML serializer
         , new GrammarHandler            () // consumes SAX events and generates a parser table
-        }; 
-    }
+        };
+    } // TranslatorFactor
 
     /** Gets an iterator over all implemented transformers.
      *  @return list iterator over <em>allTransformers</em>
@@ -62,23 +63,23 @@ public class TranslatorFactory {
         Iterator result = (Arrays.asList(allTransformers)).iterator();
         result.next(); // skip initial null element
         return result;
-    }
-    
+    } // getIterator
+
     /** Gets the number of available transformers
      *  @return number of formats which can be spelled
      */
     public int getCount() {
         return allTransformers.length - 1; // minus [0] (== null)
-    }
-    
-    /** Determines whether the format code denotes this 
+    } // getCount
+
+    /** Determines whether the format code denotes this
      *  transformer class.
      *  @param transformer the transformer to be tested
      *  @param format code for the desired format
      */
     public boolean isApplicable(BaseTransformer transformer, String format) {
         boolean result = false;
-        StringTokenizer tokenizer = new StringTokenizer(transformer.getFormatCodes(), ",");              
+        StringTokenizer tokenizer = new StringTokenizer(transformer.getFormatCodes(), ",");
         while (! result && tokenizer.hasMoreTokens()) {
             // try all tokens
             if (format.equals(tokenizer.nextToken())) {
@@ -86,11 +87,11 @@ public class TranslatorFactory {
             }
         } // while all tokens
         return result;
-    }
+    } // isApplicable
 
     /** Gets the applicable transformer for a specified format code.
      *  @param format abbreviation for the format according to ISO 639
-     *  @return the transformer for that format, or <em>null</em> if the 
+     *  @return the transformer for that format, or <em>null</em> if the
      *  format was not found
      */
     public BaseTransformer getTransformer(String format) {
@@ -103,6 +104,6 @@ public class TranslatorFactory {
         } // for itrans
         log.debug("getTransformer(\"" + format + "\") = " + transformer);
         return transformer;
-    }
+    } // getTransformer
 
 } // TranslatorFactory
