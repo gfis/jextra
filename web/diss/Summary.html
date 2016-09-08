@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+<title>Extra3</title>
+<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+</head>
+<body>
+<h2>Extra3</h2>
+
+<h3>Incremental LR(1) Parser Construction with Elementary Operations</h3>
+
+<p>
+The incremental LR(1) parser construction described in [Fischer 1980]
+was based on the elementary operations of the addition or the deletion
+of a single production of a nonterminal.
+</p><p>
+Here we go one step further and construct LR(1) parser tables
+by a set of even more elementary operations, among them the
+addition and deletion of a single symbol in a production.
+</p>
+<h4>Initial States</h4>
+The grammar and the corresponding parser table are started
+with one production:
+<pre>
+  axiom = root eof.
+</pre>
+When a sentence is reduced to the (unmodifiable) symbol <em>axiom</em>, it is in the language
+defined by the grammar. <em>root</em> is the starting symbol, and is
+terminal so far. <em>eof</em> is another terminal which terminates
+each valid sentence, and which also cannot be modified.
+</p><p>
+The corresponding parser table has 3 simple states:
+<pre>
+  1 axiom -> 2 eof =.
+  | root  -> 3 eof =: axiom,1
+</pre>
+</p>
+<h4>Add an Empty Production</h4>
+<p>
+Add the production for left side <em>sym1</em>,
+possibly switching that symbol from terminal to nonterminal.
+</p><p>
+Determine all occurrences of <em>sym1</em>, and the states
+
+</p>
+<h4>Prefix a Production with a Symbol</h4>
+<p>
+</p>
+<h4>Prefix a Production with a Symbol</h4>
+<p>
+</p>
+<h4>Remove a Symbol from the Start of a Production</h4>
+<p>
+</p>
+<h4>Remove an Empty Production</h4>
+<p>
+
+</p><p>
+<h3>Example</h3>
+The following grammar from [Fischer 1980], page 73 is LR(1), but not LALR(1):
+<pre>
+[axiom = S
+.S = A a | B b | d A b | d B a
+.A = c
+.B = c
+]
+</pre>
+The parser state set can be expanded incrementally as follows:
+<pre>
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+
++(.S = )
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  eof   =:  S,0
+
++(.S = a)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  a     ->  5 eof =: S,1
+
++(.S = A a)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,1
+
++(.A = )
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,1
+  a     =:  A,0
+
++(.A = c)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,1
+  c     ->  7 a   =: A,1
+
++(.S = )
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,2
+  c     ->  7 a   =: A,1
+  eof   =:  S,0     
+
++(.S = b)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,2
+  c     ->  7 a   =: A,1
+  b     ->  8 eof =: S,1
+
++(.S = B b)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,2
+  c     ->  7 a   =: A,1
+  B     ->  9 b   -> 8 eof =: S,2
+
++(.B = c)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,2
+  c     ->  7 a   =: A,1
+  B     ->  9 b   -> 8 eof =: S,2
+  c     -> 10 b   =: B,1
+
++(.S = )
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,2
+  c     ->  7 a   =: A,1
+  B     ->  9 b   -> 8 eof =: S,2
+  c     -> 10 b   =: B,1
+  eof   =:  S,0
+  
++(.S = b)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,1
+  c     ->  7 a   =: A,1
+  B     ->  9 b   -> 8 eof =: S,1
+  c     -> 10 b   =: B,1
+  b     -> 11 eof =: S,1
+  
++(.S = A b)
+
+2 axiom ->  3 eof =.
+  S     ->  4 eof =: axiom,1
+  A     ->  6 a   -> 5 eof =: S,1
+  c     ->  7 a   =: A,1
+  B     ->  9 b   -> 8 eof =: S,1
+  c     -> 10 b   =: B,1
+  A     -> 12 b   -> 11 eof =: S,2
+  
+  
+</pre>
+</p>
+
+</body>
+</html>
