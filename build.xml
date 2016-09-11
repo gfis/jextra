@@ -2,6 +2,7 @@
 <!--
     ant-buildfile for commandline and web application
     @(#) $Id: bfb160b42e4807f6c45c2e455d983904452f16ff $
+    2016-09-11: fill.lib
     2016-09-02: properties ${tomcat.*}, core.jar
     2016-05-29, Georg Fischer: copied from checkdig
 -->
@@ -22,7 +23,7 @@
 -->
 <project name="jextra" default="dist" basedir=".">
     <!-- the 5 needed for build-import.xml -->
-    <property name="app.name"           value="JExtra" />
+    <property name="app.name"           value="jextra" />
     <property name="app.version"        value="3" />
     <property name="app.main-class"     value="org.teherba.jextra.parse.LR1Parser" />
     <property name="tomcat.base"        value="/var/lib/tomcat" />
@@ -66,9 +67,20 @@
         -->
     </target>
 
+    <target name="fill.lib">
+        <copy todir="${lib.home}">
+            <fileset dir="${tomcat.base}/openlib">
+                <include name="common-core.jar" />
+                <include name="log4j-1.2.17.jar" />
+                <include name="serializer.jar" />
+                <include name="xtrans-core.jar" />
+           </fileset>
+        </copy>
+    </target>
+
     <target name="test">
         <java classname="org.teherba.common.RegressionTester" classpathref="compile.classpath" fork="true">
-            <arg value="test/jextra.tests" />
+            <arg value="test/all.tests" />
             <arg value="${test}" />
         </java>
     </target>

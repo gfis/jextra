@@ -4,6 +4,11 @@
 # @(#) $Id: 2bbd9511422674a354fe5a19f2d55437adbebce0 $
 # 2016-05-30, Georg Fischer
 
+APPL=jextra
+JAVA=java -cp dist/$(APPL).jar
+DIFF=diff -y --suppress-common-lines --width=160
+DIFF=diff -w -rs -C0
+SRC=src/main/java/org/teherba/$(APPL)
 TOMC=/var/lib/tomcat/webapps/jextra
 TOMC=c:/var/lib/tomcat/webapps/jextra
 METHOD=post
@@ -21,7 +26,7 @@ all: regression
 # Perform a regression test 
 regression: 
 	java -cp dist/jextra.jar \
-			org.teherba.common.RegressionTester $(TESTDIR)/jextra.tests $(TEST) 2>&1 \
+			org.teherba.common.RegressionTester $(TESTDIR)/all.tests $(TEST) 2>&1 \
 	| tee $(TESTDIR)/regression.log
 	grep FAILED $(TESTDIR)/regression.log
 #
@@ -51,7 +56,6 @@ check_tests:
 	diff -y --suppress-common-lines --width=32 $(TESTDIR)/tests_formal.tmp $(TESTDIR)/tests_actual.tmp
 #---------------------------------------------------
 jfind:
-	find src -iname "*.java" | xargs -l grep -H $(JF)
-#--------------------------------------
-rembak:
-	find src -iname "*.java.bak" | xargs -l rm -v
+	find src -iname "*.java" | xargs -l grep -H "$(JF)"
+rmbak:
+	find src -iname "*.bak"  | xargs -l rm -v
