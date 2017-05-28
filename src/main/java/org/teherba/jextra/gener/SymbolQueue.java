@@ -1,5 +1,6 @@
 /*  Queue of symbols to be processed recursively
     @(#) $Id: SymbolQueue.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2005-03-01, Georg Fischer: copied from Rule.java
 */
 /*
@@ -28,27 +29,27 @@ import  org.teherba.jextra.scan.SymbolList;
  */
 public class SymbolQueue extends Queue {
     public final static String CVSID = "@(#) $Id: SymbolQueue.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** No-args Constructor - creates a new symbol queue
      */
     public SymbolQueue() {
         super();
     } // Constructor()
-    
+
     /** Constructor - creates a queue with specified initial size
      *  @param initSize estimate of the number of elements in the queue
      */
     public SymbolQueue(int initSize) {
         super(initSize);
     } // Constructor(int)
-    
+
     /** Constructor - creates a queue with specified name
      *  @param descr description of the queue for debugging
      */
     public SymbolQueue(String descr) {
         super(descr);
     } // Constructor(String)
-    
+
     /** Constructor - creates a queue with specified initial size and name
      *  @param initSize estimate of the number of elements in the queue
      *  @param descr description of the queue for debugging
@@ -56,7 +57,7 @@ public class SymbolQueue extends Queue {
     public SymbolQueue(int initSize, String descr) {
         super(initSize, descr);
     } // Constructor(int, String)
-    
+
     /** Gets the next element to be processed
      *  @return object from the queue
      */
@@ -78,11 +79,11 @@ public class SymbolQueue extends Queue {
         return found;
     } // push
 
-    /** Deletes the entire queue (set) after unmarking all elements 
+    /** Deletes the entire queue (set) after unmarking all elements
      */
     public void clear() {
         head = 0;
-        while (hasNext()) { // unmark all elements 
+        while (hasNext()) { // unmark all elements
             Symbol symbol = next();
             symbol.unmark(this);
         }
@@ -90,27 +91,28 @@ public class SymbolQueue extends Queue {
     } // clear
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
         SymbolList list = new SymbolList();
         SymbolQueue queue = new SymbolQueue("test");
         for (int index = 0; index < 8; index ++) {
             String entity = "S" + index;
             Symbol elem = list.put(entity);
-            System.out.println("push " + entity + ": " 
+            System.out.println("push " + entity + ": "
                     + queue.push(elem)
                     + " @ " + queue.getHead()
                     );
         }
         for (int index = 0; index < 8; index += 4) {
             Symbol elem = list.get(index);
-            System.out.println("push2 " + elem.getEntity() + ": " 
+            System.out.println("push2 " + elem.getEntity() + ": "
                     + queue.push(elem)
                     + " @ " + queue.getHead()
                     );
         }
         while(queue.hasNext()) {
-            System.out.println("next elem: " 
+            System.out.println("next elem: "
                     + queue.next().getEntity());
         }
     } // main

@@ -1,5 +1,6 @@
 /*  Production rule of the grammar
     @(#) $Id: Production.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-02-10, Georg Fischer: copied from Symbol.java
 */
@@ -40,13 +41,13 @@ public class Production implements Comparable {
 
     /** a special symbol indicating the end of a production */
     public static final Symbol EOP = new Symbol(0, "EOP");
-    
+
     /** No-args Constructor - creates a new production
      */
     public Production() {
         this(new Symbol());
     } // Constructor()
-    
+
     /** Constructor - creates a new, empty production
      *  for left side <em>symbol</em>
      *  @param symbol symbol on the left side (nonterminal)
@@ -56,13 +57,14 @@ public class Production implements Comparable {
         members     = new ArrayList<Symbol>(16);
         semantics   = new ArrayList<SemAction>(16);
     } // Constructor(symbol)
-    
+
     //---------------------------------
     /** sequential number */
     private int id;
-    
+
     /** Gets the sequential number
      *  of the production
+     *  @return id of the production
      */
     public int getId() {
         return id;
@@ -76,8 +78,9 @@ public class Production implements Comparable {
     //---------------------------------
     /** (number of) left hand symbol of the production (nonterminal) */
     private Symbol leftSide;
-    /** Gets the left side (number of nonterminal symbol) 
+    /** Gets the left side (number of nonterminal symbol)
      *  of the production
+     *  @return symbol on the left side
      */
     public Symbol getLeftSide() {
         return leftSide;
@@ -93,7 +96,7 @@ public class Production implements Comparable {
      *  production (maybe empty), terminated by EOP
      */
     private ArrayList<Symbol> members;
-    
+
     /** Appends a symbol to the right side of the production
      *  @param member symbol on the right side (terminal or
      *  nonterminal)
@@ -111,14 +114,14 @@ public class Production implements Comparable {
         Symbol result;
         if (position < 0 || position >= members.size()) {
             result = EOP;
-        } 
+        }
         else {
             result = (Symbol) members.get(position);
         }
         return result;
     } // getMember
 
-    /** Gets the first member on the right side 
+    /** Gets the first member on the right side
      *  @return symbol at position 0 in the right side
      */
     public Symbol getFirstMember() {
@@ -134,7 +137,7 @@ public class Production implements Comparable {
     //---------------------------------
     /** list of semantic actions for this production */
     private ArrayList<SemAction> semantics;
-    
+
     /** Appends a semantic action
      *  @param sema semantic action to be appended
      */
@@ -151,12 +154,12 @@ public class Production implements Comparable {
     /** Compares this object (prod1) with the specified object (prod2).
      *  Ordering is by left side, common member substring and length
      *  @param obj2 production on the right side
-     *  @return -1, 0, +1 if prod1 < = > prod2
+     *  @return -1, 0, +1 if prod1 &lt; = &gt; prod2
      */
     public int compareTo(Object obj2) {
         Production prod2 = (Production) obj2;
         int result = this.leftSide.compareTo(prod2.getLeftSide()); // order 1 by left sides
-        if (result == 0) { 
+        if (result == 0) {
             // System.out.print(" " + leftSide.getEntity() + "=");
             // order 2 by member lists
             int len1 = this.size();
@@ -181,7 +184,7 @@ public class Production implements Comparable {
         } // discriminate by member lists
         return result;
     } // compareTo
-    
+
     /** Gets the length, that is the number of members on the right side
      *  of the production;
      *  can only be called for closed productions; EOP is not counted
@@ -226,7 +229,7 @@ public class Production implements Comparable {
      *  @return list of XML elements representing the members and semantic actions
      */
     public String toString() {
-        String result = Parm.getIndent() + "<prod left=\"" + leftSide.getEntity() 
+        String result = Parm.getIndent() + "<prod left=\"" + leftSide.getEntity()
                 + "\" size=\"" + size()
                 + "\">" + Parm.getNewline();
         Parm.incrIndent();
@@ -244,8 +247,9 @@ public class Production implements Comparable {
     } // toString
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
     } // main
 
 } // Production

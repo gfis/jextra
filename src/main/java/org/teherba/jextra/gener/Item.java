@@ -1,6 +1,7 @@
 /*  An Item of the generated LR(1) Parser Table
     @(#) $Id: Item.java 427 2010-06-01 09:08:17Z gfis $
     Copyright (c) 2005 Dr. Georg Fischer <punctum@punctum.com>
+    2017-05-28: javadoc 1.8
     2005-02-17, Georg Fischer: copied from Rule.java
 */
 /*
@@ -36,13 +37,13 @@ import  org.teherba.jextra.scan.Symbol;
  */
 public class Item implements Comparable {
     public final static String CVSID = "@(#) $Id: Item.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /** sequential numbers of next object to be constructed */
     private static int sequence = 1;
 
     /** the marked symbol;
      *  if EOP is marked, the marker is at the end of the production,
-     *  and the action is REDUCE (or ACCEPT if the left side is the axiom), 
+     *  and the action is REDUCE (or ACCEPT if the left side is the axiom),
      *  otherwise its SHIFT
      */
     private Symbol markedSymbol;
@@ -50,12 +51,12 @@ public class Item implements Comparable {
     /** backreference to the state that contains this item */
     private State refState;
 
-    /** the position of the marker in the right side 
+    /** the position of the marker in the right side
      *  (list of members) of the <em>production</em>
      *  (0, 1 to prod.length() - 1)
      */
     private int position;
-    
+
     /** parser action code: shift a symbol and enter corresponding state */
     public static final int SHIFT   = 1;
     /** parser action code: reduce, replace the right side of a production on the stack by its left side */
@@ -69,12 +70,12 @@ public class Item implements Comparable {
                          , "SHIFT"
                          , "REDUCE"
                          , "ACCEPT"
-                         , "ERROR" 
+                         , "ERROR"
                          };
-    
+
     /** one of the action codes for the parser (SHIFT, REDUCE, ACCEPT, ERROR) */
     private int action;
-    
+
     /** the following state for SHIFT */
     private State successor;
 
@@ -88,12 +89,12 @@ public class Item implements Comparable {
     public Item() {
         this(null, 0, ERROR, null, null);
     } // COnstructor()
-    
+
     /** Constructor - creates a new item
      *  @param symbol number of the marked symbol in the symbol table
      *  @param pos position in the right side of the production (starting at 0)
      *  @param act  action to be performed by the parser
-     *  @param next follower state, shift to this state 
+     *  @param next follower state, shift to this state
      *  @param prod reduce to this production
      */
     public Item(Symbol symbol, int pos, int act, State next, Production prod) {
@@ -104,7 +105,7 @@ public class Item implements Comparable {
         production   = prod;
         refState     = null;
     } // Constructor(...)
-    
+
     /** Constructor - creates a new item with unknown successor state
      *  @param pos position in the right side of the production (starting at 0)
      *  @param prod reduce to this production
@@ -117,7 +118,7 @@ public class Item implements Comparable {
         }
     } // Constructor(pos, prod)
 
-    /** Gets the marked symbol 
+    /** Gets the marked symbol
      *  @return symbol at the marked position in the right side
      */
     public Symbol getMarkedSymbol() {
@@ -170,7 +171,7 @@ public class Item implements Comparable {
     /** Moves the marker in <em>this</em> until the end,
      *  or until a state is found which is not yet computed,
      *  and switches the state in each step.
-     *  @return final item with new state, same production and 
+     *  @return final item with new state, same production and
      *  position of the EOP symbol, or with a null state
      */
     public Item shiftToEOP() {
@@ -182,7 +183,7 @@ public class Item implements Comparable {
             if (nextItem != null) {
                 state = nextItem.getSuccessor();
                 symbol = nextItem.getMarkedSymbol();
-            } else { // symbol was not found in state 
+            } else { // symbol was not found in state
                 Parm.alert(1);
             }
             state  = nextItem.getState();
@@ -194,7 +195,7 @@ public class Item implements Comparable {
     /** Compares this object (item1) with the specified object (item2).
      *  Ordering is by marked symbol, production, position.
      *  @param obj2 item on the right side
-     *  @return -1, 0, +1 if item1 < = > item2
+     *  @return -1, 0, +1 if item1 &lt; = &gt; item2
      */
     public int compareTo(Object obj2) {
         Item item2 = (Item) obj2;
@@ -213,12 +214,12 @@ public class Item implements Comparable {
         } // discriminate by productions
         return result;
     } // compareTo
-    
+
     /** Returns a human readable description of the object
-     *  @return "@ symbol -> successor" or "@ symbol =: leftside" 
+     *  @return "@ symbol -&gt; successor" or "@ symbol =: leftside"
      */
     public String legible() {
-        return "@" + markedSymbol.legible() 
+        return "@" + markedSymbol.legible()
                 + ((successor  != null) ? " -> " + successor.getId () : "")
                 + ((production != null) ? " =: " + production.getLeftSide().getEntity() : "")
                 ;
@@ -230,17 +231,18 @@ public class Item implements Comparable {
     public String toString() {
         return Parm.getIndent() + "<item mark=\"" + markedSymbol.getEntity() + "\""
                 + " pos=\""  + position + "\""
-                + " act=\""  + parserActions[action] + "\"" 
+                + " act=\""  + parserActions[action] + "\""
                 + ((successor  != null) ? (" successor=\""  + successor .getId() + "\"") : "")
-                + ">" 
+                + ">"
                 + ((production != null) ? (production.legible(position)) : "")
                 + "</item>" + Parm.getNewline()
                 ;
     } // toString
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
     } // main
-    
+
 } // Item

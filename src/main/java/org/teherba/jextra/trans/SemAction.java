@@ -1,6 +1,7 @@
 /*  Semantic Action 
     @(#) $Id: SemAction.java 427 2010-06-01 09:08:17Z gfis $
     Copyright (c) 2005 Dr. Georg Fischer <punctum@punctum.com>
+    2017-05-28: javadoc 1.8
     2005-02-10, Georg Fischer: copied from Production.java
 */
 /*
@@ -65,66 +66,63 @@ public class SemAction {
      */
     private int info;
     
-    /**
-     *  Empty Constructor - creates a new semantic action
+    /** No-args Constructor - creates a new semantic action
      */
     public SemAction() {
         action  = UNCHANGED;
         info    = 0;
-    }
+    } // Constructor()
     
-    /**
-     *  Constructor - creates a new semantic action
+    /** Constructor - creates a new semantic action
      *  @param code code of the semantic action
      *  @param index additional info, number of a symbol
      */
     public SemAction(int code, int index) {
         action  = code;
         info    = index;
-    }
+    } // Constructor(2)
     
-    /**
-     *  Gets the action code
+    /** Gets the action code
+     *  @return action code
      */
     public int getAction() {
         return action;
-    }
+    } // getAction
 
-    /**
-     *  Sets the action code
+    /** Sets the action code
      *  @param code code of the semantic action
      */
     public void setAction(int code) {
         action = code;
-    }
+    } // setAction
 
-    /**
-     *  Gets the additional information (symbol number)
+    /** Gets the additional information (symbol number)
+     *  @return symbol number
      */
     public int getInfo() {
         return info;
-    }
+    } // getInfo
 
-    /**
-     *  Sets the additional information (symbol number)
+    /** Sets the additional information (symbol number)
      *  @param index additional info, number of a symbol
      */
     public void setInfo(int index) {
         info = index;
-    }
+    } // setInfo
 
-    /**
-     *  Returns a human readable description of the object
+    /** Returns a human readable description of the object
      *  @return XML string rerpresenting the object
      */
     public String toString() {
         return "<sema act=\"" + action + "\" inf=\"" + info + "\" />";
-    }
+    } // toString
 
     //------------------------------------------------------------
     /**
      *  Test Frame
+     *  @param args commandline arguments
      */     
     public static void main (String args[]) { 
     } // main
-}
+    
+} // SemAction

@@ -1,5 +1,6 @@
 /*  A prototype of a state of the LR(1) Push-Down Automaton
     @(#) $Id: ProtoState.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2007-05-07, Georg Fischer: copied from State.java
 */
 /*
@@ -61,14 +62,14 @@ public class ProtoState implements Comparable {
     private ProtoState follow;
     /** mark bits for set manipulation */
     private int markBits;
-    
+
     /** No-args Constructor - creates a new prototype state
      */
     public ProtoState() {
         this(null, null, 0, null, null);
     }
-    
-    /** Constructor - creates a new prototype state 
+
+    /** Constructor - creates a new prototype state
      *  which is reached by the specified <em>symbol</em>
      *  @param home prototype state which pushed this production
      *  @param prod production with marker
@@ -85,7 +86,7 @@ public class ProtoState implements Comparable {
         this.follow     = follow;
         this.same       = null;
     }
-    
+
     /** Gets the unique identification of the state
      *  @return unique sequential number of the state
      */
@@ -128,7 +129,7 @@ public class ProtoState implements Comparable {
         return prod;
     }
 
-    /** Gets the marked position 
+    /** Gets the marked position
      *  @return position in the production (0 = before first memeber)
      */
     public int getMarkerPos() {
@@ -215,12 +216,12 @@ public class ProtoState implements Comparable {
     /** Compares this object with the specified object (protoState2).
      *  Ordering is by production, marked position, and lookAhead.
      *  @param obj2 prototype state on the right side
-     *  @return -1 | 0 | +1 if protoState1 < | = | > protoState2
+     *  @return -1 | 0 | +1 if protoState1 &lt; | = | &gt; protoState2
      */
     public int compareTo(Object obj2) {
         ProtoState proto2 = (ProtoState) obj2;
         Production prod2 = proto2.getProduction();
-        int result = prod.compareTo(prod2); 
+        int result = prod.compareTo(prod2);
         if (result == 0) {
             // System.out.print(" prod=");
             int pos2 = proto2.getMarkerPos();
@@ -230,7 +231,7 @@ public class ProtoState implements Comparable {
                 if (result == 0) {
                     // System.out.print(" lookAhead=");
                     result = home.getHome().getId() - proto2.getHome().getHome().getId();
-                }               
+                }
             } else if (markerPos < pos2) {
                 result = -1;
             } else {
@@ -242,14 +243,14 @@ public class ProtoState implements Comparable {
         // System.out.println();
         return result;
     }
-    
+
     /** Returns a human readable description of the object
      *  @return state number and list of all items
      */
     public String legible() {
-        String result = getId() + "^" + home.getId() + ": " 
+        String result = getId() + "^" + home.getId() + ": "
                 + prod.legible(markerPos) + "{" + lookAhead + "}"
-                + (markerPos > prod.size() 
+                + (markerPos > prod.size()
                     ? (" =: " + prod.getLeftSide() +  "," + prod.size())
                     : (" -> " + follow.getId())
                 );
@@ -274,8 +275,9 @@ public class ProtoState implements Comparable {
     }
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
     } // main
 
 } // ProtoState

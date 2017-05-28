@@ -1,6 +1,7 @@
 /*  Attributes of parser symbols (identifiers, number, strings ...)
     of the (programming) language
     @(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-01-24, Georg Fischer: copied from LineReader.java
 */
@@ -39,9 +40,9 @@ import  java.util.TreeSet;
  */
 public class Symbol implements Comparable {
     public final static String CVSID = "@(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $";
-    
-    /** category of the symbol: identfier, number, string, nonterminal 
-     *  (that is the index of another symbol which was previously 
+
+    /** category of the symbol: identfier, number, string, nonterminal
+     *  (that is the index of another symbol which was previously
      *  allocated)
      */
     private int category;
@@ -57,20 +58,20 @@ public class Symbol implements Comparable {
     private TreeSet<State> reachedStates;
     /** rule with this symbol as the left side (for nonterminals, null for terminals) */
     private Rule rule;
-    
+
     /** No-args Constructor - creates a new symbol
      */
     public Symbol() {
         this(0, "");
     } // Constructor()
-    
+
     /** Constructor - creates a new symbol with entity
      *  @param ent entity (string) of the symbol
      */
     public Symbol(String ent) {
         this(0, ent);
     } // Constructor(String)
-    
+
     /** Constructor - creates a new symbol with entity and category
      *  @param ent entity (string) of the symbol
      *  @param cat category of the symbol
@@ -83,7 +84,7 @@ public class Symbol implements Comparable {
         reachedStates   = new TreeSet<State>();
         rule            = null;
     } // Constructor(int, String)
-    
+
     /** Gets the category of the symbol: identifier, number etc.
      *  @return codes for identifier, number, string etc.
      */
@@ -129,7 +130,7 @@ public class Symbol implements Comparable {
     /** Marks the element as being appended to some queue
      *  @param queue append the element to this queue
      *  @return 0 if the element was not yet marked,
-     *  > 0 (= mark bit) value if the element was already queued
+     *  &gt; 0 (= mark bit) value if the element was already queued
      */
     public int mark(SymbolQueue queue) {
         int bit = queue.getBit();
@@ -143,7 +144,7 @@ public class Symbol implements Comparable {
     /** Unmarks the element when it is removed from some queue
      *  @param queue remove the element from this queue
      *  @return 0 if the element was not yet marked,
-     *  > 0 (= mark bit) value if the element was already queued
+     *  &gt; 0 (= mark bit) value if the element was already queued
      */
     public int unmark(SymbolQueue queue) {
         int bit = queue.getBit();
@@ -181,7 +182,7 @@ public class Symbol implements Comparable {
             System.err.println(exc.getMessage());
             exc.printStackTrace();
             result = 0;
-        } 
+        }
         return result;
     } // getNumericValue
 
@@ -210,12 +211,12 @@ public class Symbol implements Comparable {
 
     /** Compares this object (symbol1) with the specified object (symbol2)
      *  @param obj2 symbol on the right side
-     *  @return -1, 0, +1 if symbol1 < = > symbol2
+     *  @return -1, 0, +1 if symbol1 &lt; = &gt; symbol2
      */
     public int compareTo(Object obj2) {
-        int result = entity.compareTo(((Symbol) obj2).getEntity()); 
+        int result = entity.compareTo(((Symbol) obj2).getEntity());
                 // order 1 by entities
-        if (result == 0) { 
+        if (result == 0) {
             // order 2 by categories
             int cat2 = ((Symbol) obj2).getCategory();
             if (category < cat2) {
@@ -227,7 +228,7 @@ public class Symbol implements Comparable {
         } // discriminate by categories
         return result;
     } // compareTo
-    
+
     /** Gets the length of the symbol's entity (string)
      *  @return length of string
      */
@@ -240,10 +241,10 @@ public class Symbol implements Comparable {
      */
     public String legible() {
         String result = entity
-                .replaceAll("\n", "\\\\n") 
-                .replaceAll("&", "&amp;") 
-                .replaceAll("<", "&lt;") 
-                .replaceAll(">", "&gt;") 
+                .replaceAll("\n", "\\\\n")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
                 ;
         return Character.isLetterOrDigit(result.charAt(0)) ? result : "\'" + result + "\'";
     } // legible
@@ -255,16 +256,17 @@ public class Symbol implements Comparable {
         return "<sym id=\"" + index + "\""
                 + " cat=\"" + category + "\">"
                 + entity
-                .replaceAll("\n", "\\\\n") 
-                .replaceAll("&", "&amp;") 
-                .replaceAll("<", "&lt;") 
-                .replaceAll(">", "&gt;") 
+                .replaceAll("\n", "\\\\n")
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
                 + "</sym>";
     } // toString
 
     /** Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
     } // main
 
 } // Symbol

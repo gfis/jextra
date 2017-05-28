@@ -1,5 +1,6 @@
 /*  LR(1) Parser Table (States and Items)
     @(#) $Id: Table.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2005-02-23, Georg Fischer: copied from Grammar.java
 */
 /*
@@ -59,6 +60,7 @@ public class Table {
 
     /** Constructor - creates a new state table,
      *  and allocate a tiny initial configuration
+     *  @param gram grammar for which to parse
      */
     public Table(Grammar gram) {
         grammar             = gram;
@@ -132,6 +134,7 @@ public class Table {
      *  Former name was PROCHA.
      *  @param operation &gt; 0 - insert; &lt; 0 - delete the productions
      *  @param prod1 production to be inserted or deleted
+     *  @return whether the production was found
      */
     public boolean changeProduction(int operation, Production prod1) {
         boolean found = false;
@@ -339,6 +342,7 @@ public class Table {
     } // toString
 
     /** Test Frame
+     *  @param args commandline arguments
      */
     public static void main (String args[]) {
     } // main

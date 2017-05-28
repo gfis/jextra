@@ -1,5 +1,6 @@
 /*  Selects the applicable filter
     @(#) $Id: TranslatorFactory.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-06-10: comments; Margarete's way
     2007-04-18: NumberFilter, KontoFilter
     2007-02-27: copied from TransformerFactory
@@ -76,6 +77,7 @@ public class TranslatorFactory {
      *  transformer class.
      *  @param transformer the transformer to be tested
      *  @param format code for the desired format
+     *  @return whether the transformer can handle this format
      */
     public boolean isApplicable(BaseTransformer transformer, String format) {
         boolean result = false;

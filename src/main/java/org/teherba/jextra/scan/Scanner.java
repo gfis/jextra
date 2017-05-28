@@ -1,5 +1,6 @@
 /*  Read source file lines and return individual terminal symbols
     @(#) $Id: Scanner.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2005-01-24, Georg Fischer: copied from LineReader.java
 */
 /*
@@ -34,21 +35,21 @@ public class Scanner {
 
     /** Controls verbosity of debugging output */
     private static final int DEBUG = 1;
-    
+
     /** Programming language of the source file */
     private String language = LANG_C;
     /** Enumeration for programming languages to be parsed */
     public static final String LANG_C       = "C";
     public static final String LANG_PL1     = "PL1";
     public static final String LANG_BNF     = "BNF";
-    
+
     /** Reader for lines from the source file  */
     private LineReader lineReader;
-    
+
     /** symbol list accumulated by this scanner */
     private SymbolList symbolList;
-    
-    /**	No-args Constructor - initializes codes, but not the <em>LineReader</em>
+
+    /** No-args Constructor - initializes codes, but not the <em>LineReader</em>
      */
     public Scanner() {
         initCode();
@@ -58,7 +59,7 @@ public class Scanner {
         initCategories();
     } // Constructor()
 
-    /**	Constructor - initializes the Scanner
+    /** Constructor - initializes the Scanner
      *  @param lang source file programming language
      *  @param fileName path/name of the source file, "" = STDIN
      */
@@ -82,15 +83,15 @@ public class Scanner {
     private static final byte LETTER        = 6;
     private static final byte QUOTE         = 7;
     private static final byte DOUBLE_QUOTE  = 8;
-    
+
     /** number of lower characters which are mapped to character classes */
     private static final int CODE_MAX = 256;
-    
+
     /** mapping of lower 256 characters to classes */
     private byte[] codeTable = new byte [CODE_MAX];
-    
+
     /**
-     *  Defines a mapping of characters to character sets 
+     *  Defines a mapping of characters to character sets
      *  for all characters in the parameter string
      *  @param code to which all characters
      *  in <em>str</em> are mapped
@@ -115,7 +116,7 @@ public class Scanner {
         assignCode (SPECIAL,    "^!$%&/()={[]}?*+~#-:;,.|><@\\");
         assignCode (DIGIT,      "0123456789");
         assignCode (LETTER,     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                            +   "abcdefghijklmnopqrstuvwxyz" 
+                            +   "abcdefghijklmnopqrstuvwxyz"
                             +   "_");
         assignCode (QUOTE,      "\'");
         assignCode (DOUBLE_QUOTE,   "\"");
@@ -142,8 +143,8 @@ public class Scanner {
     public Symbol dollar    ; // $
     public Symbol slashStar ; // / *
     public Symbol starSlash ; // * /
-    public Symbol slashSlash; // / / 
-        
+    public Symbol slashSlash; // / /
+
     /**
      *  Initializes predefined, constant operator symbols
      */
@@ -173,7 +174,7 @@ public class Scanner {
     /*----------------------------------------------------------------*/
     /** Category of the current symbol */
     private int category;
-    
+
     /** Symbol categories - symbols which do not stand for themselves */
 //  public symbol endOfProduction;
     public Symbol endOfFile      ;
@@ -184,9 +185,9 @@ public class Scanner {
     public Symbol number         ;
     public Symbol space          ;
     public Symbol string         ;
-    
+
     /** Initializes predefined symbols - primaries -
-     *  which do not stand for themselves, 
+     *  which do not stand for themselves,
      *  in a fixed order
      */
     public void initCategories() {
@@ -216,7 +217,7 @@ public class Scanner {
     private static final byte STRING_2_STATE        = 10; // after 2nd quote
     private static final byte TERMINAL_STATE        = 11; // after recognition of 1 symbol
 
-    /** Index into <em>symbolList</em> of the next symbol 
+    /** Index into <em>symbolList</em> of the next symbol
      *  returned by <em>scan</em>
      */
     private Symbol resultSymbol;
@@ -227,8 +228,8 @@ public class Scanner {
     /** Start of the string for the symbol currently accumulated */
     private int start;
 
-    /** Reads input characters and returns the index of the 
-     *  next symbol (or EOF) in the symbol table, 
+    /** Reads input characters and returns the index of the
+     *  next symbol (or EOF) in the symbol table,
      *  by maintaining the state of a finite automaton.
      *  The following symbols are returned:
      *  <ul>
@@ -259,9 +260,9 @@ public class Scanner {
             if (lineReader.isAtEof()) {
                 code = EOF;
             } else {
-                code = codeTable[0x00ff & ch]; 
+                code = codeTable[0x00ff & ch];
             }
-            
+
             if (DEBUG >= 2) {
                 System.out.print("[" + String.valueOf(ch) + "]" + state);
             }
@@ -332,7 +333,7 @@ public class Scanner {
                 break;
         } // switch
     } // endOfLineState
-    
+
     protected void eolCommentState() {
         switch (code) {
             case SPACE:
@@ -349,7 +350,7 @@ public class Scanner {
                 break;
         } // switch
     } // eolCommentState
-    
+
     protected void identifierState() {
         switch (code) {
             case DIGIT:
@@ -368,7 +369,7 @@ public class Scanner {
                 break;
         } // switch
     } // identifierState
-    
+
     protected void initialState() {
         Symbol localSymbol;
         start = lineReader.getColumn();
@@ -420,7 +421,7 @@ public class Scanner {
                 } else {
                     // error: unknown sequence of special characters
                     // read all special characters and build a new operator
-                    state = OPERATOR_STATE; 
+                    state = OPERATOR_STATE;
                 }
                 break;
             default:
@@ -428,7 +429,7 @@ public class Scanner {
                 break;
         } // switch
     } // initialState
-    
+
     protected void nestCommentState() {
         Symbol localSymbol;
         switch (code) {
@@ -437,7 +438,7 @@ public class Scanner {
             case DIGIT:
             case INVALID:
             case QUOTE:
-                break; // append them 
+                break; // append them
             case EOL:
                 symbolList.append(lineReader.getSubstring(start, lineReader.getColumn()));
                 symbolList.append(lineReader.lookAt());
@@ -449,18 +450,18 @@ public class Scanner {
                 break;
             case SPECIAL:
                 localSymbol = symbolList.mapSpecial(lineReader.getSubstring());
-                if (localSymbol == starSlash) { 
+                if (localSymbol == starSlash) {
                     lineReader.advance(localSymbol.length());
                     symbolList.append(lineReader.getSubstring(start, lineReader.getColumn()));
                     resultSymbol = symbolList.put(category);
                     state = TERMINAL_STATE;
                 } else {
-                    // lineReader.advance(1); // by 1 only = care for "***/" 
+                    // lineReader.advance(1); // by 1 only = care for "***/"
                 }
                 break;
         } // switch
     } // nestCommentState
-    
+
     protected void numberState() {
         switch (code) {
             case DIGIT:
@@ -480,7 +481,7 @@ public class Scanner {
                 break;
         } // switch
     } // numberState
-    
+
     protected void operatorState() {
         switch (code) {
             case SPECIAL:
@@ -500,7 +501,7 @@ public class Scanner {
                 break;
         } // switch
     } // operatorState
-    
+
     protected void spaceState() {
         switch (code) {
             case SPACE:
@@ -539,7 +540,7 @@ public class Scanner {
                 break;
         } // switch
     } // stringState
-    
+
     protected void string2State() {
         switch (code) {
             case SPACE:
@@ -559,7 +560,7 @@ public class Scanner {
                 break;
         } // switch
     } // string2State
-    
+
     /*----------------------------------------------------------------*/
     /** Gets the index of the next free symbol
      *  @return number of symbols allocated so far
@@ -567,21 +568,21 @@ public class Scanner {
     public int size() {
         return symbolList.size();
     } // size
-    
+
     /** Gets the index of the next free symbol
      *  @return number of symbols allocated so far
      */
     public int getFreeSymbol() {
         return symbolList.size();
     } // getFreeSymbol
-    
+
     /** Gets the symbol list of this scanner object
      *  @return symbol list
      */
     public SymbolList getSymbolList() {
         return symbolList;
     } // getSymbolList
-    
+
     /** Gets a symbol from the symbol list
      *  @param index index of the symbol
      *  @return index of symbol in <em>symbolList</em>
@@ -589,9 +590,9 @@ public class Scanner {
     public Symbol getSymbol(int index) {
         return symbolList.get(index);
     } // getSymbol
-    
+
     /** Tells whether the scanner has reached the End Of File
-     *  @return true if scanner is at EOF, false otherwise 
+     *  @return true if scanner is at EOF, false otherwise
      */
     public boolean isAtEof() {
         return lineReader.isAtEof();
@@ -602,23 +603,24 @@ public class Scanner {
     public void terminate() {
         lineReader.close();
     } // terminate
-    
+
     /** Print a list of all symbols for debugging purposes
      */
     private void dumpSymbols() {
         if (Parm.isDebug(1)) {
-            int index = 0; 
+            int index = 0;
             while (index < symbolList.size()) {
                 Symbol symbol = symbolList.get(index);
                 System.out.println(symbol.toString());
                 index ++;
             } // while index
-        } // debug         
+        } // debug
     } // dumpSymbols
 
     /** Test Frame: read lines and print them
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
         System.out.println(Parm.getXMLDeclaration());
         System.out.println("<mainScanner>");
         Scanner scanner = new Scanner(LANG_BNF, args[0]);
@@ -630,5 +632,5 @@ public class Scanner {
         scanner.terminate();
         System.out.println("</mainScanner>");
     } // main
-    
+
 } // Scanner

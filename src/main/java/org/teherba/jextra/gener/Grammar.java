@@ -1,5 +1,6 @@
 /*  LR(1) Grammar of a language and corresponding parser table
     @(#) $Id: Grammar.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2007-05-08: relaunch with prototype states
     2005-02-10, Georg Fischer: copied from Symbol.java
@@ -36,8 +37,7 @@ import  java.util.Iterator;
 import  java.util.TreeMap;
 import  org.apache.log4j.Logger;
 
-/**
- *  LR(1) Grammar of a language and corresponding parser table, consisting of
+/** LR(1) Grammar of a language and corresponding parser table, consisting of
  *  <ul>
  *  <li>a set of <em>Rule</em>s consisting of sets of <em>Production</em>s</li>
  *  <li>an <em>axiom</em> - the rule with this <em>Symbol</em>
@@ -85,6 +85,7 @@ public class Grammar {
     } // Constructor()
 
     /** Constructor - creates a new grammar with an associated scanner
+     *  @param scan the Scanner to be used
      */
     public Grammar(Scanner scan) {
         scanner     = scan;
@@ -204,6 +205,7 @@ public class Grammar {
 
     /** Checks whether the grammar has a rule for a nonterminal
      *  @param leftSide symbol to be checked
+     *  @return whether the symbol is a terminal
      */
     public boolean isTerminal(Symbol leftSide) {
         return ruleMap.get(leftSide) != null;
@@ -360,8 +362,8 @@ public class Grammar {
         return result;
     } // toString
 
-    /**
-     *  Test Frame
+    /** Test Frame
+     *  @param args commandline arguments
      */
     public static void main (String args[]) {
     } // main

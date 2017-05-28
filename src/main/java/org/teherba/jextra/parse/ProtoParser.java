@@ -1,5 +1,6 @@
 /*  Simple finite state automaton which "parses" and stores grammars
     @(#) $Id: ProtoParser.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-05-30: store rules
     2005-01-27, Georg Fischer
 */
@@ -31,7 +32,7 @@ import  org.teherba.jextra.trans.SemAction;
 import  org.apache.log4j.Logger;
 
 /** A simple {@link BaseParser Parser} realized by a finite state automaton
- *  which reads and stores a {@link Grammar}. 
+ *  which reads and stores a {@link Grammar}.
  *  The syntax of such a grammar is defined by the MetaGrammar, which defines
  *  a variant of Backus-Naur-Form (BNF).
  *  @author Dr. Georg Fischer
@@ -97,12 +98,13 @@ public class ProtoParser extends BaseParser {
     } // initialize
 
     /** Stores a production for later parser table generation
+     *  @param prod production to be stored
      */
     private void store(Production prod) {
         prod.closeMembers();
         prod.closeSemantics();
         grammar.insert(prod);
-        System.out.println(Parm.getIndent() + "<store>" 
+        System.out.println(Parm.getIndent() + "<store>"
                 + prod.getLeftSide().legible() +  " =" + prod.legible() + "</store>");
     } // store
 

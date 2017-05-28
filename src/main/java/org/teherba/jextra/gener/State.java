@@ -1,5 +1,6 @@
 /*  A State of the LR(1) Push-Down Automaton
     @(#) $Id: State.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-02-17, Georg Fischer: copied from Rule.java
 */
@@ -300,7 +301,7 @@ public class State implements Comparable {
     /** Compares this object (state1) with the specified object (state2).
      *  Ordering is by reaching symbol, item set.
      *  @param obj2 state on the right side
-     *  @return -1 | 0 | +1 if state1 < | = | > state2
+     *  @return -1 | 0 | +1 if state1 &lt; | = | &gt; state2
      */
     public int compareTo(Object obj2) {
         int result = reachingSymbol.compareTo(((State) obj2).getReachingSymbol()); 
@@ -355,6 +356,7 @@ public class State implements Comparable {
     } // toString
 
     /** Test Frame
+     *  @param args commandline arguments
      */     
     public static void main (String args[]) { 
     } // main

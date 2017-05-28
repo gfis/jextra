@@ -1,6 +1,7 @@
 /*  Queue of states to be processed recursively
     @(#) $Id: StateQueue.java 427 2010-06-01 09:08:17Z gfis $
     Copyright (c) 2005 Dr. Georg Fischer <punctum@punctum.com>
+    2017-05-28: javadoc 1.8
     2005-03-01, Georg Fischer: copied from Rule.java
 */
 /*
@@ -30,14 +31,14 @@ import  org.teherba.jextra.scan.Symbol;
  */
 public class StateQueue extends Queue {
     public final static String CVSID = "@(#) $Id: StateQueue.java 427 2010-06-01 09:08:17Z gfis $";
-    
+
     /**
      *  Empty Constructor - creates a new state queue
      */
     public StateQueue() {
         super();
     } // Constructor()
-    
+
     /**
      *  Constructor - creates a queue with specified initial size
      *  @param initSize estimate of the number of elements in the queue
@@ -53,7 +54,7 @@ public class StateQueue extends Queue {
     public StateQueue(String descr) {
         super(descr);
     } // Constructor(String)
-    
+
     /**
      *  Constructor - creates a queue with specified initial size and name
      *  @param initSize estimate of the number of elements in the queue
@@ -62,7 +63,7 @@ public class StateQueue extends Queue {
     public StateQueue(int initSize, String descr) {
         super(initSize, descr);
     } // Constructor(int, String)
-        
+
     /**
      *  Gets the next element to be processed
      *  @return object from the queue
@@ -87,11 +88,11 @@ public class StateQueue extends Queue {
     } // push
 
     /**
-     *  Deletes the entire queue (set) after unmarking all elements 
+     *  Deletes the entire queue (set) after unmarking all elements
      */
     public void clear() {
         head = 0;
-        while (hasNext()) { // unmark all elements 
+        while (hasNext()) { // unmark all elements
             State state = next();
             state.unmark(this);
         } // while
@@ -101,8 +102,9 @@ public class StateQueue extends Queue {
     //------------------------------------------------------------
     /**
      *  Test Frame
-     */     
-    public static void main (String args[]) { 
+     *  @param args commandline arguments
+     */
+    public static void main (String args[]) {
         Table table = new Table();
         // table.initialize();
         StateQueue queue = new StateQueue("test");
@@ -116,14 +118,14 @@ public class StateQueue extends Queue {
     /*
         for (int index = 0; index < 8; index += 4) {
             State state = table.get(index);
-            System.out.println("push2 " 
-                    + state.getReachingSymbol().getEntity() + ": " 
+            System.out.println("push2 "
+                    + state.getReachingSymbol().getEntity() + ": "
                     + queue.push(state)
                     + " @ " + queue.getHead()
                     );
         }
         while(queue.hasNext()) {
-            System.out.println("next elem: " 
+            System.out.println("next elem: "
                     + queue.next().getReachingSymbol().getEntity());
         }
     */

@@ -1,5 +1,6 @@
 /*  Base class for all Parser Table Generators
     @(#) $Id: Generator.java 427 2010-06-01 09:08:17Z gfis $
+    2017-05-28: javadoc 1.8
     2016-06-11: renamed from Generator
     2005-02-21, Georg Fischer
 */
@@ -30,10 +31,6 @@ import  java.util.ArrayList;
 import  java.util.Iterator;
 
 /** Base class for all Parser Table Generators
- *  <ul>
- *  <li>l
- *  <li>
- *  </ul>
  *  @author Dr. Georg Fischer
  */
 public class BaseGenerator {
@@ -80,8 +77,8 @@ public class BaseGenerator {
     } // reorganize
 
     //------------------------------------------------------------
-    /**
-     *  Test Frame
+    /** Test Frame
+     *  @param args commandline arguments
      */
     public static void main (String args[]) {
     } // main
