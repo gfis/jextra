@@ -4,8 +4,9 @@
 # @(#) $Id: all.tca 955 2012-06-05 07:22:59Z gfis $
 # 2016-05-30, Dr. Georg Fischer
 #-----------------------------------
-# Caution:
-# 
+## Caution:
+# (1) Adjust the following line: URL where Dbat was deployed
+URL=http://localhost:8080/jextra/servlet
 #======================================================================
 PACKAGE=org.teherba.jextra.scan
 
@@ -73,3 +74,4 @@ CALL ProtoParser data/sasb.grm
 
 TEST PP4 ProtoParser non-LALR(1), but LR(1)
 CALL ProtoParser data/ex421.grm
+#======================================================================

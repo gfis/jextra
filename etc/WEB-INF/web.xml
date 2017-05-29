@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!--
+    @(#) $Id: web.xml 427 2010-06-01 09:08:17Z gfis $
+    2017-05-29: Servlet 3.0; ErrorServlet
+    2007-04-30: minimal version
+-->
+<!--
  * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,28 +19,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
 -->
-<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
-    "http://java.sun.com/dtd/web-app_2_3.dtd">
-<!--
-    @(#) $Id: web.xml 427 2010-06-01 09:08:17Z gfis $
-    2007-04-30: minimal version
--->
-<web-app>
-    
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+        version="3.0">
+
     <display-name>Extensible Translator</display-name>
     <description>
-        LR(1) Parser Generator 
+        LR(1) Parser Generator
     </description>
-    
+
     <!-- Servlets -->
-    <servlet> 
+    <servlet>
         <servlet-name>JExtraServlet</servlet-name>
         <servlet-class>org.teherba.jextra.JExtraServlet</servlet-class>
     </servlet>
-
-    <servlet-mapping> 
+    <servlet-mapping>
         <servlet-name>JExtraServlet</servlet-name>
-        <url-pattern>/jextraservlet</url-pattern>
+        <url-pattern>/servlet</url-pattern>
     </servlet-mapping>
-    
+
+    <servlet>
+        <servlet-name>ErrorServlet</servlet-name>
+        <servlet-class>org.teherba.common.web.ErrorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ErrorServlet</servlet-name>
+        <url-pattern>/ErrorServlet</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <location>/ErrorServlet</location>
+    </error-page>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
 </web-app>

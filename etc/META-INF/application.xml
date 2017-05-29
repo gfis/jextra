@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+    J2EE application descriptor 
+    @(#) $Id: 77d02f9fd6df5498c3b2a6fe74b616c88d4f4b7b $
+    2016-05-29, Georg Fischer
+-->
 <application 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://java.sun.com/xml/ns/javaee" 
@@ -6,11 +11,6 @@
         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/j2ee/application_5.xsd" 
         version="5"
         >
-<!--
-    J2EE application descriptor 
-    @(#) $Id: 77d02f9fd6df5498c3b2a6fe74b616c88d4f4b7b $
-    2016-05-29, Georg Fischer
--->
     <description>JExtra - Extensible Translator System in Java</description>
     <display-name>JExtra</display-name>
 
