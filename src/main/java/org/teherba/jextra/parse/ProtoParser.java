@@ -29,7 +29,8 @@ import  org.teherba.jextra.gener.Production;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
 import  org.teherba.jextra.trans.SemAction;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** A simple {@link BaseParser Parser} realized by a finite state automaton
  *  which reads and stores a {@link Grammar}.
@@ -41,7 +42,7 @@ public class ProtoParser extends BaseParser {
     public final static String CVSID = "@(#) $Id: ProtoParser.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** logger for debug and error situations */
-    private static Logger log = Logger.getLogger(ProtoParser.class);
+    private static Logger log = LogManager.getLogger(ProtoParser.class);
 
     /** Current state of the Finite State Automaton
      *  used to parse the meta grammar

@@ -28,7 +28,8 @@ import  java.util.Arrays; // asList
 import  java.util.ArrayList; // asList
 import  java.util.Iterator;
 import  java.util.StringTokenizer;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Selects a specific filter, and iterates over the descriptions
  *  of all filters and their codes
@@ -47,7 +48,7 @@ public class TranslatorFactory {
     /** Non-args Constructor
      */
     public TranslatorFactory() {
-        log = Logger.getLogger(TranslatorFactory.class.getName());
+        log = LogManager.getLogger(TranslatorFactory.class.getName());
         allTransformers = new BaseTransformer[] { null // since this allows for "," on next source line
         // the order here defines the order in documentation.jsp,
         // should be: "... group by package order by package, name"

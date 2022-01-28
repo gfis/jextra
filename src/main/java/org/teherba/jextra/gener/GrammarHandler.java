@@ -26,7 +26,8 @@ import  org.teherba.xtrans.CharTransformer;
 import  org.teherba.xtrans.grammar.ExtraTransformer;
 import  org.xml.sax.Attributes;
 import  org.xml.sax.SAXParseException;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Transformer for grammars of the EXTRA (Extensible Translator) system.
  *  @author Dr. Georg Fischer
@@ -35,7 +36,7 @@ public class GrammarHandler extends ExtraTransformer {
     public final static String CVSID = "@(#) $Id: GrammarHandler.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** log4j logger (category) */
-    private static Logger log = Logger.getLogger(GrammarHandler.class.getName());
+    private static Logger log = LogManager.getLogger(GrammarHandler.class.getName());
     
     /** No-args Constructor.
      */

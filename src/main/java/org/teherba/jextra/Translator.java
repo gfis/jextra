@@ -27,7 +27,8 @@ import  org.teherba.xtrans.grammar.ExtraTransformer;
 import  java.util.Arrays; // asList
 import  java.util.ArrayList; // asList
 import  java.util.Iterator;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Commandline tool which processes gramamrs and generates parser tables
  *  @author Dr. Georg Fischer
@@ -45,7 +46,7 @@ public class Translator {
      *  Constructor
      */
     public Translator() {
-        log = Logger.getLogger(Translator.class.getName());
+        log = LogManager.getLogger(Translator.class.getName());
         factory = new TranslatorFactory();
     }
 

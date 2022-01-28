@@ -35,7 +35,8 @@ import  org.teherba.jextra.scan.SymbolList;
 import  java.util.ArrayList;
 import  java.util.Iterator;
 import  java.util.TreeMap;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** LR(1) Grammar of a language and corresponding parser table, consisting of
  *  <ul>
@@ -52,7 +53,7 @@ public class Grammar {
     public final static String CVSID = "@(#) $Id: Grammar.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** log4j logger (category) */
-    private static Logger log = Logger.getLogger(Grammar.class.getName());
+    private static Logger log = LogManager.getLogger(Grammar.class.getName());
     /** a special nonterminal symbol which is the starting point of the grammar */
     public Symbol axiom;
     /** Maps a left side to the corresponding rule (set of productions) */

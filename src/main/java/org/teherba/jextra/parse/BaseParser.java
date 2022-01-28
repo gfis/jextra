@@ -27,7 +27,8 @@ import  org.teherba.jextra.gener.State;
 import  org.teherba.jextra.gener.Table;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
-import  org.apache.log4j.Logger;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 /** Abstract Parser - for regular or context-free languages
  *  @author Dr. Georg Fischer
@@ -36,7 +37,7 @@ public class BaseParser {
     public final static String CVSID = "@(#) $Id: BaseParser.java 427 2010-06-01 09:08:17Z gfis $";
 
     /** logger for debug and error situations */
-    private static Logger log = Logger.getLogger(BaseParser.class);
+    private static Logger log = LogManager.getLogger(BaseParser.class);
 
     /** parser {@link Table} with {@link Grammar} and state set */
     protected Table      table;
