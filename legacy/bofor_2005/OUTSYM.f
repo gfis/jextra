@@ -1,5 +1,6 @@
       SUBROUTINE OUTSYM (SYMB)
 C       PRINT A SYMBOL OF THE GRAMMAR OR OF 'SOURCE_TEXT'
+C       2021-02-05: trailing ','
 C       GF 11.07.1980
 C
         INCLUDE 'PARS.F'
@@ -29,7 +30,7 @@ C
           CALL ZZWI(I, 4)
           CALL ZZWX(1)
           CALL PUTSYM (I)
-          IF (PARASK('PACKED',1,6,1,) .NE. 0) GOTO 35
+          IF (PARASK('PACKED',1,6,1) .NE. 0) GOTO 35
           CALL ZZWC (', MAR: ',1,7,0)
           CALL ZZWI (SYMMAR(I),5)
           CALL ZZWC (', RST: ',1,7,0)

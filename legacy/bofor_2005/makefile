@@ -6,10 +6,11 @@
 # 2002-10-09, Georg Fischer <punctum@punctum.com>
 #
 # CC=g77 -g 
-CC=gfortran -O2 -std=legacy -fdec
 #-fno-automatic 
 #-finit-local-zero
 # CC=c:/bin/MinGW/bin/g77 -g
+
+CC=gfortran -std=legacy -w -fallow-argument-mismatch -fdec
 
 OBJS=	ALONG.o ASSERT.o BLODAT.o \
 	CLEARE.o CODASS.o CODGET.o CODINI.o COUNT.o DELTA.o DIRECT.o \
@@ -39,8 +40,7 @@ dummy:
 all: 	unpack repair compile clean  executables
 
 compile:
-	ls -1 *.f | sed "s/\.f/.o/" \
-	| xargs -l make 
+	ls -1 *.f | sed "s/\.f/.o/" | xargs -l make 2>&1 | tee compile.log
 clean:
 	rm -f *.o *.err *.bak *.map *.stackdump
 
@@ -87,7 +87,9 @@ parlist:
 	grep -E "PARASK *\(" *.f | grep ".f: " \
 	|  sed "s/^[:alpha:]+\.f://"
 
-executables: assloa bofog bofol bofor extra linete parate scante zzccte zzcrte zzwte 
+executables: assloa assete \
+	bofog bofol bofor direte extra \
+	linete parate scante sepute zzccte zzcrte zzwte 
 
 assloa: ASSERT.f ASSLOA.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o \
 	ZZINDX.o PUTSYM.o SYMEND.o ZZWC.o ZZWI.o ZZWS.o BLODAT.o PARADD.o \
@@ -106,41 +108,53 @@ assete: ASSERT.f ASSETE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o \
 	./$@ | tee assloa.tst
 bofog: BOFOG.o $(OBJS)
 	$(CC) -o $@ BOFOG.o $(OBJS) 
+	./$@
 bofol: BOFOL.o $(OBJS)
 	$(CC) -o $@ BOFOL.o $(OBJS)
+	./$@
 bofor: BOFOR.o $(OBJS)
 	$(CC) -o $@ BOFOR.o $(OBJS)
+	./$@
 # map with -Wl,-M
 direte: DIRETE.o  $(OBJS)
 	$(CC) -o $@ DIRETE.o $(OBJS)
+	./$@
 extra: EXTRA.o  $(OBJS)
 	$(CC) -o $@ EXTRA.o $(OBJS)
+	./$@
 linete: LINETE.o  $(OBJS)
 	$(CC) -o $@ LINETE.o BLODAT.o CODASS.o LINIT.o LINEXT.o \
-	ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o PUTSYM.o \
+	ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o PUTSYM.o SYMEND.o \
 	ZZTC.o ZZTS.o \
 	ZZWS.o ZZWI.o ZZWC.o ZZINDX.o 
 	cp LINEXT.f FORT.4
-	./$@
+	./$@ < FORT.4
 parate: PARATE.o  $(OBJS)
 	$(CC) -o $@ PARATE.o BLODAT.o ASSERT.o PARASK.o PARADD.o \
-	PUTSYM.o  ZZINDX.o ZZTC.o ZZTS.o ZZWC.o ZZWI.o ZZWS.o \
+	PUTSYM.o SYMEND.o ZZINDX.o ZZTC.o ZZTS.o ZZWC.o ZZWI.o ZZWS.o \
 	ZZCC.o ZZCR.o ZZCI.o ZZIC.o
+	./$@
 scante: SCANTE.o  $(OBJS)
 	$(CC) -o $@ LINETE.o BLODAT.o CODASS.o LINIT.o LINEXT.o \
 	ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o \
 	CODGET.o SPEINS.o SPEINI.o HAINIT.o CODINI.o SCAINI.o \
 	SYMEND.o SYMINS.o SYMNUM.o 
+	./$@
 sepute: SEPUTE.o  $(OBJS)
 	$(CC) -o $@ SEPUTE.o $(OBJS) 
-	$@
+	./$@
 zzccte: ZZCCTE.o  $(OBJS)
 	$(CC) -o $@ ZZCCTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o 
+	./$@
 zzcrte: ZZCRTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o
 	$(CC) -o $@ ZZCRTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o
+	./$@
+zzute: ZZUTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ZZUC.o
+	$(CC) -o $@ ZZUTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ZZUC.o 
 	./$@
 zzwte: ZZWTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ZZWS.o ZZWI.o ZZWC.o ZZWX.o \
 	ZZTS.o ZZTC.o ZZTX.o
 	$(CC) -o $@ ZZWTE.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ZZWS.o ZZWI.o ZZWC.o ZZWX.o \
 	ZZTS.o ZZTC.o ZZTX.o
 	./$@
+#----

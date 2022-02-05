@@ -1,9 +1,11 @@
       PROGRAM ASSLOA
 C     LOAD 'ASSERT'-TEXTS ON A DIRECT-FILE
+C     2022-02-05: OPEN statements for gfortran; XXASSH had no type
 C     GF 07.08.1980
 C
-      PARAMETER (XXASSH=40)
       INCLUDE   'PARS.F'
+      INTEGER*2 XXASSH
+      PARAMETER XXASSH=40
       INTEGER*2 ZZCR
       INTEGER*4 OFFS4
       INTEGER*2 I,J
@@ -17,21 +19,17 @@ C
       RECLEN = XXASSH * 2;
 C
       CALL PARADD
-      OPEN (UNIT=ULIN,NAME='ASSERT.f'
-     = ,TYPE='OLD'
-     = )
-      OPEN (UNIT=UASS,NAME='ASSTEX.DIR'
-     = ,TYPE='NEW',ACCESS='DIRECT',RECORD SIZE=RECLEN
-     = 
-     = )
+      OPEN (UNIT=ULIN,file='ASSERT.f',status='OLD')
+      OPEN (UNIT=UASS,file='ASSTEX.DIR'
+     = ,STATUS='REPLACE',ACCESS='DIRECT',RECL=RECLEN)
       CALL ZZCC(' UNDEF : @,@',1,12,  LINE,1,RECLEN)
       WRITE (UPRI,7) (LINE(J),J=1,XXASSH)
 7     FORMAT (1X,40A2)
       NUM = 1
       DO 1 I = 1,MAXNUM
         OFFS4 = (I - 1) * (RECLEN + 4)
-        CALL FSEEK (UASS, OFFS4, 0)
-        WRITE (UASS) (LINE(J),J=1,XXASSH)
+C        CALL FSEEK (UASS, OFFS4, 0)
+        WRITE (UASS,rec=I) (LINE(J),J=1,XXASSH)
 1     CONTINUE
 C
 2     CONTINUE
@@ -41,8 +39,8 @@ C
 C        WRITE (UPRI,4) NUM, (LINE(J),J=1,XXASSH)
 C4       FORMAT (1x, I3, 1X, 40A2)
         OFFS4 = (NUM - 1) * (RECLEN + 4)
-        CALL FSEEK (UASS, OFFS4, 0)
-        WRITE (UASS) (LINE(J),J=1,XXASSH)
+C        CALL FSEEK (UASS, OFFS4, 0)
+        WRITE (UASS,rec=NUM) (LINE(J),J=1,XXASSH)
       GOTO 2
 5     CONTINUE
       CLOSE (UNIT=UASS)

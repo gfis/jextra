@@ -1,5 +1,6 @@
       SUBROUTINE DIRECT (CODE)
 C     ACCESS TO THE DIRECT-FILE 'UDIR'
+C     2022-02-05: OPEN statement for gfortran
 C     2005-03-29: demingle MEMSETS, STASTRS
 C     GF 24.08.1980
 C
@@ -71,16 +72,12 @@ C----------------------------------------------------------------
 105   CONTINUE
       DIRHIB = PARASK ('DIRHIB',1,6,256)
       IF (PARASK('DAIO',1,4,1) .NE. 0) GOTO 1051
-      OPEN (UNIT=UDIR,NAME='DIRECT.DAT',TYPE='UNKNOWN'
-     = ,ACCESS='DIRECT',RECORD SIZE=DIRHIB/2
-     = 
-     = )
+      OPEN (UNIT=UDIR,file='DIRECT.DAT',status='UNKNOWN'
+     = ,ACCESS='DIRECT',recl=DIRHIB/2)
       GOTO 99
 1051  CONTINUE ! WITH 'DAIO'
-      OPEN (UNIT=UDIR,NAME='DIRECT.DAT',TYPE='UNKNOWN'
-     = ,ACCESS='DIRECT',RECORD SIZE=DIRHIB/2
-     = 
-     = )
+      OPEN (UNIT=UDIR,file='DIRECT.DAT',status='UNKNOWN'
+     = ,ACCESS='DIRECT',recl=DIRHIB/2)
       GOTO 99
 C----------------------------------------------------------------
 106   CONTINUE

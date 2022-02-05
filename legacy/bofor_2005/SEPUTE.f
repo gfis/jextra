@@ -1,5 +1,6 @@
       PROGRAM SEPUTE
 C     TEST SEPUSH
+C     2022-02-05: POT2 was in SETS.f
 C     2005-03-27, Georg Fischer
 C
       INCLUDE 'PARS.F'
@@ -9,12 +10,11 @@ C
      = ,I
      = ,I1       ! -> THE ELEMENT BEFORE 'I2'
      = ,I2       ! -> CURRENT ELEMENT
-     = ,POT2    ! A POWER OF 2 TO SET A BIT
      = ,X        ! ELEMENT,BE AMRKED
      = ,XBIT     ! THE BIT THAT IS MARKED
      = ,XHEAD    ! -> BEGIN AND
      = ,XMAR(1)  ! ARRAY THAT CONTAINS THE MARKINGS
-     = ,XTAIL    ! APPEND,THIS SET
+     = ,XTAIL    ! APPEND TO THIS SET
 C
       CALL PARADD
       I1 = 17

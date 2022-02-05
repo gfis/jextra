@@ -1,5 +1,6 @@
       SUBROUTINE DIRWRI (ARRAY,LNG)
 C     WRITE DIRECT-FILE
+C     2022-02-05: formal parms DECB, FDIR4 -> COMMON
 C     GF 24.08.1980
 C
       INCLUDE 'PARS.F'
@@ -17,16 +18,13 @@ C         HERE IS 'HIGH .GT. LNG' - DUPLICATE SOME ELEMENTS
           HIGH = LNG
 6       CONTINUE
         LOW = HIGH - DIRHIB + 1
-        IF (PARASK('DAIO',1,4,1) .NE. 0) GOTO 4
-C       WRITE  (UDIR'FDIR) (ARRAY(I),I=LOW,HIGH)
-        GOTO 5
 4       CONTINUE
           DECB(1) = UDIR
           DECB(2) = 1
           FDIR4 = FDIR
           FDIR = FDIR + 1
-          CALL DAWRTE (DECB,ARRAY(LOW),FDIR4,1)
-          CALL DAWAIT (DECB)
+          CALL DAWRTE (ARRAY(LOW),1)
+          CALL DAWAIT ()
           IF (DECB(5) .NE. 0) CALL ASSERT (9,DECB(5),0)
 5       CONTINUE
         IF (PARASK('DIRWRI',1,6,0) .EQ. 0) GOTO 2
