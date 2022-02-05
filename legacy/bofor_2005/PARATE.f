@@ -1,0 +1,6 @@
+      PROGRAM PARATE
+      CALL PARADD
+10    CONTINUE
+      CALL PARADD
+      GOTO 10
+      END

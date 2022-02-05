@@ -1,0 +1,20 @@
+      SUBROUTINE SPAINI
+C     INITIALIZE 'SPAS' DATA STRUCTURE
+C     GF 08.11.1980
+C
+      INCLUDE 'PARS.F'
+      INCLUDE 'SPAS.F'
+      INTEGER*2 PARASK
+      INTEGER*2 I2
+C
+      SPAHD = 1
+      SPATL = PARASK('AF',1,2,SPAHIB-1)
+      SPATES = PARASK('SPATES',1,6,0)
+      DO 1 I2 = SPAHD,SPATL
+        SPA(I2) = I2 + 1
+        SPASTA(I2) = 0
+1     CONTINUE
+      SPA(SPATL) = SPAHD
+      SPATL = SPAHD
+      RETURN
+      END

@@ -1,0 +1,20 @@
+      PROGRAM ZZWTE
+C     TEST 'ZZW'-MODULES
+C
+      INCLUDE 'PARS.F'
+      INTEGER*2 T1(4),T2(6)
+      DATA T1/2H1.,2H Z,2HEI,2HLE/
+      DATA T2/2H K,2HOM,2HMT,2H ',2HRA,2HUS/
+C
+      CALL ZZWC(T1,1,8,0)
+      CALL ZZWX(10)
+      CALL ZZWC(T2,1,11,20)
+      CALL ZZWS(0)
+      CALL ZZWS(0)
+      CALL ZZWI(12345,10)
+      CALL ZZWI(67,0)
+      CALL ZZWI(-4567,8)
+      CALL ZZWI(-4567,0)
+      CALL ZZWS(0)
+      STOP
+      END

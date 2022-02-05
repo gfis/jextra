@@ -165,7 +165,7 @@ C=  200: RECEXP @,@
      =  WRITE (UPRI,11) I
 11      FORMAT(1X,I1)
       NOW = NOW + 1
-      IF (NOW .GT. MAX) GOTO 1
+      IF (NOW .GT. MAX) GOTO 1
         I = NUM
         READ (UASS'I) (T(P1),P1=1,40)
         P1 = INDEX(T,1,80,'@')
@@ -383,7 +383,7 @@ C     STKS
 C-----------------------------------------------------------
 C     STRS
       %PARAMETER STRH2=2*STRH
-      DATA STRHIB/&STRH2/
+      DATA STRHIB/&STRH2/
       DATA FSTR /2/
 C-----------------------------------------------------------
 C     SYMS
@@ -1167,7 +1167,7 @@ C
           PRED = STAPRE(STATEB)
 5         IF(PRED .GE. PREHIB) GOTO 6
             ! COPY PREDECESSORS INTO TARGET SET
-            CALL SEPUSH(STAMAR,PRESTA(PRED),EMITTT,EMITTB)
+            CALL SEPUSH(STAMAR,PRESTA(PRED),EMITTT,EMITTB)
             PRED = PRE(PRED)
           GOTO 5
 6         CONTINUE ! ALL PREDECESSORS
@@ -1215,7 +1215,7 @@ C
 14    IF(EMITTH .EQ. EMITTT) GOTO 15
         CALL SETPOP(STAMAR,STATEB,EMITTH,EMITTB)
         CALL SEPUSH(STAMAR,STATEB,LAPUTT,LAPUTB)
-      GOTO 14
+      GOTO 14
 15    CONTINUE ! ALL IN TARGET SET
       RETURN! EMITT
       END
@@ -2084,7 +2084,7 @@ C-------GF 28.08.80------------------------------ I T E S
      = ,ITE      ! -> NEXT ITEM IN A STATE
      = ,ITESYM      ! THE MARKED SYMBOL
      = ,ITEPOS      ! THE MARKER IS BEFORE THIS MEMBER
-     = ,ITESUC  ! SHIFT: SUCCESSOR, REDUCE: PRODUCTION
+     = ,ITESUC  ! SHIFT: SUCCESSOR, REDUCE: PRODUCTION
      = ,ITEPAG  ! = 1 (0): DO (NOT) PAGE 'ITES'
 &END
 &(LACOPY  )
@@ -2392,7 +2392,7 @@ C     DETERMINE THE LAST WORD NOT CONTAINING BLANKS
       LINENO = LINENO + 1
       WRITE(UPRI,3) LINENO,FPRO,(LINE(I),I=1,MARRD2)
 3     FORMAT(1X,2I5,2X,&LINH A2)
-      FLIN = LIMARL
+      FLIN = LIMARL
       GOTO (101,102,103), LILANG
 C--------------------------------------------------------
 102   CONTINUE ! FORTRAN
@@ -2741,7 +2741,7 @@ C-------GF 28.08.80------------------------ M E M S E T S
       INTEGER SET   (&SETH),SETELE(&SETH)
      = ,EMITSH,EMITST,EMITSB   ! STA: FOR EMITT, SOURCE
      = ,EMITTH,EMITTT,EMITTB   ! STA: FOR EMITT, TARGET
-     = ,LAGARH,LAGART,LAGARB   ! STA: FOR LAGAR
+     = ,LAGARH,LAGART,LAGARB   ! STA: FOR LAGAR
      = ,LAGETH,LAGETT,LAGETB   ! STA: FOR LAGET
      = ,LAPUTH,LAPUTT,LAPUTB   ! STA: FOR LAPUT
      = ,SPLITH,SPLITT,SPLITB   ! STA: FOR SPLIT
@@ -3089,7 +3089,7 @@ C
       I = 1 ! ASSUME 'PARLAS=0'
       OPEN (UNIT=UPAR,NAME=FILNAM,TYPE='OLD'
      = ,ERR=2)
-1     CONTINUE
+1     CONTINUE
       IF (I .LE. PARHIB) GOTO 4
         CALL ASSERT (9,PARHIB,0)
 C         MORE THAN @ PARAMETERS
@@ -3346,7 +3346,7 @@ C
         IF (TRA(TRAIN) .NE. TRAIN) GOTO 1 ! INPUT IS EMPTY
           CALL SCANS (TRAIN) ! READ A STATEMENT, CARE FOR KEYWORDS
 1       CONTINUE
-        ACT = TRA(TRAIN) ! -> 1ST SYMBOL IN INPUT
+        ACT = TRA(TRAIN) ! -> 1ST SYMBOL IN INPUT
         CLASS = TRASYM(ACT)
         IF (CLASS .GE. TCOMT) GOTO 2
           IF (CLASS .EQ. TCALL) GOTO 13
@@ -3530,7 +3530,7 @@ C
       END
 &END
 &(PREINS  )
-      SUBROUTINE PREINS(STATEA,STATEB)
+      SUBROUTINE PREINS(STATEA,STATEB)
 C     INSERT 'STATE' IN THE SET OF PREDECESSORS OF 'STATEB'
 C     GF 09.07.80
 C
@@ -3600,7 +3600,7 @@ C
       INTEGER I
      = ,WHAT    ! CODE FOR THE LOCATION IN PROGRAM 'EXTRA' (1...7)
 C
-      GOTO (101,102,103,104,105,106,107,108,109),WHAT
+      GOTO (101,102,103,104,105,106,107,108,109),WHAT
 C------------------------------------------------------------
 C     1 -                       BEFORE META:GRAMMAR
 C
@@ -5998,7 +5998,7 @@ C       THROW THE OLDEST
 &END
 &(SPAINI  )
       SUBROUTINE SPAINI
-C     INITIALIZE 'SPAS' DATA STRUCTURE
+C     INITIALIZE 'SPAS' DATA STRUCTURE
 C     GF 08.11.80
 C
       %INCLUDE (PARS)
@@ -6111,7 +6111,7 @@ C
       INTEGER ZZCR
       INTEGER I
      = ,CHARS,CHARE,CHARN(1) ! INSERT THIS STRING
-     = ,I1      ! INSERT AFTER THIS SYMBOL
+     = ,I1      ! INSERT AFTER THIS SYMBOL
      = ,I2      ! INSERT BEFORE ...
      = ,POS     ! MOVE 'CHARN' HERE
      = ,POE
@@ -6128,7 +6128,7 @@ C
 13    CONTINUE
         CALL ASSERT(28,FSTR,STRHIB)
         GOTO 101 ! DONINS
-14    CONTINUE ! OVERFLOW
+14    CONTINUE ! OVERFLOW
 C
       I1 = SPEH ! THERE IS A MINIMAL ELEMENT, 'SPEH' ->
       I2 = SYMLNK(I1)
@@ -6551,7 +6551,7 @@ C
             STATEB = STATED
             CALL ITEMA8 (STATEC,GOT)
             RETURN
-8         CONTINUE
+8         CONTINUE
           CALL ITEMA8 (STATEC,GOT)
 3       CONTINUE ! .NE. PREHIB
         STATED = STARST(STATED)
@@ -7098,7 +7098,7 @@ C
 C
       IF (PARASK('TRADUV',1,6,1) .EQ. 0) GOTO 3
         J = FTRA
-        DO 2 I = 1,TRAHIB
+        DO 2 I = 1,TRAHIB
           TRASYM(J) = 0
           J = TRA(J)
           IF (J .EQ. FTRA) GOTO 3
@@ -7176,7 +7176,7 @@ C
       ASEM = PROSEM(PROD) - 1
       IF (PARASK ('TRAFOR',1,6,0) .LT. 1) GOTO 26
         CALL OUTPRO(PROD)
-26    CONTINUE
+26    CONTINUE
 C
 99    CONTINUE ! ESAC:
       ASEM = ASEM + 1
@@ -8036,7 +8036,7 @@ C
 ;
          .TITLE ZZCI
          .PSECT ZZ
-;
+;
 SN       =      02.
 SP1      =      04.
 TIN      =      06.
