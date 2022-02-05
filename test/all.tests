@@ -1,11 +1,11 @@
 #!java -cp dist/jextra.jar org.teherba.common.RegressionTester
 
-# Collection of Testcases for JExtra
+# Collection of testcases for jextra
 # @(#) $Id: all.tca 955 2012-06-05 07:22:59Z gfis $
 # 2016-05-30, Dr. Georg Fischer
 #-----------------------------------
 ## Caution:
-# (1) Adjust the following line: URL where Dbat was deployed
+# (1) Adjust the following line: URL where jextra was deployed
 URL=http://localhost:8080/jextra/servlet
 #======================================================================
 PACKAGE=org.teherba.jextra.scan
@@ -51,7 +51,6 @@ DATA
   ':'    '='   ':='  ::=      '::='  ::=  '->' ->
  ]
 CALL Scanner $(DATA)
-
 #======================================================================
 PACKAGE=org.teherba.jextra.gener
 
