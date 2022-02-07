@@ -1,8 +1,8 @@
       SUBROUTINE SETSIN
 C     INFORM ABOUT ALL SETS
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'SETS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'SETS.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,ELEM

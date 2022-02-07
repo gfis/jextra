@@ -2,10 +2,10 @@
 C     WRITE THE RESULT OF THE TRANSLATION ON A FILE
 C     GF 27.07.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'STKS.F'
-      INCLUDE 'TRAS.F'
-      INCLUDE 'TRES.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'STKS.f'
+      INCLUDE 'TRAS.f'
+      INCLUDE 'TRES.f'
       EXTERNAL TREPUT
       INTEGER*2 I
      = ,ACT     ! -> 'TRA'

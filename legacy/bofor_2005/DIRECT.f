@@ -4,14 +4,14 @@ C     2022-02-05: OPEN statement for gfortran
 C     2005-03-29: demingle MEMSETS, STASTRS
 C     GF 24.08.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'BUCS.F'
-      INCLUDE 'DIRS.F'
-      INCLUDE 'SEMS.F'
-      INCLUDE 'STAS.F'
-      INCLUDE 'STRS.F'
-      INCLUDE 'SYMS.F'
-      INCLUDE 'TRES.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'BUCS.f'
+      INCLUDE 'DIRS.f'
+      INCLUDE 'SEMS.f'
+      INCLUDE 'STAS.f'
+      INCLUDE 'STRS.f'
+      INCLUDE 'SYMS.f'
+      INCLUDE 'TRES.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,CODE    ! 1: READ OVL, 2: WRITE OVL, 3: READ ALL, 4: WRITE ALL

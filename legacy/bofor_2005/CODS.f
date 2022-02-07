@@ -1,0 +1,8 @@
+C-------GF 03.07.1980------------------------------- C O D S
+      INTEGER*2 FCOD,CODHIB,SC
+      INTEGER*2 CODTAB(XXCODH)
+      COMMON /CODS/
+     =  FCOD      ! NEXT CODE TO BE ASSIGNED
+     = ,CODHIB      ! HIGH BOUND OF 'CODTAB'
+     = ,CODTAB      ! SCANNER TRANSLATES IN THESE CODES
+     = ,SC      ! THE NEXT CHARACTER FOR THE SCANNER

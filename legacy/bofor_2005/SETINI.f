@@ -3,9 +3,9 @@ C     INITIALIZE ALL SETS
 C     2005-03-29: demingle MEMSETS
 C     GF 24.08.1980: 'SET' MINGLED UP WITH 'MEMNUC'
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'SETS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'SETS.f'
       INTEGER*2 I
      = ,J  ! 'MEMNUC(J)' MAY BE USED AS 'SET(J)' (.NE. PROD-NO.)
 C

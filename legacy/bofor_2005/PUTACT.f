@@ -2,9 +2,9 @@
 C       PRINT THE ACTION OF AN ITEM
 C       GF 11.07.1980
 C
-        INCLUDE 'PARS.F'
-        INCLUDE 'ITES.F'
-        INCLUDE 'PROS.F'
+        INCLUDE 'PARS.f'
+        INCLUDE 'ITES.f'
+        INCLUDE 'PROS.f'
         INTEGER*2
      =  ACT     ! THE ACTION OF THE PARSER
      = ,ITEM    ! THE ITEM THE ACTION OF WHICH IS TO BE PRINTED

@@ -3,8 +3,8 @@ C     WRITE DIRECT-FILE
 C     2022-02-05: include DIRS.F, formal parms DECB, FDIR4 -> COMMON 
 C     GF 15.10.2002
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'DIRS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'DIRS.f'
       INTEGER*2 I
      = ,ARRAY(1) ! TRANSMIT FROM/TO THIS ARRAY
 C     = ,DECB(1) ! IGNORE

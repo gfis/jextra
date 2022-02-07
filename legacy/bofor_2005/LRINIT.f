@@ -1,13 +1,13 @@
       SUBROUTINE LRINIT
 C     INITIALIZE PARSER-GENERATOR
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'PRES.F'
-      INCLUDE 'PROS.F'
-      INCLUDE 'STAS.F'
-      INCLUDE 'SYMS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'PRES.f'
+      INCLUDE 'PROS.f'
+      INCLUDE 'STAS.f'
+      INCLUDE 'SYMS.f'
       INTEGER*2 I
      = ,GOT   ! = 1 (0) IF THE STATE WAS (NOT) READ IN
      = ,I1,I2 ! RESULT OF 'ITEMA2'

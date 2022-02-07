@@ -82,14 +82,14 @@ C$                 | COMBINED_LIST '#' NUMBER      => #34
 C$ .
 C$ ]
 C-----------------------------------------------------------
-      INCLUDE 'PARS.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'PROS.F'
-      INCLUDE 'SEMS.F'
-      INCLUDE 'STRS.F'
-      INCLUDE 'SYMS.F'
-      INCLUDE 'STAT1.F'
-      INCLUDE 'TRAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'PROS.f'
+      INCLUDE 'SEMS.f'
+      INCLUDE 'STRS.f'
+      INCLUDE 'SYMS.f'
+      INCLUDE 'STAT1.f'
+      INCLUDE 'TRAS.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,ANCH    ! -> 'TRA'-RING COLLECTED SO FAR
@@ -102,7 +102,7 @@ C-----------------------------------------------------------
      = ,TRAIN   ! -> RING FOR THE INPUT NOT YET CONSUMED
      = ,NULL
      = ,TEMP
-      INCLUDE 'ENDS.F'
+      INCLUDE 'ENDS.f'
 C
       NULL = 0
       GOTO  (1001,1002,1003,1004,1005,1006,1007,1008,1009

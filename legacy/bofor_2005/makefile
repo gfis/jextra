@@ -45,6 +45,8 @@ ls1_f:
 gita:
 	git add -v *.f test/*.prev.tst *.dat *.grm
 #----
+exes:	assloa assete bofog bofol extra linete parate sepute zzcte zztte zzwte
+
 assloa: ASSERT.f ASSLOA.o ZZCC.o ZZCR.o ZZCI.o ZZIC.o ASSERT.o PARASK.o \
 		ZZINDX.o PUTSYM.o SYMEND.o ZZWC.o ZZWI.o ZZWS.o BLODAT.o PARADD.o \
 		ZZTS.o ZZTC.o ZZTX.o
@@ -243,7 +245,6 @@ TREGET.o:	TREGET.f PARS.f SLOS.f TRES.f ENDS.f
 TREPUT.o:	TREPUT.f PARS.f TRAS.f TRES.f ENDS.f
 TREXPA.o:	TREXPA.f PARS.f SLOS.f STRS.f SYMS.f TRES.f ENDS.f
 ZZCTE.o:	ZZCTE.f
-ZZCCTE.o:	ZZCCTE.f
 ZZCC.o:	ZZCC.f
 ZZIC.o:	ZZIC.f
 ZZCI.o:	ZZCI.f
@@ -263,7 +264,6 @@ ZZWT.o:	ZZWT.f PARS.f PRIS.f
 ZZWTE.o:	ZZWTE.f PARS.f
 ZZWX.o:	ZZWX.f PARS.f PRIS.f
 
-
 #----
 # run all programs stand-alone
 test1: BLODAT.o 
@@ -277,9 +277,9 @@ test1: BLODAT.o
 	./extra
 	./linete < LINEXT.f
 	./parate
-	./scante
+#	./scante
 	./sepute
-	./zzccte
+	./zzcte
 	./zzcrte
 	./zztte
 	./zzute

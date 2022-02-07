@@ -3,10 +3,10 @@ C       PRINT A SYMBOL OF THE GRAMMAR OR OF 'SOURCE_TEXT'
 C       2021-02-05: trailing ','
 C       GF 11.07.1980
 C
-        INCLUDE 'PARS.F'
-        INCLUDE 'PROS.F'
-        INCLUDE 'STAS.F'
-        INCLUDE 'SYMS.F'
+        INCLUDE 'PARS.f'
+        INCLUDE 'PROS.f'
+        INCLUDE 'STAS.f'
+        INCLUDE 'SYMS.f'
         INTEGER*2 PARASK
         INTEGER*2 I
      = ,GOT     ! RESULT OF 'ITEMA1/2', =1 IF STATE WAS READ

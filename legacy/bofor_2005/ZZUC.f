@@ -1,8 +1,8 @@
       SUBROUTINE ZZUC(CHARN,CHARS,CHARE,WIDTH)
 C     WRITE CHARACTERS TO STREAM-OUTPUT
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'PRIS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'PRIS.f'
       INTEGER*2 CHARS,CHARE,CHARN(1),WIDTH
       INTEGER*2 LNG
 C
@@ -18,8 +18,8 @@ C------------------------------------------------------------------
       SUBROUTINE ZZUS (LNG)
 C     CONDITIONALLY WRITE 'SKIP' TO STREAM OUTPUT
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'PRIS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'PRIS.f'
       INTEGER*2 I
      = ,LEN     ! =1000 IF 'LNG=0'
      = ,LNG      ! SKIP IF NO MORE 'LNG' CHARACTERS FREE

@@ -4,16 +4,16 @@ C     2022-02-05: OPEN statements for gfortran
 C     GF 08.11.1980: CARRIAGECONTROL='NONE' FOR 'TARGET.DAT'
 C     GF 23.08.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'LINS.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'PROS.F'
-      INCLUDE 'SPAS.F'
-      INCLUDE 'STAS.F'
-      INCLUDE 'STAT1.F'
-      INCLUDE 'SYMS.F'
-      INCLUDE 'TRES.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'LINS.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'PROS.f'
+      INCLUDE 'SPAS.f'
+      INCLUDE 'STAS.f'
+      INCLUDE 'STAT1.f'
+      INCLUDE 'SYMS.f'
+      INCLUDE 'TRES.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,WHAT    ! CODE FOR THE LOCATION IN PROGRAM 'EXTRA' (1...7)

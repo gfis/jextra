@@ -3,8 +3,8 @@ C     READ DIRECT-FILE
 C     2022-02-05: formal parms DECB, FDIR4 -> COMMON
 C     GF 24.08.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'DIRS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'DIRS.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,LNG     ! NUMBER OF ELEMENTS IN 'ARRAY'

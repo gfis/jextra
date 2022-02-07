@@ -3,35 +3,35 @@ C     FOR THE EXTRA PARSER-GENERATOR
 C     2005-03-29: demingle MEMSETS, PRESEMS, STASTRS
 C     GF 19.07.1980: 'SYMPRO' INIT('PROHIB') FOR 'TRACCU', 'TRATTR'
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'BUCS.F'
-      INCLUDE 'CODS.F'
-      INCLUDE 'DIRS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'LINS.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'PRES.F'
-      INCLUDE 'PRIS.F'
-      INCLUDE 'PROS.F'
-      INCLUDE 'SEMS.F'
-      INCLUDE 'SETS.F'
-      INCLUDE 'SLOS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'BUCS.f'
+      INCLUDE 'CODS.f'
+      INCLUDE 'DIRS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'LINS.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'PRES.f'
+      INCLUDE 'PRIS.f'
+      INCLUDE 'PROS.f'
+      INCLUDE 'SEMS.f'
+      INCLUDE 'SETS.f'
+      INCLUDE 'SLOS.f'
       INTEGER*2 DIR(XXDIRH)
 CEQU  EQUIVALENCE (SLOT(1,1),DIR(1))
-      INCLUDE 'SPAS.F'
+      INCLUDE 'SPAS.f'
 C----------------------------------------------------------------
-      INCLUDE 'SPES.F'
-      INCLUDE 'STAS.F' 
-      INCLUDE 'STAT1.F' ! STATICS FOR 'SEMANT'
+      INCLUDE 'SPES.f'
+      INCLUDE 'STAS.f' 
+      INCLUDE 'STAT1.f' ! STATICS FOR 'SEMANT'
 C--------------------------------------------
       INTEGER*2 TRAFS(15)
       COMMON /STAT2/ TRAFS ! STATICS FOR 'TRAFOR'
-      INCLUDE 'STKS.F'
-      INCLUDE 'STRS.F'
-      INCLUDE 'SYMS.F'
-      INCLUDE 'TARS.F'
-      INCLUDE 'TRAS.F'
-      INCLUDE 'TRES.F'
+      INCLUDE 'STKS.f'
+      INCLUDE 'STRS.f'
+      INCLUDE 'SYMS.f'
+      INCLUDE 'TARS.f'
+      INCLUDE 'TRAS.f'
+      INCLUDE 'TRES.f'
 C
 C-------------------------------------------------------------
 C     PARS

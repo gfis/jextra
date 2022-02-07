@@ -1,9 +1,9 @@
      1    0        SUBROUTINE LINEXT 
      2    0  C     GET NEXT LINE FROM SOURCE-PROGRAM 
      3    0  C 
-     4    0        INCLUDE 'PARS.F'
-     5    0        INCLUDE 'LINS.F'
-     6    0        INCLUDE 'PROS.F'
+     4    0        INCLUDE 'PARS.f'
+     5    0        INCLUDE 'LINS.f'
+     6    0        INCLUDE 'PROS.f'
      7    0        INTEGER*2 ZZCR
      8    0        INTEGER*2 I 
      9    0       = ,MARRD2  ! RIGHT MARGIN IN WORDS 

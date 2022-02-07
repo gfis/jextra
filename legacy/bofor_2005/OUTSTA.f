@@ -2,12 +2,12 @@
 C       PRINT A STATE OF THE PARSING TABLE
 C       GF 11.10.1980
 C
-        INCLUDE 'PARS.F'
-        INCLUDE 'ITES.F'
-        INCLUDE 'PRES.F'
-        INCLUDE 'PROS.F'
-        INCLUDE 'STAS.F'
-        INCLUDE 'SYMS.F'
+        INCLUDE 'PARS.f'
+        INCLUDE 'ITES.f'
+        INCLUDE 'PRES.f'
+        INCLUDE 'PROS.f'
+        INCLUDE 'STAS.f'
+        INCLUDE 'SYMS.f'
         INTEGER*2 PARASK
         INTEGER*2 I
      = ,GOT     ! RESULT OF 'ITEMA1/2', =1 IF STATE WAS READ

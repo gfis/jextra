@@ -2,7 +2,7 @@
 C     Wrapper for PARADD
 C     2022-02-07, Georg Fischer: remove loop
 
-      INCLUDE 'PARS.F'
+      INCLUDE 'PARS.f'
       INTEGER*2 PARASK
       CALL PARADD
 70    FORMAT (1X, A6, ': ', I4)

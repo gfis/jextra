@@ -3,7 +3,7 @@ C     PRINT AN ERROR- OR OTHER MESSAGE OF THE EXTRA-SYSTEM
 C     2022-02-05: OPEN statement for gfortran
 C     GF 21.07.1980
 C
-      INCLUDE 'PARS.F'
+      INCLUDE 'PARS.f'
       INTEGER*2 PARASK
       INTEGER*2 RECLEN
       PARAMETER RECLEN=80
@@ -18,7 +18,7 @@ C
      = ,VAR1     ! 1ST VARIABLE,BE INSERTED IN THE TEXT
      = ,VAR2     ! 2ND ...
       DATA MAX /0/, NOW/0/
-      INCLUDE 'ENDS.F'
+      INCLUDE 'ENDS.f'
 C
       IF (MAX .GT. 0) GOTO 10
         MAX = PARASK('ASSERT',1,6,32)

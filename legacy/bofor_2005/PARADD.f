@@ -5,7 +5,7 @@ C     2022-02-05: OPEN statement for gfortran
 C     GF 14.03.1981: NEW VERSION FOR '0 0' (EOD) IN THE 1ST LINE
 C     GF 12.07.1980
 C
-      INCLUDE 'PARS.F'
+      INCLUDE 'PARS.f'
       INTEGER*2 PARASK
       INTEGER*2 I,J
 15    CONTINUE

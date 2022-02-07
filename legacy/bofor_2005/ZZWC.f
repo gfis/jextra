@@ -4,8 +4,8 @@ C     write characters CHARN(CHARS:CHARE) with WIDTH to stream output,
 C     and advance the pointer FPRI
 C     WIDTH=0 implies source field length
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'PRIS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'PRIS.f'
       INTEGER*2 CHARS,CHARE,CHARN(1),WIDTH
       INTEGER*2 LNG
 C

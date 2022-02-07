@@ -1,0 +1,6 @@
+C------------------------------------------------------- P R I S
+      INTEGER*2 FPRI,PRIHIB,PRIBUF(XXPRIH)
+      COMMON /PRIS/
+     =  FPRI   ! 1ST FREE PRINT POSITION
+     =, PRIHIB ! LAST AVAILABLE PRINT POSITION
+     =, PRIBUF ! BUFFER WHICH COLLECTS STREAM PRINT-OUT

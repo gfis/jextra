@@ -3,9 +3,9 @@ C     ALLOCATE AN ITEM
 C     GF 20.08.1980
 C     GF 28.12.1980: WITH 'SPAFRE'
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'SPAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'SPAS.f'
       INTEGER*2
      =  ACTION  ! SET THIS ACTION IN 'ITEACT'
      = ,I1      ! -> BEFORE THE NEW ITEM

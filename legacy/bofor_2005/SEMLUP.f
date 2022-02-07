@@ -1,10 +1,10 @@
         SUBROUTINE SEMLUP (PROD,SYMB,INC,  SON)
 C       LOOK-UP A MEMBER IN THE RIGTH SIDE OF 'PROD'
 C
-        INCLUDE 'PARS.F'
-        INCLUDE 'MEMS.F'
-        INCLUDE 'PROS.F'
-        INCLUDE 'SEMS.F'
+        INCLUDE 'PARS.f'
+        INCLUDE 'MEMS.f'
+        INCLUDE 'PROS.f'
+        INCLUDE 'SEMS.f'
         INTEGER*2 I
      = ,INC     ! DESIRED OCCURRENCE OF 'SYMB'
      = ,OCCUR   ! CURRENT ...

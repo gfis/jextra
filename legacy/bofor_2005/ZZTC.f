@@ -5,8 +5,8 @@ C     and advance the pointer FTAR
 C     WIDTH=0 implies source field length
 C     WRITE CHARACTERS TO STREAM-OUTPUT
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'TARS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'TARS.f'
       INTEGER*2 CHARS,CHARE,CHARN(1),WIDTH
       INTEGER*2 LNG
 C

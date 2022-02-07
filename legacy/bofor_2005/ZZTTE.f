@@ -2,7 +2,7 @@
 C     TEST 'ZZT'-MODULES
 C     2022-02-07, Georg Fischer: no H format
 C
-      INCLUDE 'PARS.F'
+      INCLUDE 'PARS.f'
       INTEGER*2 I
       INTEGER*2 T1(6),T2(6)
       DATA T1/'SO','ME',' F','OR','TR','AN'/

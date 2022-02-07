@@ -2,8 +2,8 @@
 C     2022-02-07: no H format, english text
 C     TEST OF 'ZZW' STREAM OUTPUT MODULES
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'PRIS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'PRIS.f'
       INTEGER*2 T1(5),T2(5)
       DATA T1/'FI','RS','T ','LI','NE'/
       DATA T2/'IS',' W','RI','TT','EN'/

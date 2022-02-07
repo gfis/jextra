@@ -2,15 +2,15 @@
 C     OUTPUT OF ONE SINGLE 'TRA'-ELEMENT
 C     GF 24.07.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'TRAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'TRAS.f'
       INTEGER*2 I,J
      = ,TMNEMO(18) ! MNEMO-CODES FOR THE CLASSES IN 'TRASYM'
       DATA TMNEMO
      = /'VO','ID',  'KE','YW',  'SP','EC',  'CA','LL'
      = ,'CO','MT',  'GO','TO',  'ID','EN',  'NU','MB'
      = ,'ST','RI'/
-      INCLUDE 'ENDS.F'
+      INCLUDE 'ENDS.f'
 C
       IF (TRASYM(I) .EQ. 0) GOTO 1
         J = TRASYM(I)

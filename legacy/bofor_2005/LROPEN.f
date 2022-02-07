@@ -3,14 +3,14 @@ C     OPEN THE PARSING TABLE
 C     2005-03-29: demingle MEMSETS
 C     GF 24.08.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'PRES.F'
-      INCLUDE 'PROS.F'
-      INCLUDE 'SETS.F'
-      INCLUDE 'STAS.F'
-      INCLUDE 'SYMS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'PRES.f'
+      INCLUDE 'PROS.f'
+      INCLUDE 'SETS.f'
+      INCLUDE 'STAS.f'
+      INCLUDE 'SYMS.f'
       INTEGER*2 PARASK
       INTEGER*2 I
      = ,GOT   ! = 1 (0) IF THE STATE WAS (NOT) READ IN

@@ -2,8 +2,8 @@
 C       WRITE A SINGLE ACTION TO 'SEM'
 C       GF 11.07.1980
 C
-        INCLUDE 'PARS.F'
-        INCLUDE 'SEMS.F'
+        INCLUDE 'PARS.f'
+        INCLUDE 'SEMS.f'
         INTEGER*2 I
      = ,CODE    ! TO BE WRITTEN
      = ,POS     ! DESIRED PLACE (= 0 : FSEM, +=1)

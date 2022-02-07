@@ -2,7 +2,7 @@
 C     TEST LINEXT
 C     2022-02-07, Georg Fischer: no UPRI output
 C
-      INCLUDE 'PARS.F'
+      INCLUDE 'PARS.f'
       INTEGER*2 I
 C
       CALL LINIT

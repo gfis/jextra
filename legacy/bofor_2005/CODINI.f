@@ -1,8 +1,8 @@
       SUBROUTINE CODINI(CODE)
 C     INITIALIZE THE CODE-TABLE
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'CODS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'CODS.f'
       INTEGER*2 I
      = ,TABPOS
      = ,CODE

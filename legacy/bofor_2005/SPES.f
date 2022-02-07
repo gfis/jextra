@@ -1,0 +1,3 @@
+C ---- SPES.F
+      INTEGER*2 HIGH8(5)
+      COMMON /SPES/ HIGH8

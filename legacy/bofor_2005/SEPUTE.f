@@ -3,9 +3,9 @@ C     TEST SEPUSH
 C     2022-02-05: POT2 was in SETS.f
 C     2005-03-27, Georg Fischer
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'SETS.F'
-      INCLUDE 'STAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'SETS.f'
+      INCLUDE 'STAS.f'
       INTEGER*2 PARASK
      = ,I
      = ,I1       ! -> THE ELEMENT BEFORE 'I2'

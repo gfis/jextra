@@ -1,10 +1,10 @@
       SUBROUTINE HAINIT
 C     INITIALIZE 'STRS' AND 'BUCS'
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'BUCS.F'
-      INCLUDE 'STRS.F'
-      INCLUDE 'SYMS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'BUCS.f'
+      INCLUDE 'STRS.f'
+      INCLUDE 'SYMS.f'
       INTEGER*2 I
 C
       FSTR = 2

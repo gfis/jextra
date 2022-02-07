@@ -2,11 +2,11 @@
 C     INSERT AN ITEM IN A STATE
 C     GF 11.07.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'MEMS.F'
-      INCLUDE 'SETS.F'
-      INCLUDE 'STAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'MEMS.f'
+      INCLUDE 'SETS.f'
+      INCLUDE 'STAS.f'
       INTEGER*2 PARASK
       INTEGER*2 D
      = ,DIFF1    !,COMPARE THE SYMBOLS

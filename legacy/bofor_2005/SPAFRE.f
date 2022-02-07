@@ -2,9 +2,9 @@
 C     PUT A 'STATE' IN 'SPAS'-RING
 C     GF 08.11.1980
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'ITES.F'
-      INCLUDE 'SPAS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'ITES.f'
+      INCLUDE 'SPAS.f'
       INTEGER*2 I2 ! -> SUCCESSIVE ELEMENTS IN 'SPAS'
      = ,IHD     ! -> FIRST ITEM OF 'STATE'
      = ,ITL     ! -> LAST  ...

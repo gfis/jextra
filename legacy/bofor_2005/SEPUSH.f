@@ -1,8 +1,8 @@
       SUBROUTINE SEPUSH (XMAR,X,XTAIL,XBIT)
 C     PUSH AN ELEMENT IN A SET
 C
-      INCLUDE 'PARS.F'
-      INCLUDE 'SETS.F'
+      INCLUDE 'PARS.f'
+      INCLUDE 'SETS.f'
       INTEGER*2 PARASK
      = ,I
      = ,I1       ! -> THE ELEMENT BEFORE 'I2'
