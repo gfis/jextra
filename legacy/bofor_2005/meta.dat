@@ -1,0 +1,50 @@
+ /*------------------------------------------------------*/
+ /* Meta Grammar for Parsing of Transformation Grammars  */
+ /* Georg Fischer Aug. 1, 1980                           */
+ /*------------------------------------------------------*/
+ EOF IDENTIFIER NUMBER STRING ;
+ [AXIOM = EXTRA_INPUT
+ .EXTRA_INPUT    = '[' GRAMMAR ']'
+ .GRAMMAR        = RULES                         => #2
+ .RULES          = RULE
+                 | RULES '.' RULE
+ .RULE           = LEFT_SIDE '=' RIGHT_SIDES
+ .LEFT_SIDE      = IDENTIFIER                    => #3
+ .RIGHT_SIDES    = RIGHT_SIDE
+                 | RIGHT_SIDES '|' RIGHT_SIDE
+ .RIGHT_SIDE     = SYNTAX_PART SEMANTIC_PART
+ .SYNTAX_PART    = MEMBERETIES                   => #6
+ .MEMBERETIES    =                               => #7
+                 | MEMBERETIES MEMBER
+ .MEMBER         = PRIMARY
+ .PRIMARY        = IDENTIFIER                    => #8
+                 | STRING                        => #9
+                 | NUMBER                        => #8
+ .SEMANTIC_PART  = TRANSFORMATIONS               => #11
+ .TRANSFORMATIONS=                               => #12
+                 | '=>' TRANSFORMATION           => #13
+                 | TRANSFORMATIONS '->' TRANSFORMATION
+                                                 => #14
+ .TRANSFORMATION = DESTINATION
+                 | TRANSFORMATION ELEMENT        => #16
+ .DESTINATION    = '='                           => #17
+                 | ELEMENT                       => #18
+                 | SYMBOL '='                    => #19
+ .ELEMENT        = SYMBOL                        => #20
+                 | '#' NUMBER                    => #21
+                 | NUMBER                        => #22
+                 | STRING                        => #23
+                 | '@'                           => #24
+                 | SYMBOL '(' COMBINED_LIST ')'  => #25
+ .SYMBOL         = INCARNATION
+                 | INCARNATION '$' IDENTIFIER    => #27
+ .INCARNATION    = IDENTIFIER                    => #28
+                 | IDENTIFIER ':' NUMBER         => #29
+ .COMBINED_LIST  =                               => #30
+                 | COMBINED_LIST SYMBOL
+                 | COMBINED_LIST NUMBER          => #32
+                 | COMBINED_LIST STRING          => #33
+                 | COMBINED_LIST '#' NUMBER      => #34
+ ]
+ 
+

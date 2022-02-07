@@ -1,0 +1,18 @@
+# Collection of Testcases for bofor
+# @(#) $Id$
+# 2022-02-06, Georg Fischer: copied from numword
+#-----------------------------------
+TEST M01
+MAKE ls1_f
+
+TEST ZZC1
+SHELL zzcte
+
+TEST ASS1
+SHELL assloa
+TEST ASS2
+SHELL assete
+
+TEST LIN1
+SHELL linete < LINEXT.f
+

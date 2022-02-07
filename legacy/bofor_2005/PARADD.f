@@ -10,7 +10,7 @@ C
       INTEGER*2 I,J
 15    CONTINUE
       I = 1 ! ASSUME 'PARLAS=0'
-      OPEN (UNIT=UPAR,file='PARMS.DAT',status='OLD'
+      OPEN (UNIT=UPAR,file='parms.dat',status='OLD'
      = ,ERR=2)
 1     CONTINUE
       IF (I .LE. PARHIB) GOTO 4

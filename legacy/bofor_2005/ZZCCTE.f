@@ -1,5 +1,6 @@
         PROGRAM ZZCCTE
 C       TEST OF BOFOR-RTS-ROUTINES 'ZZCC', 'ZZIC', 'ZZCI', 'ZZCR'
+C       2022-02-07: STOP if not CC/CR/CI/IC; *DR=112
 C       GF 11.10.2002 write to separate unit U6
 C       GF 09.07.1980
 C
@@ -35,9 +36,13 @@ C
           GOTO 1
 C
 7       CONTINUE
+        IF(CODE .NE. 'CR') GOTO 99
           I = ZZCR(A,LS,LE,A,RS,RE)
           WRITE(U6,10) I
 10        FORMAT(' CR: ',I5)
           GOTO 1
-99      STOP
+99      CONTINUE
+          WRITE(U6,12)
+12        FORMAT(' STOP')
+        STOP
         END

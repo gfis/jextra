@@ -1,11 +1,12 @@
       INTEGER FUNCTION ZZCR (CSN,SS,SE, CTN,TS,TE)
-      IMPLICIT COMPLEX (A-Z)
+C     2022-02-07: implicit none
 C     GF 10.10.2002 rewritten from PDP/11 assembler
-C     COMPARE CHARACTERS: 
+C     COMPARE CHARACTERS:
 C     RETURN -1 IF CSN < CTN
 C             0        =
-C             1        > 
+C             1        >
 C
+      IMPLICIT NONE
       INTEGER*2 SS,SE, TS,TE
       CHARACTER*16 CSN, CTN
       INTEGER*2 SI,TI
@@ -13,7 +14,7 @@ C
       SI = SS
       TI = TS
 10    CONTINUE
-      IF (SI .GT. SE .OR. TI .GT. TE) GOTO 20     
+      IF (SI .GT. SE .OR. TI .GT. TE) GOTO 20
       IF (CSN(SI:SI) .LT. CTN(TI:TI)) GOTO 40
       IF (CSN(SI:SI) .GT. CTN(TI:TI)) GOTO 60
       SI = SI + 1

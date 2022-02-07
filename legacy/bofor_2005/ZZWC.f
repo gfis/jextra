@@ -1,5 +1,8 @@
       SUBROUTINE ZZWC(CHARN,CHARS,CHARE,WIDTH)
-C     WRITE CHARACTERS TO STREAM-OUTPUT
+C     2022-02-07: comments
+C     write characters CHARN(CHARS:CHARE) with WIDTH to stream output,
+C     and advance the pointer FPRI
+C     WIDTH=0 implies source field length
 C
       INCLUDE 'PARS.F'
       INCLUDE 'PRIS.F'
