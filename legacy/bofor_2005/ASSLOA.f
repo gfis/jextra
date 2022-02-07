@@ -14,6 +14,7 @@ C
      = ,NUM     ! WRITE THE TEXT TO THIS RECORD OF 'UASS'
      = ,MAXNUM  ! HIGHEST POSSIBLE RECORD-NUMBER
      = ,LINE(XXASSH) ! BUFFER FOR THE TEXTS
+      CHARACTER*3 NUM3
       DATA LINE/40*'  '/
       DATA MAXNUM /200/
       RECLEN = XXASSH * 2;
@@ -33,15 +34,12 @@ C        CALL FSEEK (UASS, OFFS4, 0)
 1     CONTINUE
 C
 2     CONTINUE
-        READ (ULIN,3,END=5) CODE, NUM, (LINE(J),J=1,XXASSH)
-3       FORMAT (A2, I3, 1X, 40A2)
+        READ (ULIN,3,END=5) CODE, NUM3, (LINE(J),J=1,XXASSH)
+3       FORMAT (A2, A3, 1X, 40A2)
         IF (ZZCR (CODE,1,2, 'C=',1,2) .NE. 0) GOTO 2
-C        WRITE (UPRI,4) NUM, (LINE(J),J=1,XXASSH)
-C4       FORMAT (1x, I3, 1X, 40A2)
-        OFFS4 = (NUM - 1) * (RECLEN + 4)
-C        CALL FSEEK (UASS, OFFS4, 0)
-        WRITE (UASS,rec=NUM) (LINE(J),J=1,XXASSH)
-      GOTO 2
+          READ (NUM3, '(I3)') NUM
+          WRITE (UASS,rec=NUM) (LINE(J),J=1,XXASSH)
+        GOTO 2
 5     CONTINUE
       CLOSE (UNIT=UASS)
       WRITE (UPRI,9)

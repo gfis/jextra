@@ -2,17 +2,40 @@
 # @(#) $Id$
 # 2022-02-06, Georg Fischer: copied from numword
 #-----------------------------------
-TEST M01
+TEST M01 list of all FORTRAN source files *.f
 MAKE ls1_f
 
+#----
+# Central character access routines
 TEST ZZC1
 SHELL zzcte
 
+TEST ZZW1
+SHELL zzwte
+
+TEST ZZT1
+SHELL zztte
+SHELL cat fort.3
+
+#----
+# Assertions
 TEST ASS1
 SHELL assloa
 TEST ASS2
 SHELL assete
 
+#----
+# Line input
 TEST LIN1
 SHELL linete < LINEXT.f
+
+#----
+# Parameters
+TEST PRM1
+SHELL parate
+
+#----
+# Sets and states
+TEST SEP1
+SHELL sepute
 

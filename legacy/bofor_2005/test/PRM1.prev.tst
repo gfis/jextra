@@ -1,0 +1,3 @@
+ ASSERT:  200
+ SPATES:   -1
+ STASUC:    1

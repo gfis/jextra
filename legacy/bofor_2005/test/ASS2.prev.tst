@@ -1,35 +1,33 @@
-
-C:\Users\User\work\gits\jextra\legacy\bofor_2005>assete
- ---  1-ALONG : IN STATE 1 POSIT 2 NOT FOUND                                            
- ---  2-HAPPEN: CANNOT ALLOCATE STRING, STRHIB=1, FSYM=2                                
- ---  3-EMITT : SYMBOL 1 IN STATE 2 NOT FOUND                                           
- ---  4-PARSE : TEST-TRACE STATE=1, ITEM=2                                              
- ---  5-SETALL: TOO MUCH SET-ELEMENTS, FSET=1, SETHIB=2                                 
- ---  6-PREDEL: STATE 1 IS NOT A PREDECESSOR OF STATE 2                                 
- ---  7-HAMAP : CANNOT ALLOCATE SYMBOL, SYMHIB=1, FSTR=2                                
- ---  8-SPEINS: CANNOT ALLOCATE SYMBOL, SYMHIB=1, FSTR=2                                
- ---  9-PARADD: MORE THAN 1 PARAMETERS 2                                                
- --- 10-DELTA : INVALID MEMBER AT POSITION 1, 2                                         
- --- 11-PREINS: CANNOT ALLOCATE PREDECESSOR 1 OF STATE 2                                
- --- 12-STAALL: CANNOT ALLOCATE STATE 1 REACHED,SYMBOL 2                                
- --- 13-SETDEL: 1 NOT FOUND IN LIST, TAIL=2                                             
- --- 14-UNDEF : 1,2                                                                     
- --- 15-UNDEF : 1,2                                                                     
- --- 16-PROCHA: CANNOT ALLOCATE PRODUCTION OF 1, FMEM=2                                 
- --- 17-PROCHA: SAME PRODUCTION 1 FOR 2  IN THE GRAMMAR                                 
- --- 18-INFLIS: CYCLE IN LIST, AHIB=1, FA=2                                             
- --- 19-PROCHA: CANNOT ALLOCATE MEMBER, LEFT=1, FMEM=2'                                 
- --- 20-SEPUSH: CANNOT APPEND,TAIL 1, VALUE 2                                           
- --- 21-ITEALL: CANNOT ALLOCATE ITEM FOR STATE 1, ITEHIB=2                              
- --- 22-ITEINS: IN STATE 1 CANNOT INSERT POSIT 2                                        
- --- 23-PREINS: STATE 1 IS ALREADY A PREDECESSOR OF STATE 2                             
- --- 24-RECEIV: 'ALONG' DOES NOT YIELD PRODUCTION 1, BUT 2                              
- --- 25-LITRAC: ELEMENT 1 ALREADY MARKED, TAIL=2                                        
- --- 26-UNDEF : 1,2                                                                     
- --- 27-STAFRE: STATE 1 NOT IN REACHING LIST OF SYMBOL 2                                
- --- 28-SPEINS: CANNOT ALLOCATE STRING, FSTR=1, STRHIB=2                                
- --- 29-SCAN  : IN LINE 1, COLUMN 2 END OF FILE IN COMMENT                              
- --- 30-SCAN  : IN LINE 1, COLUMN 2 END OF FILE IN STRING                               
- --- 31-UNDEF : 1,2                                                                     
- --- 32-UNDEF : 1,2                                                                     
+ ---1  -ALONG : IN STATE 1 POSIT 1 NOT FOUND                                            
+ ---2  -HAPPEN: CANNOT ALLOCATE STRING, STRHIB=2, FSYM=2                                
+ ---3  -EMITT : SYMBOL 3 IN STATE 3 NOT FOUND                                           
+ ---4  -PARSE : TEST-TRACE STATE=4, ITEM=4                                              
+ ---5  -SETALL: TOO MUCH SET-ELEMENTS, FSET=5, SETHIB=5                                 
+ ---6  -PREDEL: STATE 6 IS NOT A PREDECESSOR OF STATE 6                                 
+ ---7  -HAMAP : CANNOT ALLOCATE SYMBOL, SYMHIB=7, FSTR=7                                
+ ---8  -SPEINS: CANNOT ALLOCATE SYMBOL, SYMHIB=8, FSTR=8                                
+ ---9  -PARADD: MORE THAN 9 PARAMETERS 9                                                
+ ---10 -DELTA : INVALID MEMBER AT POSITION 10, 10                                         
+ ---11 -PREINS: CANNOT ALLOCATE PREDECESSOR 11 OF STATE 11                                
+ ---12 -STAALL: CANNOT ALLOCATE STATE 12 REACHED,SYMBOL 12                                
+ ---13 -SETDEL: 13 NOT FOUND IN LIST, TAIL=13                                             
+ ---14 -UNDEF : 14,14                                                                     
+ ---15 -UNDEF : 15,15                                                                     
+ ---16 -PROCHA: CANNOT ALLOCATE PRODUCTION OF 16, FMEM=16                                 
+ ---17 -PROCHA: SAME PRODUCTION 17 FOR 17  IN THE GRAMMAR                                 
+ ---18 -INFLIS: CYCLE IN LIST, AHIB=18, FA=18                                             
+ ---19 -PROCHA: CANNOT ALLOCATE MEMBER, LEFT=19, FMEM=19'                                 
+ ---20 -SEPUSH: CANNOT APPEND,TAIL 20, VALUE 20                                           
+ ---21 -ITEALL: CANNOT ALLOCATE ITEM FOR STATE 21, ITEHIB=21                              
+ ---22 -ITEINS: IN STATE 22 CANNOT INSERT POSIT 22                                        
+ ---23 -PREINS: STATE 23 IS ALREADY A PREDECESSOR OF STATE 23                             
+ ---24 -RECEIV: 'ALONG' DOES NOT YIELD PRODUCTION 24, BUT 24                              
+ ---25 -LITRAC: ELEMENT 25 ALREADY MARKED, TAIL=25                                        
+ ---26 -UNDEF : 26,26                                                                     
+ ---27 -STAFRE: STATE 27 NOT IN REACHING LIST OF SYMBOL 27                                
+ ---28 -SPEINS: CANNOT ALLOCATE STRING, FSTR=28, STRHIB=28                                
+ ---29 -SCAN  : IN LINE 29, COLUMN 29 END OF FILE IN COMMENT                              
+ ---30 -SCAN  : IN LINE 30, COLUMN 30 END OF FILE IN STRING                               
+ ---31 -UNDEF : 31,31                                                                     
+ ---32 -UNDEF : 32,32                                                                     
  ---201-ASSERT: MORE THAN  32 ASSERTIONS - STOP

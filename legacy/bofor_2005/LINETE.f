@@ -1,13 +1,12 @@
       PROGRAM LINETE
-C     TEST 'LINEXT'
+C     TEST LINEXT
+C     2022-02-07, Georg Fischer: no UPRI output
 C
       INCLUDE 'PARS.F'
       INTEGER*2 I
 C
       CALL LINIT
-      WRITE(UPRI,2) ULIN
-2     FORMAT(' ULIN=',I5)
-      DO 1 I = 1,15
+      DO 1 I = 1,16
         CALL LINEXT
 1     CONTINUE
       STOP

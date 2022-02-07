@@ -1,4 +1,8 @@
       SUBROUTINE ZZTC(CHARN,CHARS,CHARE,WIDTH)
+C     2022-02-07: copied from ZZWC
+C     write characters CHARN(CHARS:CHARE) with WIDTH to stream output,
+C     and advance the pointer FTAR
+C     WIDTH=0 implies source field length
 C     WRITE CHARACTERS TO STREAM-OUTPUT
 C
       INCLUDE 'PARS.F'

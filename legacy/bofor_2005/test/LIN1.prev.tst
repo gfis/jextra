@@ -1,7 +1,4 @@
-
-C:\Users\User\work\gits\jextra\legacy\bofor_2005>linete  0<LINEXT.f 
      1    0        SUBROUTINE LINEXT 
- ULIN=    5
      2    0  C     GET NEXT LINE FROM SOURCE-PROGRAM 
      3    0  C 
      4    0        INCLUDE 'PARS.F'
@@ -17,3 +14,4 @@ C:\Users\User\work\gits\jextra\legacy\bofor_2005>linete  0<LINEXT.f
     14    0        READ (ULIN,1,END=2) LINE
     15    0  1     FORMAT(41A2)
     16    0  C     DETERMINE THE LAST WORD NOT CONTAINING BLANKS 
+    17    0        MARRD2 = XXLINH + 1 

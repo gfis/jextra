@@ -50,8 +50,8 @@ EOF IDENTIFIER NUMBER STRING ; /* END OF STATEMENT */
               | COMBINED_LIST '#' NUMBER      => #34
 ]
  /*--------------------------------------------------------------*/
- /*  METAGRAMMATIK FUER GRAMMATIKEN                             */
- /*--------------------------------------------------------------
+ /*  METAGRAMMATIK FUER GRAMMATIKEN                              */
+ /*--------------------------------------------------------------*/
  EOF IDENTIFIER NUMBER STRING ;
  [AXIOM          = PROGRAM
  .PROGRAM        = '[' SYNTAX ']' STATEMENTS              => #1
@@ -97,7 +97,6 @@ EOF IDENTIFIER NUMBER STRING ; /* END OF STATEMENT */
                  | IDENTIFIER                             => #25
  .
  ]
- */
  
  [
    /*------------------------------------------------*/
