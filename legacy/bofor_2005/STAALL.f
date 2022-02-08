@@ -1,5 +1,6 @@
       SUBROUTINE STAALL(STATE,SYMBOL)
 C     ALLOCATE A NEW STATE
+C     2022-02-07: comments
 C     2005-03-29: demingle MEMSETS
 C     GF 09.07.1980
 C
@@ -13,7 +14,7 @@ C
       INCLUDE 'SYMS.f'
       INTEGER*2 I
      = ,STATE    ! THE NUMBER OF THE ALLOCATED STATE
-     = ,SYMBOL   ! 'STATE' IS REACHED,THIS SYMBOL
+     = ,SYMBOL   ! 'STATE' IS REACHED BY THIS SYMBOL
      = ,I1       ! -> ONE ELEMENT BEFORE 'I2'
      = ,I2       ! -> CURRENT ELEMENT IN 'STARST'-LIST
      = ,POS
@@ -31,8 +32,6 @@ C
 1     CONTINUE
         CALL ASSERT(12,STATE,SYMBOL)
 2     CONTINUE ! OVERFLOW
-CXML
-C     XML2 (STAALL, STATE, SYMBOL)
       CALL XML2 ('STAALL', 1, 6, STATE,SYMBOL)
       RETURN ! STAALL
 C-----------------------------------------------------------------
@@ -72,5 +71,5 @@ C
       STAPRE(STATE) = FSTA
       FSTA = STATE
       STAITE(STATE) = 0
-      RETURN! STAFRE
+      RETURN ! STAFRE
       END

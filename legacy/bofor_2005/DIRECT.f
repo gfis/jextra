@@ -22,7 +22,7 @@ C
       SYMLNK(1) = 1 ! SYMBOLS ARE PRINTABLE
       IF (PARASK('DIRECT',1,6,0) .NE. 0)
      =  CALL ASSERT (155,FDIR,LENGTH)
-      RETURN
+C???  RETURN
 C=============================================================
       FDIR = STAHIB
       IF (CODE .GE. 5) GOTO 4
@@ -71,13 +71,9 @@ C----------------------------------------------------------------
 C----------------------------------------------------------------
 105   CONTINUE
       DIRHIB = PARASK ('DIRHIB',1,6,256)
-      IF (PARASK('DAIO',1,4,1) .NE. 0) GOTO 1051
       OPEN (UNIT=UDIR,file='DIRECT.DAT',status='UNKNOWN'
-     = ,ACCESS='DIRECT',recl=DIRHIB/2)
+     = ,ACCESS='DIRECT',recl=DIRHIB*2)
       GOTO 99
-1051  CONTINUE ! WITH 'DAIO'
-      OPEN (UNIT=UDIR,file='DIRECT.DAT',status='UNKNOWN'
-     = ,ACCESS='DIRECT',recl=DIRHIB/2)
       GOTO 99
 C----------------------------------------------------------------
 106   CONTINUE

@@ -16,10 +16,8 @@ C
       INCLUDE 'TRES.f'
       INTEGER*2 PARASK
       INTEGER*2 I
-     = ,WHAT    ! CODE FOR THE LOCATION IN PROGRAM 'EXTRA' (1...7)
+     = ,WHAT    ! CODE FOR THE LOCATION IN PROGRAM 'EXTRA' (1...9)
 C
-CXML
-C     XML1 (PREPAR, WHAT)
       CALL XML1 ('PREPAR', 1, 6, WHAT)
       GOTO (101,102,103,104,105,106,107,108,109),WHAT
 C------------------------------------------------------------

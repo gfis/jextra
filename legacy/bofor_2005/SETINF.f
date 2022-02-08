@@ -1,5 +1,6 @@
       SUBROUTINE SETINF (CHARN,CHARS,CHARE,XHEAD,XTAIL)
 C     INFORM ABOUT A SINGLE SET/LIST/QUEUE
+C     2022-02-07: LITRAC?
 C     2005-05-06: XML OUTPUT
 C
       INCLUDE 'PARS.f'
@@ -14,7 +15,7 @@ C
       CALL ZZWC('" tail="', 1, 8, 0)
       CALL ZZWI(XTAIL,4)
       CALL ZZWC('>', 1, 1, 0)
-      OUTSC = 0
+      OUTSC = 0 ! counter in OUTSET
       CALL LITRAC(SET,XHEAD,XTAIL,OUTSET,1)
       CALL ZZWC('  </set>', 1, 8, 0)
       CALL ZZWS (0)

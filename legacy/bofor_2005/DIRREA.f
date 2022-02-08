@@ -7,7 +7,7 @@ C
       INCLUDE 'DIRS.f'
       INTEGER*2 PARASK
       INTEGER*2 I
-     = ,LNG     ! NUMBER OF ELEMENTS IN 'ARRAY'
+     = ,LNG      ! NUMBER OF ELEMENTS IN 'ARRAY'
      = ,ARRAY(1) ! TRANSMIT FROM/TO THIS ARRAY
 C
       HIGH = 0
@@ -20,15 +20,8 @@ C         HERE IS 'HIGH .GT. LNG' - DUPLICATE SOME ELEMENTS
         LOW = HIGH - DIRHIB + 1
         IF (LOW .LT. 0)
      =    CALL ASSERT (162,LNG,DIRHIB)
-2       CONTINUE
-          DECB(1) = UDIR
-          DECB(2) = 1
-          FDIR4 = FDIR
-          FDIR = FDIR + 1
-          CALL DAREAD (ARRAY(LOW),1)
-          CALL DAWAIT ()
-          IF (DECB(5) .NE. 0) CALL ASSERT (10,DECB(5),0)
-3       CONTINUE
+        READ  (UDIR, rec=FDIR) (ARRAY(I),I=LOW,HIGH)
+        FDIR = FDIR + 1
       IF (HIGH .LT. LNG) GOTO 1
       RETURN
       END

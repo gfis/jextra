@@ -6,11 +6,12 @@
     0 6 ENBLOC ! prevents calling of LAGAR, STAGAR, LAGET
     1 5 GENER  ! generate (1) or run only (0)
     1 6 GRAMAR
+    1 6 PREPAR
     1 6 GRANOU ! GRAMAR
     0 6 PROCHA
     0 5 HAMAP  ! HAMAP
     1 6 IMDUMP ! REORG
-    0 6 INFOUT ! REORG
+    1 6 INFOUT ! REORG
     1 6 ITEINS 
     1 6 OUTSTA
     0 6 PUTCON ! REORG 
@@ -27,7 +28,6 @@
     0 4 BUCS   ! in LRDUMP
     1 6 CLEASH ! CLEARE
     0 4 CODS   ! in LRDUMP
-    0 4 DAIO   ! 1 is default
     0 5 DELTA  ! parse trace
     1 6 DIRECT ! BOFOR
   256 6 DIRHIB

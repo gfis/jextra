@@ -1,13 +1,10 @@
       SUBROUTINE SETSIN
 C     INFORM ABOUT ALL SETS
-C
+C     2022-02-07, GF: cleanup
+
       INCLUDE 'PARS.f'
       INCLUDE 'SETS.f'
       INTEGER*2 PARASK
-      INTEGER*2 I
-     = ,ELEM
-     = ,STATE     ! A STATE THAT CONTAINS A CONFLICT
-     = ,SYMBOL    ! A SYMBOL THAT IS NOT ACCESSIBLE
 C
       IF (PARASK('SETSIN',1,6,0) .EQ. 0) GOTO 1
         CALL ZZWC ('<sets>', 1, 6, 0)
