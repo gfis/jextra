@@ -1,0 +1,198 @@
+<http://www.punctum.com/interest/diss/diss.html#4.2.1>
+==================================================================
+Thesis page 73
+4.2.1  A Non-LALR(1) Grammar
+----------------------------
+
+Aho and Ullman [1972] give an example (7.27) for a grammar which
+is LR(1) but not LALR(1):
+
+Example 4.2.1-1:
+
+    [axiom = S
+    .S = A a | B b | d A b | d B a
+    .A = c
+    .B = c
+    ]
+
+LALR(1) produces the following transition graph for this grammar:
+
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c ->  8 a =: A,1
+    |                   | a =: B,1
+    |                   | b =: A,1
+    |                   | b =: B,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     ->  8 ...
+
+State 8 has conflicts for 'a' and 'b', but we could replace
+it by two conflict-free states 8' and 8":
+
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c -> 8' b =: A,1
+    |                   | a =: B,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     -> 8" a =: A,1
+                | b =: B,1
+
+The LR(0) compatibility criterion used by LALR(1) sometimes is
+too strong, because the identification of some states
+constructed by Knuth's LR(1) method may lead to conflicts
+that were not present before.
+
+In the example, it was possible to cancel the effect of the
+LALR(1) merging of states. In some cases it can be seen from
+the outset that such a splitting of states is not possible.
+
+#-----------------------------------------------
+/* Aho & Ullman example (7.27) p. 73 4.2.1-1 */
+[ axiom = S EOF
+. S = A a | B b | d A b | d B a
+. A = c
+. B = c
+]
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3
+    |           | B -> 11 a -> 14 eof =: S,3
+    | B     ->  7 b -> 12 eof =: S,2
+
+/* Rule A = c, affects states 2, 6 */
+
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c -> 15 b =: A,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     ->  8 a =: A,1
+
+/* Rule B = c, affects states 2, 6 */
+
+    2 axiom ->  3 eof =.
+    | S     ->  4 eof =: axiom,1
+    | A     ->  5 a ->  9 eof =: S,2
+    | d     ->  6 A -> 10 b -> 13 eof =: S,3
+    |           | B -> 11 a -> 14 eof =: S,3
+    |           | c -> 15 b =: A,1
+    |                   | a =: B,1
+    | B     ->  7 b -> 12 eof =: S,2
+    | c     ->  8 a =: A,1
+                | b =: B,1
+#-----------------------------------------------
+with items, but no look-aheads
+start with axiom = S eof.
+    2 @ axiom          ->  3 axiom @ =.
+    | axiom = @ S eof  ->  4 axiom = S @ =:  axiom,1
+
+insert S = A a.
+    2 @axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ () =: axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+
+insert S = B b.
+    2 @axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ () =: axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+    | S = @B b         ->  7 S = B @b   -> 12 S = B b @ () =: S,2
+
+insert S = d A b.
+    2 @ axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ =:  axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+    | S = @B b         ->  7 S = B @b   -> 12 S = B b @ () =: S,2
+    | S = @d A b       ->  6 S = d @A b -> 10 d A @b       -> 13 d A b @ () =: S,3
+
+insert S = d B a.
+    2 @ axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ =:  axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+    | S = @B b         ->  7 S = B @b   -> 12 S = B b @ () =: S,2
+    | S = @d A b       ->  6 S = d @A b -> 10 d A @b       -> 13 d A b @ () =: S,3
+    | S = @d B a       ->  6 S = d @B a -> 11 d B @a       -> 14 d B a @ () =: S,3
+
+insert A = c.
+    2 @ axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ =:  axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+    | S = @B b         ->  7 S = B @b   -> 12 S = B b @ () =: S,2
+    | S = @d A b       ->  6 S = d @A b -> 10 d A @b       -> 13 d A b @ () =: S,3
+                           | A = @c     -> 15 A = c @   () =: A,1
+    | S = @d B a       ->  6 S = d @B a -> 11 d B @a       -> 14 d B a @ () =: S,3
+    | A = @c           ->  8 A = c @    () =: A,1
+
+insert B = c.
+    2 @ axiom           ->  3 axiom @ =.
+    | axiom = @S eof   ->  4 axiom = S @ =:  axiom,1
+    | S = @A a         ->  5 S = A @a   ->  9 S = A a @ () =: S,2
+    | A = @c           ->  8 A = c @    () =: A,1
+    | S = @B b         ->  7 S = B @b   -> 12 S = B b @ () =: S,2
+    | B = @c           -> 16 B = c @    () =: B,1
+    | S = @d A b       ->  6 S = d @A b -> 10 d A @b       -> 13 d A b @ () =: S,3
+                           | A = @c     -> 15 A = c @   () =: A,1
+    | S = @d B a       ->  6 S = d @B a -> 11 d B @a       -> 14 d B a @ () =: S,3
+                           | B = @c     -> 17 B = c @   () =: B,1
+
+#-----------------------------------------------
+with items and look-aheads
+start with axiom = S eof.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+
+insert S = A a.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ (eof) =: S,2
+
+insert S = B b.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ () =: S,2
+    | S = @B b (eof)   ->  7 S = B @b (eof)   -> 12 S = B b @ (eof) =: S,2
+
+insert S = d A b.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ (eof) =: S,2
+    | S = @B b (eof)   ->  7 S = B @b (eof)   -> 12 S = B b @ (eof) =: S,2
+    | S = @d A b (eof) ->  6 S = d @A b (eof) -> 10 d A @b (eof)    -> 13 d A b @ (eof) =: S,3
+
+insert S = d B a.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ (eof) =: S,2
+    | S = @B b (eof)   ->  7 S = B @b (eof)   -> 12 S = B b @ (eof) =: S,2
+    | S = @d A b (eof) ->  6 S = d @A b (eof) -> 10 d A @b (eof)    -> 13 d A b @ (eof) =: S,3
+    | S = @d B a (eof) ->  6 S = d @B a (eof) -> 11 d B ab (eof)    -> 14 d B a @ (eof) =: S,3
+
+insert A = c.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @      =: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ (eof) =: S,2
+    | A = @c (a)       ->  8 A = c @ (a)      =: A,1
+    | S = @B b (eof)   ->  7 S = B @b (eof)   -> 12 S = B b @ (eof) =: S,2
+    | S = @d A b (eof) ->  6 S = d @A b (eof) -> 10 d A @b (eof)    -> 13 d A b @ (eof) =: S,3
+                           | A = @c (b)       -> 15 A = c @ (b)     =: A,1
+    | S = @d B a (eof) ->  6 S = d @B a (eof) -> 11 d B ab (eof)    -> 14 d B a @ (eof) =: S,3
+
+insert B = c.
+    2 @axiom (eof)     ->  3 axiom @ (eof)    =.
+    | axiom = @S (eof) ->  4 axiom = S @ (eof)=: axiom,1
+    | S = @A a (eof)   ->  5 S = A @a (eof)   ->  9 S = A a @ (eof) =: S,2
+    | A = @c (a)       ->  8 A = c @ (a)      =: A,1
+    | S = @B b (eof)   ->  7 S = B @b (eof)   -> 12 S = B b @ (eof) =: S,2
+    | B = @c (b)       -> 16 B = c @ (b)      =: B,1
+    | S = @d A b (eof) ->  6 S = d @A b (eof) -> 10 d A @b (eof)    -> 13 d A b @ (eof) =: S,3
+                           | A = @c (b)       -> 15 A = c @ (b)     =: A,1
+    | S = @d B a (eof) ->  6 S = d @B a (eof) -> 11 d B ab (eof)    -> 14 d B a @ (eof) =: S,3
+                           | B = @c (a)       -> 17 B = c @ (b)     =: B,1
