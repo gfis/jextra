@@ -70,14 +70,6 @@
       <sym id="44" cat="23" type="SPACE">   </sym>
     </symbolList>
     <rules>
-      <rule left="HYPER_AXIOM">
-        <prod left="HYPER_AXIOM" size="3">
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="41" cat="26">S</sym>
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="0" cat="0">EOP</sym>
-        </prod>
-      </rule>
       <rule left="S">
         <prod left="S" size="4">
           <sym id="41" cat="26">S</sym>
@@ -104,7 +96,6 @@
 ]
   </legibleGrammar>
   <legibleTable>
-14: 	@S -> 15 =: HYPER_AXIOM
-15: 	@EOF -> 15 =: HYPER_AXIOM
+
   </legibleTable>
 </ProtoParser>

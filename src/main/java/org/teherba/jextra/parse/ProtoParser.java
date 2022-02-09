@@ -1,11 +1,12 @@
-/*  Simple finite state automaton which "parses" and stores grammars
-    @(#) $Id: ProtoParser.java 427 2010-06-01 09:08:17Z gfis $
+/*  Simple finite state automaton that "parses" and stores grammars
+    @(#) $Id$
+    2022-02-10: terminate()
     2017-05-28: javadoc 1.8
     2016-05-30: store rules
     2005-01-27, Georg Fischer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,30 +24,24 @@
 package org.teherba.jextra.parse;
 import  org.teherba.jextra.parse.BaseParser;
 import  org.teherba.jextra.Parm;
-import  org.teherba.jextra.gener.Table;
 import  org.teherba.jextra.gener.Grammar;
 import  org.teherba.jextra.gener.Production;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
 import  org.teherba.jextra.trans.SemAction;
-import  org.apache.logging.log4j.Logger;
-import  org.apache.logging.log4j.LogManager;
 
-/** A simple {@link BaseParser Parser} realized by a finite state automaton
- *  which reads and stores a {@link Grammar}.
- *  The syntax of such a grammar is defined by the MetaGrammar, which defines
- *  a variant of Backus-Naur-Form (BNF).
- *  @author Dr. Georg Fischer
+/** A simple {@link BaseParser} realized by a finite state automaton
+ *  that reads and stores a {@link Grammar}.
+ *  The syntax of such a grammar is defined by the "Meta grammar", 
+ *  that is a variant of the Backus-Naur-Form (BNF).
+ *  @author Georg Fischer
  */
 public class ProtoParser extends BaseParser {
-    public final static String CVSID = "@(#) $Id: ProtoParser.java 427 2010-06-01 09:08:17Z gfis $";
-
-    /** logger for debug and error situations */
-    private static Logger log = LogManager.getLogger(ProtoParser.class);
+    public final static String CVSID = "@(#) $Id$";
 
     /** Current state of the Finite State Automaton
      *  used to parse the meta grammar
-    */
+     */
     private int finState = FINISH;
     /* codes for <em>finState</em> */
     private static final int LEFT_SIDE      =  0;
@@ -68,16 +63,17 @@ public class ProtoParser extends BaseParser {
 
     /** left side of current production */
     private Symbol leftSide;
+    /** current grammar */
+    private Grammar grammar;
 
-    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
+    /** Constructor - allocate new {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public ProtoParser(String fileName) {
         super(fileName);
     } // Constructor(String)
 
-    /** Initialize the parser by reading
-     *  a scanner interface
+    /** Initialize the parser by reading from a scanner interface
      */
     protected void initialize() {
         symbol = scanner.scan(); // terminal or (later) also: nonterminal
@@ -91,14 +87,14 @@ public class ProtoParser extends BaseParser {
             // process the (rest of the) interface to the scanner
             symbol = scanner.scan(); // '[' is consumed
         } // while rest
-        symbol   = scanner.scan(); // the axiom is always the first left hand side
+        symbol   = scanner.scan(); // the axiom must always be the first left hand side
         leftSide = symbol;
+        grammar  = stateTable.getGrammar();
         grammar.setAxiom(symbol);
-        table.initialize();
         finState = LEFT_SIDE;
     } // initialize
 
-    /** Stores a production for later parser table generation
+    /** Store a production for later parser table generation
      *  @param prod production to be stored
      */
     private void store(Production prod) {
@@ -109,7 +105,7 @@ public class ProtoParser extends BaseParser {
                 + prod.getLeftSide().legible() +  " =" + prod.legible() + "</store>");
     } // store
 
-    /** Determines the next state of the parser.
+    /** Determine the next state of the parser.
      *  @return true (false) if the sentence of the language
      *  was (not yet) accepted
      */
@@ -187,6 +183,11 @@ public class ProtoParser extends BaseParser {
         } // switch finState
         return accepted;
     } // transition
+
+    /** Terminate the parser
+     */
+    protected void terminate() {
+    } // terminate
 
     /** Test Frame: read a grammar and print all productions
      *  @param args command line arguments:

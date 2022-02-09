@@ -1,12 +1,13 @@
 /*  Attributes of parser symbols (identifiers, number, strings ...)
     of the (programming) language
-    @(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-01-24, Georg Fischer: copied from LineReader.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +40,7 @@ import  java.util.TreeSet;
  *  @author Dr. Georg Fischer
  */
 public class Symbol implements Comparable {
-    public final static String CVSID = "@(#) $Id: Symbol.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** category of the symbol: identfier, number, string, nonterminal
      *  (that is the index of another symbol which was previously

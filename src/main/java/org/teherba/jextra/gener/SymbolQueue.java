@@ -1,10 +1,11 @@
 /*  Queue of symbols to be processed recursively
-    @(#) $Id: SymbolQueue.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2005-03-01, Georg Fischer: copied from Rule.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +29,7 @@ import  org.teherba.jextra.scan.SymbolList;
  *  @author Dr. Georg Fischer
  */
 public class SymbolQueue extends Queue {
-    public final static String CVSID = "@(#) $Id: SymbolQueue.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** No-args Constructor - creates a new symbol queue
      */
@@ -58,14 +59,14 @@ public class SymbolQueue extends Queue {
         super(initSize, descr);
     } // Constructor(int, String)
 
-    /** Gets the next element to be processed
+    /** Get the next element to be processed
      *  @return object from the queue
      */
     public Symbol next() {
         return (Symbol) elements.get(head ++);
     } // next
 
-    /** Appends an element to the queue if it is not yet contained in the queue
+    /** Append an element to the queue if it is not yet contained in the queue
      *  @param elem element to be appended
      *  @return number of same elements already queued (0 or 1)
      */
@@ -79,7 +80,7 @@ public class SymbolQueue extends Queue {
         return found;
     } // push
 
-    /** Deletes the entire queue (set) after unmarking all elements
+    /** Delete the entire queue (set) after unmarking all elements
      */
     public void clear() {
         head = 0;

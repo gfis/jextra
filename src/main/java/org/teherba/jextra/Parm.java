@@ -1,11 +1,12 @@
 /*  Parm.java - System Parameters
-    @(#) $Id: Parm.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2016-06-08: fixed NEWLINE; Franzi = 2
     2007-05-04: incrIndent and decrIndent can be used in string expressions
     2005-02-16, Georg Fischer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +30,7 @@ import  java.util.Properties;
  *  @author Dr. Georg Fischer
  */
 public class Parm { 
-    public final static String CVSID = "@(#) $Id: Parm.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
     
     /** Properties aus der Anwendungsresource. */
     private static Properties parameters;

@@ -1,12 +1,13 @@
 /*  LR(1) Grammar of a language and corresponding parser table
-    @(#) $Id: Grammar.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2007-05-08: relaunch with prototype states
     2005-02-10, Georg Fischer: copied from Symbol.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +36,6 @@ import  org.teherba.jextra.scan.SymbolList;
 import  java.util.ArrayList;
 import  java.util.Iterator;
 import  java.util.TreeMap;
-import  org.apache.logging.log4j.Logger;
-import  org.apache.logging.log4j.LogManager;
 
 /** LR(1) Grammar of a language and corresponding parser table, consisting of
  *  <ul>
@@ -50,13 +49,11 @@ import  org.apache.logging.log4j.LogManager;
  *  @author Dr. Georg Fischer
  */
 public class Grammar {
-    public final static String CVSID = "@(#) $Id: Grammar.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
-    /** log4j logger (category) */
-    private static Logger log = LogManager.getLogger(Grammar.class.getName());
     /** a special nonterminal symbol which is the starting point of the grammar */
     public Symbol axiom;
-    /** Maps a left side to the corresponding rule (set of productions) */
+    /** Map a left side to the corresponding rule (set of productions) */
     private TreeMap<Symbol, Rule> ruleMap;
     /** underlying scanner with symbol table */
     private Scanner scanner;
@@ -98,7 +95,7 @@ public class Grammar {
         protos      = new ProtoQueue(2048);
     } // Constructor(Scanner)
 
-    /** Allocates a minimal initial configuration with one production:
+    /** Allocate a minimal initial configuration with one production:
      *  <ul>
      *  <li>one production: [hyperAxiom = eof axiom eof EOP]</li>
      *  <li>a start state 2 which has the marker before the axiom</li>
@@ -125,7 +122,7 @@ public class Grammar {
         protos.push(proto2);
     } // initializeTable
 
-    /** Generates all states of the LR(1) parser PDA.
+    /** Generate all states of the LR(1) parser PDA.
      */
     public void generateStates() {
         ProtoState result = null;
@@ -169,42 +166,42 @@ public class Grammar {
         } // while processing queue
     } // generateStates
 
-    /** Gets the starting state for the parser
+    /** Get the starting state for the parser
      *  @return initial state to start the parser with
      */
     public State getStartState() {
         return state2;
     } // getStartState
 
-    /** Gets the axiom (root symbol) of the grammar
+    /** Get the axiom (root symbol) of the grammar
      *  @return symbol for the axiom of the grammar
      */
     public Symbol getAxiom() {
         return axiom;
     } // getAxiom
 
-    /** Sets the axiom (root symbol) of the grammar
+    /** Set the axiom (root symbol) of the grammar
      *  @param nonterminal symbol for the axiom
      */
     public void setAxiom(Symbol nonterminal) {
         axiom = nonterminal;
     } // setAxiom
 
-    /** Gets the scanner associated with the grammar
+    /** Get the scanner associated with the grammar
      *  @return scanner associated with the grammar
      */
     public Scanner getScanner() {
         return scanner;
     } // getScanner
 
-    /** Gets the symbol list of this grammar object
+    /** Get the symbol list of this grammar object
      *  @return symbol list
      */
     public SymbolList getSymbolList() {
         return symbolList;
     } // getSymbolList
 
-    /** Checks whether the grammar has a rule for a nonterminal
+    /** Check whether the grammar has a rule for a nonterminal
      *  @param leftSide symbol to be checked
      *  @return whether the symbol is a terminal
      */
@@ -212,7 +209,7 @@ public class Grammar {
         return ruleMap.get(leftSide) != null;
     } // isTerminal
 
-    /** Gets the set of productions for a nonterminal
+    /** Get the set of productions for a nonterminal
      *  @param leftSide symbol on the left side of the rule
      *  @return rule, or null if there is none
      */
@@ -220,7 +217,7 @@ public class Grammar {
         return ruleMap.get(leftSide);
     } // getRule
 
-    /** Inserts or replaces a rule in the set of rules;
+    /** Insert or replaces a rule in the set of rules;
      *  there is no check whether the rule was already stored
      *  @param rule rule to be inserted or replaced
      */
@@ -229,8 +226,8 @@ public class Grammar {
         System.out.println("irule: " + rule.getLeftSide().getEntity() + ", size=" + rule.size());
     } // insert
 
-    /** Removes all productions for a nonterminal, and thereby
-     *  transforms it into a terminal
+    /** Remove all productions for a nonterminal, and thereby
+     *  transform it into a terminal
      *  @param leftSide symbol on the left side
      *  @return whether the rule was previously stored in the grammar
      *  (that is whether the left side was a nonterminal)
@@ -247,8 +244,8 @@ public class Grammar {
     } // removeRule
 */
 
-    /** Adds a production to the grammar;
-     *  checks whether the production was already stored, and ignores
+    /** Add a production to the grammar;
+     *  check whether the production was already stored, and ignore
      *  the call in that case
      *  @param prod production to be added
      *  @return number of productions previously stored in the grammar
@@ -267,8 +264,8 @@ public class Grammar {
         return rule.insert(prod);
     } // insert(prod)
 
-    /** Removes a production from the grammar;
-     *  checks whether the production was already stored, and prints
+    /** Remove a production from the grammar;
+     *  check whether the production was already stored, and print
      *  a message if that was not the case
      *  @param prod production to be removed
      *  @return number of productions previously stored in the grammar
@@ -284,7 +281,7 @@ public class Grammar {
         return found;
     } // delete(prod)
 
-    /** Adds a state to the table.
+    /** Add a state to the table.
      *  Former name was STAALL.
      *  @param symbol symbol that was shifted to reached this state
      *  @return new state just added
@@ -296,7 +293,7 @@ public class Grammar {
         return result;
     } // allocate
 
-    /** Returns a human readable representation of this grammar
+    /** Return a human readable representation of this grammar
      *  @return lines with all rules, prefixed by dots
      */
     public String legible() {
@@ -317,7 +314,7 @@ public class Grammar {
         return result + Parm.newline() + "]";
     } // legible
 
-    /** Returns an XML description of this grammar
+    /** Return an XML description of this grammar
      *  @return list of XML elements representing the rules
      */
     public String toString() {

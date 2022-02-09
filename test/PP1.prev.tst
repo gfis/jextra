@@ -300,14 +300,6 @@
           <sema act="20" inf="0" />
         </prod>
       </rule>
-      <rule left="HYPER_AXIOM">
-        <prod left="HYPER_AXIOM" size="3">
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="39" cat="26">AXIOM</sym>
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="0" cat="0">EOP</sym>
-        </prod>
-      </rule>
       <rule left="INCARNATION">
         <prod left="INCARNATION" size="1">
           <sym id="34" cat="26">IDENTIFIER</sym>
@@ -535,7 +527,6 @@
 ]
   </legibleGrammar>
   <legibleTable>
-12: 	@AXIOM -> 13 =: HYPER_AXIOM
-13: 	@EOF -> 13 =: HYPER_AXIOM
+
   </legibleTable>
 </ProtoParser>

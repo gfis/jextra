@@ -2,12 +2,13 @@
 
 # Collection of testcases for jextra
 # @(#) $Id: all.tca 955 2012-06-05 07:22:59Z gfis $
+# 2022-02-09: PA1
 # 2016-05-30, Dr. Georg Fischer
 #-----------------------------------
 ## Caution:
 # (1) Adjust the following line: URL where jextra was deployed
 URL=http://localhost:8080/jextra/servlet
-#======================================================================
+#================
 PACKAGE=org.teherba.jextra.scan
 
 ECHO 000
@@ -51,7 +52,13 @@ DATA
   ':'    '='   ':='  ::=      '::='  ::=  '->' ->
  ]
 CALL Scanner $(DATA)
-#======================================================================
+#================
+PACKAGE=org.teherba.jextra
+
+TEST PA1 Parm clas
+CALL Parm enbloc
+#================
+
 PACKAGE=org.teherba.jextra.gener
 
 TEST SQ1 SymbolQueue
@@ -59,7 +66,7 @@ CALL SymbolQueue
 
 TEST SQ2 StateQueue
 CALL StateQueue
-#======================================================================
+#================
 PACKAGE=org.teherba.jextra.parse
 
 TEST EP1 EmptyParser metagrammar

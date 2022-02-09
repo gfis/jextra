@@ -1,11 +1,12 @@
 /*  Production rule of the grammar
-    @(#) $Id: Production.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-02-10, Georg Fischer: copied from Symbol.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,15 +30,15 @@ import  java.util.Iterator;
 
 /** Production rule of the grammar, consisting of
  *  <ul>
- *  <li>left side (nonterminal)</li>
- *  <li>array of members (symbol numbers) on the right side, maybe empty</li>
+ *  <li>the left side (nonterminal)</li>
+ *  <li>the array of members (symbol numbers) on the right side, maybe empty</li>
  *  <li>EOP = end of production symbol</li>
- *  <li>semantic (transformational) part = list of semantic actions</li>
+ *  <li>the semantic (transformational) part = list of semantic actions</li>
  *  </ul>
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class Production implements Comparable {
-    public final static String CVSID = "@(#) $Id: Production.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** a special symbol indicating the end of a production */
     public static final Symbol EOP = new Symbol(0, "EOP");
@@ -62,14 +63,14 @@ public class Production implements Comparable {
     /** sequential number */
     private int id;
 
-    /** Gets the sequential number
+    /** Get the sequential number
      *  of the production
      *  @return id of the production
      */
     public int getId() {
         return id;
     } // getId
-    /** Sets the sequential number of the production
+    /** Set the sequential number of the production
      *  @param id set this int
      */
     public void setId(int id) {
@@ -78,14 +79,14 @@ public class Production implements Comparable {
     //---------------------------------
     /** (number of) left hand symbol of the production (nonterminal) */
     private Symbol leftSide;
-    /** Gets the left side (number of nonterminal symbol)
+    /** Get the left side (number of nonterminal symbol)
      *  of the production
      *  @return symbol on the left side
      */
     public Symbol getLeftSide() {
         return leftSide;
     } // getLeftSide
-    /** Sets the left side of the production
+    /** Set the left side of the production
      *  @param nonterminal symbol on the left side (nonterminal)
      */
     public void setLeftSide(Symbol nonterminal) {
@@ -97,15 +98,14 @@ public class Production implements Comparable {
      */
     private ArrayList<Symbol> members;
 
-    /** Appends a symbol to the right side of the production
-     *  @param member symbol on the right side (terminal or
-     *  nonterminal)
+    /** Append a symbol to the right side of the production
+     *  @param member symbol on the right side (terminal or nonterminal)
      */
     public void addMember(Symbol member) {
         members.add(member);
     } // addMember
 
-    /** Gets a member on the right side by its position
+    /** Get a member on the right side by its position
      *  @param position index of the desired member, starting at 0,
      *  must be less than <em>size()</em>
      *  @return symbol at the specified position in the right side
@@ -121,14 +121,14 @@ public class Production implements Comparable {
         return result;
     } // getMember
 
-    /** Gets the first member on the right side
+    /** Get the first member on the right side
      *  @return symbol at position 0 in the right side
      */
     public Symbol getFirstMember() {
         return getMember(0);
     } // getFirstMember
 
-    /** Terminates the right side (member list) of the production
+    /** Terminate the right side (member list) of the production
      */
     public void closeMembers() {
         addMember(EOP);
@@ -138,20 +138,20 @@ public class Production implements Comparable {
     /** list of semantic actions for this production */
     private ArrayList<SemAction> semantics;
 
-    /** Appends a semantic action
+    /** Append a semantic action
      *  @param sema semantic action to be appended
      */
     public void addSemantic(SemAction sema) {
         semantics.add(sema);
     } // addSemantic
 
-    /** Terminates the list of semantic actions for the production
+    /** Terminate the list of semantic actions for the production
      */
     public void closeSemantics() {
         addSemantic(new SemAction(SemAction.EOS, 0));
     } // closeSemantics
     //---------------------------------
-    /** Compares this object (prod1) with the specified object (prod2).
+    /** Compare this object (prod1) with the specified object (prod2).
      *  Ordering is by left side, common member substring and length
      *  @param obj2 production on the right side
      *  @return -1, 0, +1 if prod1 &lt; = &gt; prod2
@@ -185,7 +185,7 @@ public class Production implements Comparable {
         return result;
     } // compareTo
 
-    /** Gets the length, that is the number of members on the right side
+    /** Get the length, that is the number of members on the right side
      *  of the production;
      *  can only be called for closed productions; EOP is not counted
      *  @return number of members on the right side (0, 1 ...)
@@ -194,7 +194,7 @@ public class Production implements Comparable {
         return members.size() - 1; // EOP is not counted
     } // size
 
-    /** Returns a human readable representation of this {@link Production}
+    /** Return a human readable representation of this {@link Production}
      *  @return string of symbols on the right side, separated and
      *  prefixed with 1 blank
      */
@@ -202,7 +202,7 @@ public class Production implements Comparable {
         return legible(-1); // will never be reached as marker position
     } // legible
 
-    /** Returns a human readable representation of this {@link Production}
+    /** Return a human readable representation of this {@link Production}
      *  with a marker before a position
      *  @param position index of member to be marked (0 = first)
      *  @return string of symbols on the right side, separated and
@@ -225,7 +225,7 @@ public class Production implements Comparable {
         return result;
     } // legible(position)
 
-    /** Returns an XML description of the object
+    /** Return an XML description of the object
      *  @return list of XML elements representing the members and semantic actions
      */
     public String toString() {

@@ -1,9 +1,10 @@
 /*  Abstract Parser - for regular or context-free languages
-    @(#) $Id: BaseParser.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only, no logging, Table -> StateTable
     2005-03-02, Georg Fischer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,34 +25,27 @@ import  org.teherba.jextra.gener.Grammar;
 import  org.teherba.jextra.gener.Production;
 import  org.teherba.jextra.gener.Rule;
 import  org.teherba.jextra.gener.State;
-import  org.teherba.jextra.gener.Table;
+import  org.teherba.jextra.gener.StateTable;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
-import  org.apache.logging.log4j.Logger;
-import  org.apache.logging.log4j.LogManager;
 
 /** Abstract Parser - for regular or context-free languages
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class BaseParser {
-    public final static String CVSID = "@(#) $Id: BaseParser.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
-    /** logger for debug and error situations */
-    private static Logger log = LogManager.getLogger(BaseParser.class);
-
-    /** parser {@link Table} with {@link Grammar} and state set */
-    protected Table      table;
+    /** parser {@link StateTable} with {@link Grammar} and state set */
+    protected StateTable stateTable;
     /** current state of the push-down automaton */
     protected State      state;
-    /** {@link Grammar} of the language to be read in */
-    protected Grammar    grammar;
-    /** {@link Scanner} which reads the input file */
+    /** {@link Scanner} that reads the input file */
     protected Scanner    scanner;
     /** category of the currently scanned {@link #symbol} */
     protected int        category;
     /** {@link Symbol} just read by the {@link #scanner} */
     protected Symbol     symbol;
-    /** whether the symbol was "comsumed" by a transition */
+    /** whether the symbol was "consumed" by a transition */
     protected boolean    readOff;
     /** current {@link Production} */
     protected Production prod;
@@ -63,36 +57,34 @@ public class BaseParser {
      *  @param tab LR(1) table of parser states
      *  @param fileName path/name of the source file, "" = STDIN
      */
-    public BaseParser(Table tab, String fileName) {
-        table   = tab;
-        grammar = table.getGrammar();
-        scanner = grammar.getScanner();
-    } // Constructor(Table, String)
+    public BaseParser(StateTable tab, String fileName) {
+        stateTable = tab;
+        scanner    = stateTable.getGrammar().getScanner();
+    } // Constructor(StateTable, String)
 
-    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
+    /** Constructor - allocate new {@link stateTable}, {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     protected BaseParser(String fileName) {
-        scanner = new Scanner(Scanner.LANG_BNF, fileName);
-        grammar = new Grammar(scanner);
-        table   = new Table(grammar);
+        scanner     = new Scanner(Scanner.LANG_BNF, fileName);
+        stateTable  = new StateTable(new Grammar(scanner));
     } // Constructor(String)
 
-    /** Gets the grammar associated with the parser's table
-     *  @return  grammar associated with the parser's table
+    /** Get the grammar associated with the parser's {@link stateTable}
+     *  @return grammar
      */
     public Grammar getGrammar() {
-        return grammar;
+        return stateTable.getGrammar();
     } // getGrammar
 
-    /** Gets the parser's table
+    /** Get the parser's {@link stateTable}
      *  @return table with state set and grammar
      */
-    public Table getTable() {
-        return table;
+    public StateTable getStateTable() {
+        return stateTable;
     } // getTable
 
-    /** Reads from input and parses the (next) sentence of the grammar's language.
+    /** Read from input and parse the (next) sentence of the grammar's language.
      *  @return true (false) if the sentence was (not) accepted
      */
     protected boolean parse() {
@@ -104,20 +96,20 @@ public class BaseParser {
             System.out.println("<" + className + ">");
             Parm.incrIndent();
         }
-        state = table.getStartState();
+        state = stateTable.getStartState();
         initialize();
         boolean accepted = loop();
         terminate();
         if (Parm.isDebug(1)) {
-            System.out.println(grammar.toString());
-            System.out.println(Parm.getIndent() + "<legibleGrammar>");
-            System.out.println(this.getGrammar().legible());
-            System.out.println(Parm.getIndent() + "</legibleGrammar>");
-            System.out.println(Parm.getIndent() + "<legibleTable>");
-            System.out.println(this.getTable()  .legible());
-            System.out.println(Parm.getIndent() + "</legibleTable>");
+            System.out.println(getGrammar().toString());
+            System.out.println(Parm.getIndent()     + "<legibleGrammar>");
+            System.out.println(getGrammar().legible());
+            System.out.println(Parm.getIndent()     + "</legibleGrammar>");
+            System.out.println(Parm.getIndent()     + "<legibleTable>");
+            System.out.println(getStateTable().legible());
+            System.out.println(Parm.getIndent()     + "</legibleTable>");
             Parm.decrIndent();
-            System.out.println(Parm.getIndent() + "</" + className + ">");
+            System.out.println(Parm.getIndent()     + "</" + className + ">");
         }
         return accepted;
     } // parse
@@ -129,12 +121,12 @@ public class BaseParser {
         symbol = scanner.scan(); // terminal or (later) also: nonterminal
     } // initialize
 
-    /** Terminates the parser
+    /** Terminate the parser
      */
     protected void terminate() {
     } // terminate
 
-    /** Reads the input file and parses all symbols;
+    /** Read the input file and parse all symbols;
      *  assumes that the first symbol is already read in.
      *  @return true (false) if the sentence was (not) accepted
      */
@@ -153,7 +145,7 @@ public class BaseParser {
         return accepted;
     } // loop
 
-    /** Decides whether a scanned symbol is not ignored.
+    /** Decide whether a scanned symbol is not ignored.
      *  @return true (false) if the symbol is (not) relevant,
      *  that means it is no comment and no whitespace
      */
@@ -165,7 +157,7 @@ public class BaseParser {
             ;
     } // relevant
 
-    /** Determines the next state of the parser.
+    /** Determine the next state of the parser.
      *  This dummy version reads over all symbols without
      *  any state change.
      *  @return true (false) if the sentence of the language
@@ -181,7 +173,7 @@ public class BaseParser {
         return false;
     } // transition
 
-    /** Issues a parser error message
+    /** Issue a parser error message
      *  @param stateId number of the state which doesn't expect this symbol
      *  @param symbolEntity representation of the offending symbol
      */

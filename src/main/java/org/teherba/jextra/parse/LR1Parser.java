@@ -1,11 +1,11 @@
 /*  LR(1) Parser - recognizes the language of a context-free grammar
-    @(#) $Id: LR1Parser.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2016-05-29: Java generics
     2005-02-25, Georg Fischer
-    Copyright (c) 1980 Georg Fischer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import  org.teherba.jextra.gener.Grammar;
 import  org.teherba.jextra.gener.Item;
 import  org.teherba.jextra.gener.Production;
 import  org.teherba.jextra.gener.State;
-import  org.teherba.jextra.gener.Table;
+import  org.teherba.jextra.gener.StateTable;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
 import  org.teherba.jextra.trans.SemAction;
@@ -35,10 +35,10 @@ import  java.util.ArrayList;
 
 /** LR(1) Parser - recognizes the language of a context-free
  *  grammar; utilizes a deterministic push-down stack automaton.
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class LR1Parser extends BaseParser {
-    public final static String CVSID = "@(#) $Id: LR1Parser.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** push-down stack for states */
     protected ArrayList<State> stack;
@@ -48,10 +48,10 @@ public class LR1Parser extends BaseParser {
      *  @param tab LR(1) table of parser states
      *  @param fileName path/name of the source file, "" = STDIN
      */
-    public LR1Parser(Table tab, String fileName) {
+    public LR1Parser(StateTable tab, String fileName) {
         super(tab, fileName);
         stack = new ArrayList<State>(128);
-        state = table.getStartState();
+        state = stateTable.getStartState();
     } // Constructor(Table, String)
 
     /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects

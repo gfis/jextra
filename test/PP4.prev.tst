@@ -94,14 +94,6 @@
           <sema act="20" inf="0" />
         </prod>
       </rule>
-      <rule left="HYPER_AXIOM">
-        <prod left="HYPER_AXIOM" size="3">
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="41" cat="26">axiom</sym>
-          <sym id="21" cat="21">EOF</sym>
-          <sym id="0" cat="0">EOP</sym>
-        </prod>
-      </rule>
       <rule left="S">
         <prod left="S" size="2">
           <sym id="44" cat="26">A</sym>
@@ -154,7 +146,6 @@
 ]
   </legibleGrammar>
   <legibleTable>
-16: 	@axiom -> 17 =: HYPER_AXIOM
-17: 	@EOF -> 17 =: HYPER_AXIOM
+
   </legibleTable>
 </ProtoParser>
