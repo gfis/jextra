@@ -41,6 +41,9 @@ recr1:
 regr2:
 	make regression TEST=$(TEST) > x.tmp
 #--------------------------------------------------
+search: # S=
+	find src -iname "*.java" | xargs -l grep -iH $(S)
+#--------------------------------------------------
 # create the documentation files
 doc: javadoc wikidoc
 javadoc:

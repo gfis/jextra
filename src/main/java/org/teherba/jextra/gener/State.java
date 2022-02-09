@@ -1,11 +1,12 @@
-/*  A State of the LR(1) Push-Down Automaton
-    @(#) $Id: State.java 427 2010-06-01 09:08:17Z gfis $
+/*  A state of the LR(1) push-down automaton
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2016-05-29: Java generics
     2005-02-17, Georg Fischer: copied from Rule.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +32,7 @@ import  java.util.ArrayList;
 import  java.util.Iterator;
 import  java.util.TreeSet;
 
-/** A State of the LR(1) Push-Down Automaton, consisting of
+/** A state of the LR(1) push-down automaton, consisting of
  *  <ul>
  *  <li>the symbol which "reaches" the state</li>
  *  <li>the list of predecessor states</li>
@@ -39,10 +40,10 @@ import  java.util.TreeSet;
  *  <li>the list of states with the same accessing symbol</li>
  *  <li>various marking bits</li>
  *  </ul>
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class State implements Comparable {
-    public final static String CVSID = "@(#) $Id: State.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** the state was reached by this symbol */
     private Symbol reachingSymbol;
@@ -73,6 +74,7 @@ public class State implements Comparable {
         markBits        = 0;
         predecessors    = new TreeSet<State>();
         reachingSymbol  = symbol;
+        symbol.addReachedState(this);
     } // Constructor(symbol>
     
     /** Gets the unique identification of the state

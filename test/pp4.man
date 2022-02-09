@@ -73,9 +73,9 @@ the outset that such a splitting of states is not possible.
     | A     ->  5 a ->  9 eof =: S,2
     | d     ->  6 A -> 10 b -> 13 eof =: S,3
     |           | B -> 11 a -> 14 eof =: S,3
-    |           | c -> 15 b =: A,1
+    |           | c ->  8 b =: A,1
     | B     ->  7 b -> 12 eof =: S,2
-    | c     ->  8 a =: A,1
+    | c     -> 15 a =: A,1
 
 /* Rule B = c, affects states 2, 6 */
 
@@ -84,10 +84,10 @@ the outset that such a splitting of states is not possible.
     | A     ->  5 a ->  9 eof =: S,2
     | d     ->  6 A -> 10 b -> 13 eof =: S,3
     |           | B -> 11 a -> 14 eof =: S,3
-    |           | c -> 15 b =: A,1
+    |           | c ->  8 b =: A,1
     |                   | a =: B,1
     | B     ->  7 b -> 12 eof =: S,2
-    | c     ->  8 a =: A,1
+    | c     -> 15 a =: A,1
                 | b =: B,1
 #-----------------------------------------------
 with items, but no look-aheads

@@ -1,6 +1,6 @@
 /*  Parm.java - System Parameters
     @(#) $Id$
-    2022-02-10: LF only
+    2022-02-10: LF only, addOptions, options --name=value
     2016-06-08: fixed NEWLINE; Franzi = 2
     2007-05-04: incrIndent and decrIndent can be used in string expressions
     2005-02-16, Georg Fischer
@@ -25,27 +25,32 @@ package org.teherba.jextra;
 import  java.io.FileInputStream;
 import  java.util.Iterator;
 import  java.util.Properties;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
-/** Access to System and Configuration Parameters
- *  @author Dr. Georg Fischer
+/** Access to system, configuration and commandline parameters
+ *  @author Georg Fischer
  */
-public class Parm { 
+public class Parm {
     public final static String CVSID = "@(#) $Id$";
-    
-    /** Properties aus der Anwendungsresource. */
+
+    /** log4j logger (category) */
+    private static Logger log = LogManager.getLogger(Parm.class.getName());
+
+    /** accumulated properties */
     private static Properties parameters;
 
     /** type of operating system
      */
-    private static int operatingSystem; 
+    private static int operatingSystem;
     private static final int UNIX    = 1;
     private static final int WINDOWS = 2;
 
     /** level of indenting for XML output */
     private static String indent = "";
-    
+
     /**
-     *  Reads the system parameters from a properties file
+     *  Read the system parameters from a properties file
      */
     static {
         indent = "";
@@ -53,24 +58,42 @@ public class Parm {
             parameters = new Properties();
             if (! System.getProperty("file.separator").equals("/")) {
                 operatingSystem = WINDOWS;
-            } else {                
-                operatingSystem = UNIX;             
+            } else {
+                operatingSystem = UNIX;
             }
             parameters.load(new FileInputStream("jextra.properties"));
         } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
+            log.error(exc.getMessage());
         }
     } // static
 
-    /** Returns the version number of the system
+    /** Return the version number of the system
      *  @return current version number
      */
     public static String getVersion() {
-        return "1.1";
+        return "2.0";
     } // getVersion
 
-    /** Returns the value of a parameter
+    /** Add all options of the form <code>--name=value</code> 
+     *  from the beginning of the commandline as properties
+     *  @param args commandline arguments
+     *  @return index of first non-option argument (normally a filename)
+     */
+    public static int addOptions(String[] args) {
+        int iarg = 0; 
+        while (iarg < args.length && args[iarg].startsWith("--")) {
+            int eqPos = args[iarg].indexOf('=');
+            if (eqPos >= 0) {
+                String name  = args[iarg].substring(2, eqPos);
+                String value = args[iarg].substring(eqPos + 1);
+                parameters.setProperty(name, value);
+            }
+            iarg ++;
+        } // for iarg
+        return iarg;
+    } // addOptions
+
+    /** Return the value of a parameter
      *  @param name name of parameter
      *  @return value of the system parameter, or "" if it is undefined
      */
@@ -82,7 +105,7 @@ public class Parm {
         return result;
     } // get
 
-    /** Returns the integer value of a parameter
+    /** Return the integer value of a parameter
      *  @param name name of parameter
      *  @return integer value of the system parameter, or 0 if it is undefined
      */
@@ -94,41 +117,40 @@ public class Parm {
                 result = Integer.parseInt(value);
             }
         } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
+            log.error(exc.getMessage());
         }
         return result;
     } // getInt
 
-    /** Gets the system dependant line separator string (CR/LF or LF)
+    /** Get the system dependant line separator string (CR/LF or LF)
      *  @return newline string, "\n" on Unix
      */
     public static String getNewline() {
         return newline();
     } // getNewline
 
-    /** Gets the system dependant line separator string (CR/LF or LF)
+    /** Get the system dependant line separator string (CR/LF or LF)
      *  @return newline string, "\n" on Unix
      */
     public static String newline() {
         return "\n"; // System.getProperty("line.separator");
     } // newline
 
-    /** Gets an XML declaration
+    /** Get an XML declaration
      *  @return XML declaration
      */
     public static String getXMLDeclaration() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
     } // getXMLDeclaration
 
-    /** Gets the leading whitespace for indented XML output 
+    /** Get the leading whitespace for indented XML output
      *  @return a sequence of tab characters
      */
     public static String getIndent() {
         return indent;
     } // getIndent
 
-    /** Increments the leading whitespace for indented XML output 
+    /** Increment the leading whitespace for indented XML output
      *  @return empty string
      */
     public static String incrIndent() {
@@ -136,7 +158,7 @@ public class Parm {
         return "";
     } // incrIndent
 
-    /** Decrements the leading whitespace for indented XML output 
+    /** Decrement the leading whitespace for indented XML output
      *  @return empty string
      */
     public static String decrIndent() {
@@ -146,14 +168,14 @@ public class Parm {
         return "";
     } // decrIndent
 
-    /** Prints an error message about some system assertion
+    /** Print an error message about some system assertion
      *  @param message number of the message
      */
     public static void alert(int message) {
         System.err.println("<assert id=\"" + message + "\"" + " />");
     } // alert(1)
 
-    /** Prints an error message about some system assertion
+    /** Print an error message about some system assertion
      *  @param message number of the message
      *  @param parm1 first additional parameter
      *  @param parm2 second additional parameter
@@ -164,7 +186,7 @@ public class Parm {
                 + " parm2=\"" + parm2 + "\" />");
     } // alert(3)
 
-    /** Determines whether a specified debugging level is in effect
+    /** Determine whether a specified debugging level is in effect
      *  @param level level of debugging: 0 = none, 1 = some, 2 = more ...
      *  @return whether the current debugging level is &gt;= <em>level</em>
      */
@@ -187,12 +209,12 @@ public class Parm {
         try {
             System.out.println("java.version=" + System.getProperty("java.version"));
             System.out.println("os.name=" + System.getProperty("os.name"));
-            
-            int iargs = 0; 
-            while (iargs < args.length) {
-                System.out.println(args[iargs] + "=" + Parm.get(args[iargs]));
-                iargs ++;
-            } // for iargs
+
+            int iarg = Parm.addOptions(args);;
+            while (iarg < args.length) {
+                System.out.println(args[iarg] + "=" + Parm.get(args[iarg]));
+                iarg ++;
+            } // for iarg
             System.out.println();
             Iterator iter = parameters.keySet().iterator();
             while (iter.hasNext()) {
@@ -200,9 +222,8 @@ public class Parm {
                 System.out.println(key + "=" + Parm.get(key));
             } // while hasNext
         } catch (Exception exc) {
-            System.err.println(exc.getMessage());
-            exc.printStackTrace();
+            log.error(exc.getMessage());
         }
     } // main
-    
+
 } // Parm

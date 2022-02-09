@@ -87,7 +87,7 @@ public class BaseParser {
     /** Read from input and parse the (next) sentence of the grammar's language.
      *  @return true (false) if the sentence was (not) accepted
      */
-    protected boolean parse() {
+    public boolean parse() {
         String className = this.getClass().getName(); // e.g. org.teherba.jextra.parse.ProtoParser
         int dotPos = className.lastIndexOf('.');
         className = className.substring(dotPos + 1);

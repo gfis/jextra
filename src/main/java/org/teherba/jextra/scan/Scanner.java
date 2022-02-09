@@ -621,9 +621,10 @@ public class Scanner {
      *  @param args commandline arguments
      */
     public static void main (String args[]) {
+        int iarg = Parm.addOptions(args);
         System.out.println(Parm.getXMLDeclaration());
         System.out.println("<mainScanner>");
-        Scanner scanner = new Scanner(LANG_BNF, args[0]);
+        Scanner scanner = new Scanner(LANG_BNF, args[iarg]);
         while (! scanner.isAtEof()) { // read 1 symbol per line
             Symbol symbol = scanner.scan();
             System.out.println(symbol.toString());

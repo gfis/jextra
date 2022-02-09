@@ -67,6 +67,7 @@ public class LR1Parser extends BaseParser {
      *  @return true (false) if the sentence of the language 
      *  was (not yet) accepted  
      */
+    @Override
     protected boolean transition() {
         boolean accepted = false;
         Item item = state.delta(symbol);

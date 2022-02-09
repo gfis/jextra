@@ -1,9 +1,11 @@
 /*  Transforms grammar files of the EXTRA (Extensible Translator) system 
-    @(#) $Id: GrammarHandler.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2007-05-02, Georg Fischer: copied from JCLTransformer
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
+ *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +32,10 @@ import  org.apache.logging.log4j.Logger;
 import  org.apache.logging.log4j.LogManager;
 
 /** Transformer for grammars of the EXTRA (Extensible Translator) system.
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class GrammarHandler extends ExtraTransformer { 
-    public final static String CVSID = "@(#) $Id: GrammarHandler.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** log4j logger (category) */
     private static Logger log = LogManager.getLogger(GrammarHandler.class.getName());
@@ -97,9 +99,9 @@ public class GrammarHandler extends ExtraTransformer {
     /** Process the grammar which was built from the SAX events
      */
     public void processGrammar() {
-        grammar.initializeTable();
-        grammar.generateStates();
-        System.out.println(grammar.toString());
+        // grammar.initializeTable();
+        // grammar.generateStates();
+        System.out.println("GrammarHandler.processGrammar not yet implemented"); // grammar.toString());
     } // processGrammar
     
     /** Receive notification of the start of an element.

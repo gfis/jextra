@@ -40,6 +40,7 @@ public class EmptyParser extends BaseParser {
     /** Decides whether a scanned symbol is not ignored.
      *  @return true (false) if the symbol is (not) relevant
      */
+    @Override
     protected boolean relevant() {
         return true;
     } // relevant

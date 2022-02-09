@@ -75,6 +75,7 @@ public class ProtoParser extends BaseParser {
 
     /** Initialize the parser by reading from a scanner interface
      */
+    @Override
     protected void initialize() {
         symbol = scanner.scan(); // terminal or (later) also: nonterminal
         while (symbol != scanner.sub && ! scanner.isAtEof()) { // read the scanner interface (1st line), up to '['
@@ -109,6 +110,7 @@ public class ProtoParser extends BaseParser {
      *  @return true (false) if the sentence of the language
      *  was (not yet) accepted
      */
+    @Override
     protected boolean transition() {
         boolean accepted = false;
         switch (finState) {
@@ -186,6 +188,7 @@ public class ProtoParser extends BaseParser {
 
     /** Terminate the parser
      */
+    @Override
     protected void terminate() {
     } // terminate
 
@@ -196,7 +199,8 @@ public class ProtoParser extends BaseParser {
      *  </ol>
      */
     public static void main (String args[]) {
-        ProtoParser parser = new ProtoParser(args[0]);
+        int iarg = Parm.addOptions(args);
+        ProtoParser parser = new ProtoParser(args[iarg]);
         parser.parse();
     } // main
 

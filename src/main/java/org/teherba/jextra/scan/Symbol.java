@@ -37,7 +37,7 @@ import  java.util.TreeSet;
  *  <li>strings</li>
  *  <li>interpunctuation</li>
  *  </ul>
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class Symbol implements Comparable {
     public final static String CVSID = "@(#) $Id$";

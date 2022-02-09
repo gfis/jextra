@@ -26,10 +26,7 @@ package org.teherba.jextra.gener;
 import  org.teherba.jextra.Parm;
 import  org.teherba.jextra.gener.Item;
 import  org.teherba.jextra.gener.Production;
-import  org.teherba.jextra.gener.ProtoQueue;
-import  org.teherba.jextra.gener.ProtoState;
 import  org.teherba.jextra.gener.Rule;
-import  org.teherba.jextra.gener.State;
 import  org.teherba.jextra.scan.Scanner;
 import  org.teherba.jextra.scan.Symbol;
 import  org.teherba.jextra.scan.SymbolList;
@@ -62,20 +59,6 @@ public class Grammar {
     /** the symbol list */
     private SymbolList symbolList;
 
-    /** List of generated LR(1) parser states */
-    private ArrayList<State> states;
-    /** the parser starts in this state */
-    private State state2;
-    /** the parser finishes in this state */
-    private State state3;
-
-    /** Queue of prototype states */
-    private ProtoQueue protos;
-    /** Fictitious father of the first prototype state */
-    ProtoState proto0;
-    /** prototype state with the marker behind the axiom */
-    ProtoState proto2;
-
     /** No-args Constructor - creates a new grammar
      */
     public Grammar() {
@@ -91,87 +74,7 @@ public class Grammar {
     //  symbolList.put(Production.EOP);
         axiom       = symbolList.put("axiom");
         ruleMap     = new TreeMap<Symbol, Rule>();
-        states      = new ArrayList<State>(1024);
-        protos      = new ProtoQueue(2048);
     } // Constructor(Scanner)
-
-    /** Allocate a minimal initial configuration with one production:
-     *  <ul>
-     *  <li>one production: [hyperAxiom = eof axiom eof EOP]</li>
-     *  <li>a start state 2 which has the marker before the axiom</li>
-     *  <li>a final state 3 which has the marker behind the axiom and accepts it</li>
-     *  </ul>
-     */
-    public void initializeTable() {
-        Symbol eof = scanner.endOfFile;
-        Symbol hyperAxiom = new Symbol(scanner.identifier.getCategory(), "HYPER_AXIOM");
-        Production prod1 = new Production(hyperAxiom);
-        // prod1.addMember(eof);
-        prod1.addMember(axiom);
-        prod1.addMember(eof);
-        prod1.closeMembers();
-        insert(prod1);
-        // state1 is reserved and not used (for historical reasons)
-        state2 = allocate(eof);
-        state3 = allocate(eof);
-        state3.addPredecessor(state2);
-        state2.addItem(new Item(axiom, 1, Item.SHIFT , state3, prod1));
-        state3.addItem(new Item(eof  , 2, Item.ACCEPT, null,   prod1));
-        proto0 = new ProtoState();
-        proto2 = new ProtoState(proto0, prod1, prod1.size() - 1, eof, null);
-        protos.push(proto2);
-    } // initializeTable
-
-    /** Generate all states of the LR(1) parser PDA.
-     */
-    public void generateStates() {
-        ProtoState result = null;
-        while (protos.hasNext()) { // process every element of the queue
-            ProtoState proto1 = protos.next();
-            // System.out.print("qproc: " + proto1.toString());
-            int pos1 = proto1.getMarkerPos() - 1; // move leftwards
-            if (proto1.getSame() != null) {
-                // do not re-evaluate
-            } else if (pos1 >= 0) { // still not before 1st member
-                Production prod1 = proto1.getProduction();
-                ProtoState proto2 = new ProtoState(proto1.getHome(), prod1, pos1, proto1.getLookAhead(), proto1);
-                result = protos.merge(proto2);
-                proto1.setLeft(result);
-                System.out.print("push2: " + proto2.toString());
-                Symbol markedSymbol = prod1.getMember(pos1);
-                // System.out.println("markd: " + markedSymbol.toString());
-                Object obj = ruleMap.get(markedSymbol);
-                if (proto2.getSame() == null && obj != null) { // nonterminal
-                    Rule rule = (Rule) obj;
-                /*
-                    System.out.println("expnd: " + markedSymbol.toString()
-                        + ", left=" + rule.getLeftSide().getEntity()
-                        + ", size=" + rule.size()
-                        );
-                */
-                    Iterator iter = rule.iterator();
-                    while (iter.hasNext()) {
-                        Production prodm = (Production) iter.next();
-                        ProtoState protom = new ProtoState
-                                ((pos1 == 0 ? proto1.getHome() : proto2)
-                                , prodm, prodm.size(), proto1.getLookAhead(), null);
-                        protos.merge(protom);
-                        System.out.print("pushm: " + protom.toString());
-                    } // while left side
-                } else { // terminal
-                    proto2.setLookAhead(markedSymbol);
-                }
-            } else { // before 1st member
-            }
-        } // while processing queue
-    } // generateStates
-
-    /** Get the starting state for the parser
-     *  @return initial state to start the parser with
-     */
-    public State getStartState() {
-        return state2;
-    } // getStartState
 
     /** Get the axiom (root symbol) of the grammar
      *  @return symbol for the axiom of the grammar
@@ -281,18 +184,6 @@ public class Grammar {
         return found;
     } // delete(prod)
 
-    /** Add a state to the table.
-     *  Former name was STAALL.
-     *  @param symbol symbol that was shifted to reached this state
-     *  @return new state just added
-     */
-    public State allocate(Symbol symbol) {
-        State result = new State(symbol);
-        states.add(result);
-        // symbol.addReachedState(result);
-        return result;
-    } // allocate
-
     /** Return a human readable representation of this grammar
      *  @return lines with all rules, prefixed by dots
      */
@@ -315,7 +206,8 @@ public class Grammar {
     } // legible
 
     /** Return an XML description of this grammar
-     *  @return list of XML elements representing the rules
+     *  @return list of XML elements representing the symbol list
+     *  and the rules with productions and members.
      */
     public String toString() {
         String result = Parm.getIndent() + "<grammar axiom=\"" + axiom.getEntity() + "\">" + Parm.getNewline();
@@ -335,26 +227,6 @@ public class Grammar {
         } // try - catch
         Parm.decrIndent();
         result += Parm.getIndent() + "</rules>" + Parm.getNewline();
-
-        result += Parm.getIndent() + "<protos>" + Parm.getNewline();
-        Parm.incrIndent();
-        Iterator iter = protos.iterator();
-        while (iter.hasNext()) {
-            result += ((ProtoState) iter.next()).toString();
-        } // while states
-        Parm.decrIndent();
-        result += Parm.getIndent() + "</protos>" + Parm.getNewline();
-
-        result += Parm.getIndent() + "<states>" + Parm.getNewline();
-        Parm.incrIndent();
-        int istate = 0;
-        while (istate < states.size()) {
-            result += states.get(istate).toString();
-            istate ++;
-        } // while states
-        Parm.decrIndent();
-        result += Parm.getIndent() + "</states>" + Parm.getNewline();
-
         Parm.decrIndent();
         result += Parm.getIndent() + "</grammar>";
         return result;

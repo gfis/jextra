@@ -85,10 +85,6 @@
         </prod>
       </rule>
     </rules>
-    <protos>
-    </protos>
-    <states>
-    </states>
   </grammar>
   <legibleGrammar>
 [S = S a S b

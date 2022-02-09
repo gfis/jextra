@@ -55,8 +55,11 @@ CALL Scanner $(DATA)
 #================
 PACKAGE=org.teherba.jextra
 
-TEST PA1 Parm clas
+TEST PA1 value of enbloc parameter
 CALL Parm enbloc
+
+TEST PA2 properties on the commandline
+CALL Parm --gener=3 enbloc
 #================
 
 PACKAGE=org.teherba.jextra.gener
@@ -80,4 +83,13 @@ CALL ProtoParser data/sasb.grm
 
 TEST PP4 ProtoParser non-LALR(1), but LR(1)
 CALL ProtoParser data/ex421.grm
-#======================================================================
+
+TEST PP5 ProtoParser example 4.2.1-1 with generation
+CALL ProtoParser --gener=1 data/ex421.grm
+#================
+# Generation
+PACKAGE=org.teherba.jextra.gener
+
+TEST GEN1 LR0Generator
+CALL LR0Generator --debug=2 --gener=1 data/ex421.grm
+#================

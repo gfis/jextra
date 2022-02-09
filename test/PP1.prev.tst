@@ -477,10 +477,6 @@
         </prod>
       </rule>
     </rules>
-    <protos>
-    </protos>
-    <states>
-    </states>
   </grammar>
   <legibleGrammar>
 [AXIOM = EXTRA_INPUT

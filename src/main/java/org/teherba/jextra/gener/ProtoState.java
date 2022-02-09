@@ -1,10 +1,11 @@
 /*  A prototype of a state of the LR(1) Push-Down Automaton
-    @(#) $Id: ProtoState.java 427 2010-06-01 09:08:17Z gfis $
+    @(#) $Id$
+    2022-02-10: LF only
     2017-05-28: javadoc 1.8
     2007-05-07, Georg Fischer: copied from State.java
 */
 /*
- * Copyright 2006 Dr. Georg Fischer <punctum at punctum dot kom>
+ * Copyright 2006 Georg Fischer <dr dot georg dot fischer at gmail dot com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,10 +38,10 @@ import  java.util.TreeSet;
  *  <li>the position of the marker in the production (0 = before first member, length + 1 = reduce action)</li>
  *  <li>the lookahead terminal</li>
  *  </ul>
- *  @author Dr. Georg Fischer
+ *  @author Georg Fischer
  */
 public class ProtoState implements Comparable {
-    public final static String CVSID = "@(#) $Id: ProtoState.java 427 2010-06-01 09:08:17Z gfis $";
+    public final static String CVSID = "@(#) $Id$";
 
     /** unique number assigned to this object */
     private int id;
