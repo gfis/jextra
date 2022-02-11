@@ -130,50 +130,49 @@ my @states    = (); # state number -> array of items; [0] and[1] are not used.
 my @succs     = (); # state number -> array of successor states
 my @itemQueue = (); # List of items with symbols that must be expanded.
 my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
-my $acceptState;
+my $acceptState;    # the parser accepts the sentence when it reachs this state
 my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
 
-sub initTable() {
-    $acceptState = 0;
-    push(@states, [ 0], [0]); # states 0, 1 are not used
-    push(@succs , [ 0], [0]); # states 0, 1 are not used
-    my $state = 2;
-    # push(@itemQueue, $state);
-    $symStates{$axiom}[0] = $state;
-    push(@states, [ $state ++]); # @axiom ...
-    push(@succs,  [ $state]); # ... -> 3
-    push(@states, [ $state ++]); # @eop
-    push(@succs,  [ $acceptState]); # ... "-> 4" = accept
-    &enqueueProds($axiom);
-    print "/* initTable, acceptState=$acceptState */\n\n";
-} # initTable
+sub statistics() { # print counts of data structures
+    print sprintf("%4d rules\n"                 , scalar(keys(%rules)      ));
+    print sprintf("%4d members in productions\n", scalar(     @prods       ));
+    print sprintf("%4d states\n"                , scalar(     @states      ));
+    print sprintf("%4d successor states\n"      , scalar(     @succs       ));
+    print sprintf("%4d symStates\n"             , scalar(keys(%symStates)  ));
+    print sprintf("%4d symDone\n"               , scalar(keys(%symDone)    ));
+    print sprintf("%4d itemStates\n"            , scalar(     @itemQueue   ));
+    print sprintf("%4d itemDone\n"              , scalar(keys(%itemDone)   ));
+    print "\n";
+} # statistics
 
-&initTable();
+&statistics();
 
-sub markedItem() { # get the marker and the portion behind it
+sub markedItem() { # legible item: the marker and the portion behind it, or a reduction
     my ($item, $succ) = @_;
-    my $result = "";
-    my $sep = "[$item] @";
-    my $left;
-    if (&isEOP($item)) { # last, @eop, accept
+    my $result = sprintf("%3d:", $item);
+    my $sep;
+    if (&isEOP($item)) {
+        $sep = " =: ";
+        $succ = 0;
+    } else {
+        $sep = " @";
+    }
+    my $busy = 1;
+    while ($busy) {
         my $mem = $prods[$item];
-        $left = $prods[$item + $mem - 1];
-        $result = "[$item] =: $left," . (- $mem); # accept
-    } else { # not last
-        my $busy = 1;
-        while ($busy) {
-            if (&isEOP($item)) { # last, @eop
-                $busy = 0;
-            } else { # inside - shift
-                $result.= "$sep$prods[$item]";
-                $sep = " ";
-            }
-            $item ++;
-        } # while $busy
-        if ($succ > 0) {
-            $result .= " -> $succ";
+        if (&isEOP($item)) { # last, @eop
+            my $left = $prods[$item + $mem - 1];
+            $result .= "$sep($left," . (- $mem) . ")"; # reduce
+            $busy = 0;
+        } else { # inside - shift
+            $result .= "$sep$mem";
         }
-    } # not last
+        $sep = " ";
+        $item ++;
+    } # while $busy
+    if ($succ > 0) {
+        $result .= " -> $succ";
+    }
     return $result;
 } # markedItem
 
@@ -184,19 +183,18 @@ sub isEOP() { # whehter the item's marker is at the end of a production
 
 sub dumpTable() { # expand the grammar tree
     print "/* dumpTable */\n";
-    for my $state (2 .. $#states) {
-        my $sep = "\t";
-        print "state $state:";
+    for my $state (2 .. $#states) { # over all states
+        my $sep = sprintf("%-12s", sprintf("state [%3d]", $state));
         for my $stix (0 .. $#{$states[$state]}) {
             my $item = $states[$state][$stix];
             my $mem = $prods[$item];
             if (0) {
             } elsif ($succs[$state][$stix] == $acceptState) {
-                print "${sep}[$item] =.\n";
+                print "$sep" . sprintf("%3d:", $item) . " =.\n";
             } else {
                 print "$sep" . &markedItem($item, $succs[$state][$stix]) . "\n";
             }
-            $sep = "\t\t";
+            $sep = sprintf("%-12s", "");
         } # for $item
         # print "\n";
     } # for $state
@@ -204,10 +202,6 @@ sub dumpTable() { # expand the grammar tree
         my $sep = "\t";
         print "symbol $sym in states";
         for my $syix (0 .. $#{$symStates{$sym}}) {
-            if (! defined($symStates{$sym}[$syix])) {
-                print "undefined sep=$sep, symStates{$sym}[$syix]\n";
-                $symStates{$sym}[$syix] = 0;
-            }
             print "$sep$symStates{$sym}[$syix]";
             $sep = ", ";
         }
@@ -216,39 +210,12 @@ sub dumpTable() { # expand the grammar tree
     print "\n";
 } # dumpTable
 
-sub enqueueProds() { # enqueue items for all productions of a left side with the marker at the beginning
-    my ($mem, $state) = @_;
-    # insert $state into $symStates[$mem] if not yet present
-    my $busy = 1;
-    my $syix = 0;
-    while ($busy == 1 && $syix <= $#{$symStates{$mem}}) { # while not found
-        if ($state == $symStates{$mem}[$syix]) { # found
-            $busy = 0;
-            print "    found $state in symStates{$mem}[$syix]\n";
-        }
-        $syix ++;
-    } # while
-    if ($busy == 1) { # not found
-        $symStates{$mem}[$syix] = $state;
-    }
-    # now loop over the rule
-    if (defined($rules{$mem})) { # is really a non-terminal
-        foreach my $item (split(/\,/, $rules{$mem})) { # $iprod and $item coincide
-            $item ++; # skip over left side
-            if (! defined($itemDone{$item})) { # not yet enqueued
-                print "enqueue item: $mem = " . &markedItem($item, -1) . "\n";
-                push(@itemQueue, $item);
-                $itemDone{$item} = 1;
-            } # not yet enqueued
-        } # foreach $item
-    } # if non-terminal
-} # enqueueProds
-
 sub findSuccessor() { # Determine the next state reached by the marked symbol.
     # Return
     # < 0 if item already present (negative successor)
     # > 0 if marked symbol found, but not the item
     # = 0 if nothing was found
+    # and $stix = index where to enter this item in $states[$state]
     my ($item, $state) = @_;
     my $mem = $prods[$item];
     my $result = 0; # neither item nor symbol found
@@ -261,28 +228,30 @@ sub findSuccessor() { # Determine the next state reached by the marked symbol.
         } elsif ($item == $item2) { # same item found
             $busy = 0;
             $result = - $succs[$state][$stix]; # negative successor
-            print "  found item [$item] in states[$state][$stix] => $result\n";
+            print "  found item $item2 in states[$state][$stix] => $result\n";
         } elsif ($mem eq $mem2) { # marked symbol found
             $busy = 0;
             $result = $succs[$state][$stix]; # positive successor
-            print "  found \@ $mem in states[$state][$stix] => $result\n";
-
+            print "  found member $mem2 in states[$state][$stix] => $result\n";
         }
         $stix ++;
     } # while $stix
     if ($busy == 1) {
         $result = 0; # successor = 0
-        print "  found no item [$item] in states[$state][$stix] => $result\n";
+        print "  found no item $item in states[$state][$stix] => $result\n";
     }
-    return $result;
+    return ($result, $stix);
 } # findSuccessor
 
 sub walkLane() { # follow a production starting at $item, insert $item in $state and/or follow the lane
     my ($item, $state) = @_;
+    print "walkLane from state $state follow item " . &markedItem($item, -1) . "\n";
     my $stix;
+    my $succ;
     my $busy = 1;
     while ($busy && ! &isEOP($item)) {
-        my $succ = &findSuccessor($item, $state); # > for symbol, < 0 for item, = 0 nothing found
+        &enqueueProds($prods[$item], $state);
+        ($succ, $stix) = &findSuccessor($item, $state); # > for symbol, < 0 for item, = 0 nothing found
         if (0) {
         } elsif ($succ > 0) { # marked symbol found, but not the item: insert item anyway and follow to successor
             $stix = $#{$states[$state]} + 1;
@@ -293,17 +262,71 @@ sub walkLane() { # follow a production starting at $item, insert $item in $state
             $busy = 0; # break loop, quit lane
         } else { # $succ == 0: allocate new state
             $succ = scalar(@states); # new state
-            &enqueueProds($prods[$item], $state);
             $stix = $#{$states[$state]} + 1;
             $states[$state][$stix] = $item;
             $succs [$state][$stix] = $succ;
             $state = $succ;
         }
+        $itemDone{$item} = 1;
         $item ++;
     } # while $busy, not at EOP
-    $states[$state][0] = $item;
-    $succs [$state][0] = 1;
+    # now at EOP
+    if ($busy) { # not same item found
+        $stix = $#{$states[$state]} + 1;
+        $states[$state][$stix] = $item;
+        $succs [$state][$stix] = 0;
+    }
 } # walkLane
+
+sub enqueueProds() {
+    # enqueue items for all productions of $left with the marker at the beginning,
+    # and insert them in $state
+    # insert $state into $symStates[$left] if not yet present
+    my ($left, $state) = @_;
+    print "  enqueueProds(left=$left, state=$state)\n";
+    my $busy = 1;
+    my $syix = 0;
+    while ($busy == 1 && $syix <= $#{$symStates{$left}}) { # while not found
+        if ($state == $symStates{$left}[$syix]) { # found
+            $busy = 0;
+            print "    found state $state in symStates{$left}[$syix]\n";
+        }
+        $syix ++;
+    } # while
+    if ($busy == 1) { # not found
+        $symStates{$left}[$syix] = $state;
+    }
+    # now loop over the rule
+    if (defined($rules{$left})) { # is really a non-terminal
+        foreach my $item (split(/\,/, $rules{$left})) { # $iprod and $item coincide
+            $item ++; # skip over left side
+            if (! defined($itemDone{$item})) { # not yet enqueued
+                print "    enqueue item: $left = " . &markedItem($item, -1) . "\n";
+                push(@itemQueue, $item);
+                #$itemDone{$item} = 1;
+            } # not yet enqueued
+        } # foreach $item
+    } # if non-terminal
+} # enqueueProds
+
+sub initTable() { # initialize the state table with 
+    $acceptState = 4;
+    push(@states, [ 0], [0]); # states 0, 1 are not used
+    push(@succs , [ 0], [0]); # states 0, 1 are not used
+    my $state = 2;
+    # push(@itemQueue, $state);
+#   $symStates{$axiom}[0] = $state;
+    push(@states, [ $state]); # @axiom ...
+    &enqueueProds($axiom, $state);
+    $state ++;
+    push(@succs,  [ $state]); # ... -> 3
+    push(@states, [ $state ++]); # @eof
+    push(@succs,  [ $acceptState]); # ... "-> 4" = accept
+    print "/* initTable, acceptState=$acceptState */\n\n";
+} # initTable
+
+&initTable();
+&dumpTable();
 
 sub insertProdsIntoState() {
     my ($left, $state) = @_;
@@ -314,28 +337,31 @@ sub insertProdsIntoState() {
     } # foreach $item
 } # insertProdsIntoState
 
-&dumpTable();
-
 sub walkGrammar() { # expand the grammar tree by inserting items from the queue
     my $mem;
     print "/* walkGrammar */\n";
     %itemDone = (); # clear history of %itemQueue
     while (scalar(@itemQueue) > 0) { # queue not empty
         my $item = shift(@itemQueue);
-        my $left = $prods[$item - 1];
+        my $left = $prods[$item - 1];      
+        print "----------------\n";
         print "dequeue item: $left = " . &markedItem($item, -1) . "\n";
-        # now insert the start of all productions of $left into all states where $left is marked in an item
-        # follow those productions and eventually generate successor states
-        for my $stix (0 .. $#{$symStates{$left}}) {
-            my $state = $symStates{$left}[$stix];
-            &insertProdsIntoState($left, $state);
-        } # for $stix
-        &dumpTable();
+        if (! defined($itemDone{$item})) {
+            # now insert the start of all productions of $left into all states where $left is marked in an item
+            # follow those productions and eventually generate successor states
+            for my $stix (0 .. $#{$symStates{$left}}) {
+                my $state = $symStates{$left}[$stix];
+                &insertProdsIntoState($left, $state);
+            } # for $stix
+            &dumpTable();
+        } else {
+            print "  already done\n";
+        }
     } # while queue not empty
 } # walkGrammar
 
 &walkGrammar();
-
+&statistics();
 #----------------
 __DATA__
 [axiom = S
