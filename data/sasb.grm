@@ -3,6 +3,7 @@
 /* Dr. Georg Fischer 1980-08-01                   */
 /*------------------------------------------------*/  
 EOF IDENTIFIER NUMBER STRING ;
-[S = S a S b
-   | 
+[ axiom = S
+ .S = S a S b
+    |
 ]
