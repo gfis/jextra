@@ -2,6 +2,7 @@
 
 # Prototype parser generator, version 4: read input file
 # @(#) $Id$
+# 2022-02-12: LR(1) after 41 years?!
 # 2022-02-11: walkLane
 # 2022-02-10, Georg Fischer
 
@@ -160,13 +161,14 @@ sub markedItem() { # legible item: the marker and the portion behind it, or a re
     if (&isEOP($item)) {
         $sep = " ";
         if ($succ < 0) {
-            $sep = "";
             my $ilah = - $succ;
             while ($laheads[$ilah] !~ m{\A\-}) {
                 $sep .= ",$laheads[$ilah]";
                 $ilah ++;
             } # while $ilah
-            $sep = " " . substr($sep, 1); # remove 1st comma
+            if (length($sep) >= 2) {
+                $sep = " " . substr($sep, 2); # remove 1st comma
+            }
         }
         $sep .= "=: ";
         $succ = 0;
@@ -527,11 +529,6 @@ sub addLAheads() { # for each state with potential conflicts: assign lookahead s
 } # addLAheads
 
 &addLAheads();
-
-# &walkBack(28, 14, 0);
-# &walkBack(31, 14, 1);
-# &walkBack(28, 15, 0);
-# &walkBack(31, 15, 1);
 &dumpTable();
 #----------------
 __DATA__
