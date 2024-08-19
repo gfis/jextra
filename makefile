@@ -63,6 +63,7 @@ jfind:
 rmbak:
 	find src -iname "*.bak"  | xargs -l rm -v
 #----
+D=0
 jegen: # run the standalone generator
-	java -cp dist/jextra.jar ParserGenerator -f data/ex421.grm 2>&1 | tee jegen.txt
+	java -cp dist/jextra.jar ParserGenerator -d $(D) -f data/ex421.grm 2>&1 | tee jegen.txt
 

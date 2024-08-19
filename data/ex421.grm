@@ -1,11 +1,11 @@
 /* Test grammar, example 4.2.1-1, page 73         */
-/* Aho and Ullman [1972] give an example (7.27) for a grammar which
+/* Aho and Ullman (1972) give an example (7.27) for a grammar which
    is LR(1) but not LALR(1)                       */
 /* Dr. Georg Fischer 1980-08-01                   */
 /*------------------------------------------------*/  
 EOF IDENTIFIER NUMBER STRING ;
-[axiom = S
-    .S = A a | B b | d A b | d B a
-    .A = c
-    .B = c
+[ axiom = S
+. S = A a | B b | d A b | d B a
+. A = c
+. B = c
 ]

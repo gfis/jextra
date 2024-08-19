@@ -2,21 +2,23 @@
     ParserGenerator.java: all-in-one LR(1) parser generator
     @(#) $Id$
     2024-08-19, Georg Fischer: reattempt
-    2023-12-30 automatically translated from gen4.pl 
+    2023-12-30 automatically translated from gen4.pl
 */
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 
 public class ParserGenerator {
-    private static int debug = 0;
-    private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
+    private static int debug;
     private static List<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
+    private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
     private static String hyper = "hyper_axiom"; // artificial first left side
     private static String axiom; // first left side of the user's grammar
     private static String left; // symbol on the left side
@@ -34,11 +36,20 @@ public class ParserGenerator {
     private static List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
     private static Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
 
+    /**
+     * Main program 
+     * @param args commandline arguments: [-d mode] [-f fileName|-]
+     * <ul>
+     * <li>-d debug mode</li>
+     * <li>-f fileName</li>
+     */
     public static void main(String[] args) {
         // evaluate commandline arguments
-        String fileName = "";
+        String fileName = null;
+        debug = 0;
         int iarg = 0;
         try {
+            // evaluate any commandline arguments
             while (iarg < args.length) {
                 String arg = args[iarg ++];
                 if (false) {
@@ -48,40 +59,12 @@ public class ParserGenerator {
                     fileName = args[iarg ++];
                 }
             } // while args
-            // Reader for the source file
-            BufferedReader reader = new BufferedReader(
-                    (fileName == null || fileName.length() <= 0 || fileName.equals("-"))
-                    ? new InputStreamReader(System.in)
-                    : new FileReader (fileName)
-                    );
-
-            initGrammar();
-            String line = ""; // read input line
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
-                if (false) {
-                } else if (line.matches("\\A *\\[ *(\\w+) *= *(\\w+)")) { // [ axiom = @rights
-                    String[] parts = line.split("=");
-                    left = parts[0].trim();
-                    right = parts[1].trim();
-                    axiom = left;
-                    appendToProds(left, right);
-                } else if (line.matches("\\A *\\. *(\\w+) *= *(.+)")) { // .left = @rights
-                    String[] parts = line.split("=");
-                    left = parts[0].trim();
-                    right = parts[1].trim();
-                    appendToProds(left, right);
-                } else if (line.matches("\\A *\\| *(.+)")) { // | @rights
-                    right = line.substring(1).trim();
-                    appendToProds(left, right);
-                } else if (line.matches("\\A *\\]")) {
-                    break;
-                }
-            } // while line
         } catch (Exception exc) {
             System.err.println(exc.getMessage());
             exc.printStackTrace();;
         } // catch
+            
+        readGrammar(fileName);
         printGrammar();
         symQueue.add(hyper);
         symDone.put(hyper, true);
@@ -94,15 +77,115 @@ public class ParserGenerator {
         addLAheads();
         dumpTable();
     } // main
-
+    
+    /**
+     * Initialize the grammar with the first rule for the {@link #hyper_axiom}
+     */
     private static void initGrammar() {
-        prods.add(0, null); // [0] is not used
-        rules.put(hyper, List.of(prods.size()));
-        prods.add(hyper);
-        prods.add(axiom);
+        prods.add("null"); // [0] is not used
+        rules.put(hyper, List.of(prods.size())); // the first production will start thereafter
+        prods.add(hyper); 
+        prods.add(axiom); // hyper_axiom = axiom eof . (length 2)
         prods.add("eof");
         prods.add(String.valueOf(-2));
-    }
+    } // initGrammar
+
+    /**
+     * Read the grammar from a file and build the structures for rules and productions.
+     * @param fileName input file
+     */
+    private static void readGrammar(String fileName) {
+        final int IN_HEAD = 1;    // looking for first "["
+        final int IN_LEFT = 2;    // expecting the left side of a rule
+        final int IN_RULE = 3;    // expecting "="
+        final int IN_PROD = 4;    // expecting "="
+        final int IN_TAIL = 5;    // after "]"d of a rule
+        String srcEncoding = "UTF-8"; // Encoding of the input file
+        try {
+            Scanner sc = (fileName == null || fileName.length() <= 0 || fileName.equals("-")) 
+                ? new Scanner(System.in)
+                : new Scanner(new File(fileName), srcEncoding);
+            // sc.useDelimiter("\\b");
+            int state = IN_HEAD;
+            String left = null;
+            int iprod = prods.size();
+            while (sc.hasNext()) {  
+                String part = sc.next().trim();
+                if (debug > 0) {
+                    System.out.println("part=\"" + part + "\", state=" + state);
+                }
+                switch(state) {
+                    default:
+                    case IN_HEAD: // skip all before the first "["
+                        if (part.equals("[")) {
+                            axiom = null;
+                            left = null;
+                            state = IN_LEFT;
+                        }
+                        break;
+                    case IN_LEFT: // after "[" or "." - start of a new rule
+                        if (part.matches("\\w+")) { // valid left side
+                            if (axiom == null) { // was not yet seen
+                                axiom = part;
+                                initGrammar();
+                            }
+                            left = part; 
+                            iprod = prods.size();
+                            prods.add(left);
+                            if (rules.containsKey(left)) { // there was already a rule with this left side
+                                List<Integer> indexes = rules.get(left);
+                                indexes.add(iprod);
+                            } else { // new left side
+                                rules.put(left, new ArrayList<>(List.of(iprod)));
+                            }
+                            state = IN_RULE;
+                        } else {
+                            System.err.println("part=\"" + part + "\" is no valid left side");
+                        }
+                        break;
+                    case IN_RULE: // expecting "="
+                        if (part.equals("=")) {
+                            state = IN_PROD;
+                        } else {
+                            System.err.println("part=\"" + part + "\" instead of \"=\" or \"|\"");
+                        }
+                        break;
+                    case IN_PROD: // append the members of the production
+                        if (false) {
+                        } else if (part.matches("\\w+")) { // valid member
+                            prods.add(part);
+                        } else if (part.equals("|") || part.equals(".") || part.equals("]")) { // EOP
+                            int memNo = prods.size() - iprod - 1; // left side is not counted
+                            prods.add(String.valueOf(-memNo));
+                            if (false) {
+                            } else if (part.equals(".")) {
+                                state = IN_LEFT;
+                            } else if (part.equals("]")) {
+                                state = IN_TAIL;
+                            } else { // continue with same rule
+                                iprod = prods.size();
+                                prods.add(left);
+                                if (rules.containsKey(left)) {
+                                    List<Integer> indexes = rules.get(left);
+                                    indexes.add(iprod);
+                                } else {
+                                    rules.put(left, new ArrayList<>(List.of(iprod)));
+                                }
+                                state = IN_PROD;
+                            }
+                        } else {
+                            System.err.println("part=\"" + part + "\" is no valid member");
+                        }
+                        break;
+                    case IN_TAIL: // after "]" - skip all following
+                        break;
+                } // switch state
+            } // while sc.hasNext
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+            exc.printStackTrace();;
+        } // catch
+    } // readGrammar
 
     private static void appendToProds(String left, String right) {
         String[] rights = right.split("\\|");
@@ -132,6 +215,7 @@ public class ParserGenerator {
             dot = "  .";
             String sep = " =";
             for (int iprod : rules.get(left)) {
+                iprod ++;
                 try {
                     // int iprod = prod; // Integer.parseInt(prod) + 1;
                     System.out.print(sep);
