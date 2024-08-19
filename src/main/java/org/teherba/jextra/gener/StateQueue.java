@@ -23,7 +23,7 @@
 package org.teherba.jextra.gener;
 import  org.teherba.jextra.gener.Queue;
 import  org.teherba.jextra.gener.State;
-import  org.teherba.jextra.gener.Table;
+import  org.teherba.jextra.gener.StateTable;
 import  org.teherba.jextra.scan.Symbol;
 /**
  *  Queue of states to be processed recursively
@@ -105,7 +105,7 @@ public class StateQueue extends Queue {
      *  @param args commandline arguments
      */
     public static void main (String args[]) {
-        Table table = new Table();
+        StateTable table = new StateTable();
         // table.initialize();
         StateQueue queue = new StateQueue("test");
         for (int index = 0; index < 8; index ++) {

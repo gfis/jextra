@@ -29,7 +29,7 @@ import  org.teherba.jextra.parse.BaseParser;
 public class EmptyParser extends BaseParser {
     public final static String CVSID = "@(#) $Id$";
 
-    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
+    /** Constructor - allocate new {@link StateTable}, {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public EmptyParser(String fileName) {

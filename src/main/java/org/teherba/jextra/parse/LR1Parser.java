@@ -52,9 +52,9 @@ public class LR1Parser extends BaseParser {
         super(tab, fileName);
         stack = new ArrayList<State>(128);
         state = stateTable.getStartState();
-    } // Constructor(Table, String)
+    } // Constructor(StateTable, String)
 
-    /** Constructor - allocate new {@link Table}, {@link Grammar} and {@link Scanner} objects
+    /** Constructor - allocate new {@link StateTable}, {@link Grammar} and {@link Scanner} objects
      *  @param fileName path/name of the source file, "" = STDIN
      */
     public LR1Parser(String fileName) {

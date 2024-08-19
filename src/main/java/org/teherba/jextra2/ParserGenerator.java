@@ -1,3 +1,9 @@
+/*
+    All-in-one LR(1) parser generator
+    @(#) $Id$
+    2024-08-19, Georg Fischer: reattempt
+    2023-12-30 automatically translated from gen4.pl 
+*/
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +18,33 @@ public class ParserGenerator {
     private static String left; // symbol on the left side
     private static String right; // a right side, several productions
 
+/*
+# An item is an index into @prods.
+# The marker "@" is thought to be before the member prods[item].
+my @states    = (); # state number -> array of items; [0] and [1] are not used.
+my @succs     = (); # state number -> array of successor states
+my @preits    = (); # state number -> array of items
+my @preds     = (); # state number -> array of predecessor states
+my @itemQueue = (); # List of items with symbols that must be expanded.
+my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
+my $acceptState;    # the parser accepts the sentence when it reachs this state
+my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+my @laheads   = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+my %conStates = (); # states with conflicts: they get lookaheads for all reduce items
+*/
+    private List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
+    private Map<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
+    private List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
+    private List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
+    private List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
+    private List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
+    private List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
+    private Map<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
+    private int acceptState; // the parser accepts the sentence when it reaches this state
+    private Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+    private List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    private Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
+ 
     public static void main(String[] args) {
         initGrammar();
         while (true) {
@@ -39,21 +72,9 @@ public class ParserGenerator {
             }
         }
         printGrammar();
-        List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
-        Map<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
         symQueue.add(hyper);
         symDone.put(hyper, true);
         dumpGrammar();
-        List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
-        List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
-        List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
-        List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
-        List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
-        Map<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
-        int acceptState; // the parser accepts the sentence when it reaches this state
-        Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-        List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-        Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
         statistics();
         initTable();
         dumpTable();
@@ -117,8 +138,6 @@ public class ParserGenerator {
     private static void dumpGrammar() {
         System.out.println("/* dumpGrammar */");
         String dot = "[  ";
-        List<String> symQueue = new ArrayList<>(List.of(hyper));
-        Map<String, Boolean> symDone = new HashMap<>(Map.of(hyper, true));
         while (!symQueue.isEmpty()) {
             String left = symQueue.remove(0);
             for (int iprod : rules.get(left)) {
