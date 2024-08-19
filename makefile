@@ -62,3 +62,7 @@ jfind:
 	find src -iname "*.java" | xargs -l grep -H "$(JF)"
 rmbak:
 	find src -iname "*.bak"  | xargs -l rm -v
+#----
+jegen: # run the standalone generator
+	java -cp dist/jextra.jar ParserGenerator -f data/ex421.grm 2>&1 | tee jegen.txt
+

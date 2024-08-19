@@ -1,5 +1,5 @@
 /*
-    All-in-one LR(1) parser generator
+    ParserGenerator.java: all-in-one LR(1) parser generator
     @(#) $Id$
     2024-08-19, Georg Fischer: reattempt
     2023-12-30 automatically translated from gen4.pl 
@@ -9,9 +9,12 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 
 public class ParserGenerator {
-    private static int debug = 1;
+    private static int debug = 0;
     private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
     private static List<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
     private static String hyper = "hyper_axiom"; // artificial first left side
@@ -30,33 +33,55 @@ public class ParserGenerator {
     private static Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
     private static List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
     private static Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
- 
+
     public static void main(String[] args) {
-        initGrammar();
-        while (true) {
+        // evaluate commandline arguments
+        String fileName = "";
+        int iarg = 0;
+        try {
+            while (iarg < args.length) {
+                String arg = args[iarg ++];
+                if (false) {
+                } else if (arg.equals("-d")) {
+                    debug    = Integer.parseInt(args[iarg ++]);
+                } else if (arg.equals("-f")) {
+                    fileName = args[iarg ++];
+                }
+            } // while args
+            // Reader for the source file
+            BufferedReader reader = new BufferedReader(
+                    (fileName == null || fileName.length() <= 0 || fileName.equals("-"))
+                    ? new InputStreamReader(System.in)
+                    : new FileReader (fileName)
+                    );
+
+            initGrammar();
             String line = ""; // read input line
-            line = line.trim();
-            if (line.isEmpty()) {
-                break;
-            }
-            if (line.matches("\\A *\\[ *(\\w+) *= *(\\w+)")) { // axiom = @rights
-                String[] parts = line.split("=");
-                left = parts[0].trim();
-                right = parts[1].trim();
-                axiom = left;
-                appendToProds(left, right);
-            } else if (line.matches("\\A *\\. *(\\w+) *= *(.+)")) { // .left = @rights
-                String[] parts = line.split("=");
-                left = parts[0].trim();
-                right = parts[1].trim();
-                appendToProds(left, right);
-            } else if (line.matches("\\A *\\| *(.+)")) { // | @rights
-                right = line.substring(1).trim();
-                appendToProds(left, right);
-            } else if (line.matches("\\A *\\]")) {
-                break;
-            }
-        }
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (false) {
+                } else if (line.matches("\\A *\\[ *(\\w+) *= *(\\w+)")) { // [ axiom = @rights
+                    String[] parts = line.split("=");
+                    left = parts[0].trim();
+                    right = parts[1].trim();
+                    axiom = left;
+                    appendToProds(left, right);
+                } else if (line.matches("\\A *\\. *(\\w+) *= *(.+)")) { // .left = @rights
+                    String[] parts = line.split("=");
+                    left = parts[0].trim();
+                    right = parts[1].trim();
+                    appendToProds(left, right);
+                } else if (line.matches("\\A *\\| *(.+)")) { // | @rights
+                    right = line.substring(1).trim();
+                    appendToProds(left, right);
+                } else if (line.matches("\\A *\\]")) {
+                    break;
+                }
+            } // while line
+        } catch (Exception exc) {
+            System.err.println(exc.getMessage());
+            exc.printStackTrace();;
+        } // catch
         printGrammar();
         symQueue.add(hyper);
         symDone.put(hyper, true);
@@ -68,7 +93,7 @@ public class ParserGenerator {
         statistics();
         addLAheads();
         dumpTable();
-    }
+    } // main
 
     private static void initGrammar() {
         prods.add(0, null); // [0] is not used
@@ -107,13 +132,17 @@ public class ParserGenerator {
             dot = "  .";
             String sep = " =";
             for (int iprod : rules.get(left)) {
-                iprod++;
-                System.out.print(sep);
-                sep = " |";
-                while (!isEOP(iprod)) {
-                    String mem = prods.get(iprod);
-                    System.out.print(" " + mem);
-                    iprod++;
+                try {
+                    // int iprod = prod; // Integer.parseInt(prod) + 1;
+                    System.out.print(sep);
+                    sep = " |";
+                    while (!isEOP(iprod)) {
+                        String mem = prods.get(iprod);
+                        System.out.print(" " + mem);
+                        iprod++;
+                    }
+                } catch (Exception exc) {
+                    System.err.println("printGrammar: exc, left=" + left + ", iprod=" + iprod);
                 }
             }
             System.out.println();

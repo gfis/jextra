@@ -270,10 +270,12 @@
         target core.jar must be defined somehow (maybe empty) in build.xml
     -->
     <target name="dist"     depends="prepare,compile"><!-- ,manifest,core.jar" -->
+        <!--
         <antcall target="manifest">
             <param name="core" value="-core"  />
         </antcall>
         <antcall target="core.jar" />
+        -->
         <antcall target="manifest">
             <param name="core" value=""  />
         </antcall>

@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use integer;
 
-my $debug = 1;
+my $debug   = 1;
 my %rules   = (); # left -> list of indexes in prod
 my @prods   = (); # flattened: left, mem1, mem2, ... memk, -k
 my $hyper   = "hyper_axiom";  # artificial first left side
@@ -31,7 +31,7 @@ while (<>) {
     my $line = $_;
     $line =~ s{\s+\Z}{}; # chompr
     if (0) {
-    } elsif ($line =~ m{\A *\[ *(\w+) *\= *(\w+)}) { # axiom = @rights
+    } elsif ($line =~ m{\A *\[ *(\w+) *\= *(\w+)}) { # [ axiom = @rights
         ($left, $right) = ($1, $2);
         $axiom = $left;
         &initGrammar();
