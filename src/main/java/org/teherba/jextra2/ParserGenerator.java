@@ -17,23 +17,23 @@ import java.io.InputStreamReader;
 
 public class ParserGenerator {
     private static int debug;
-    private static List<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
+    private static ArrayList<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
     private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
     private static String hyper = "hyper_axiom"; // artificial first left side
     private static String axiom; // first left side of the user's grammar
     private static String left; // symbol on the left side
     private static String right; // a right side, several productions
-    private static List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
+    private static ArrayList<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
     private static HashMap<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
-    private static List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
-    private static List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
-    private static List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
-    private static List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
-    private static List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
+    private static ArrayList<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
+    private static ArrayList<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
+    private static ArrayList<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
+    private static ArrayList<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
+    private static ArrayList<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
     private static HashMap<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
     private static int acceptState; // the parser accepts the sentence when it reaches this state
     private static HashMap<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-    private static List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    private static ArrayList<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
     private static HashMap<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
 
     /**
@@ -261,19 +261,20 @@ public class ParserGenerator {
 
     private static void initTable() {
         acceptState = 4;
+        states.add(List.of(0, 0));
         states.add(List.of(0));
-        states.add(List.of(0));
-        succs.add(List.of(0));
+        succs.add(List.of(0, 0));
         succs.add(List.of(0));
         int state = 2;
         states.add(List.of(state));
         enqueueProds(axiom, state);
-        state++;
+        state ++;
         succs.add(List.of(state));
-        states.add(List.of(state++));
+        states.add(List.of(state ++));
         succs.add(List.of(acceptState));
         System.out.println("/* initTable, acceptState=" + acceptState + " */\n");
-        laheads = List.of(-1, -1);
+        laheads.add(-1);
+        laheads.add(-1);
     }
 
     private static void enqueueProds(String left, int state) {
@@ -477,10 +478,11 @@ public class ParserGenerator {
         try {
             boolean busy = true;
             while (busy) {
-                int mem = Integer.parseInt(prods.get(item));
+                String mem = prods.get(item);
                 if (isEOP(item)) {
-                    String left = prods.get(item + mem - 1);
-                    result.append(sep).append("(").append(left).append(",").append(-mem).append(")");
+                    int memNo = Integer.parseInt(mem); // negative number of members
+                    String left = prods.get(item + memNo - 1);
+                    result.append(sep).append("(").append(left).append(",").append(-memNo).append(")");
                     busy = false;
                 } else {
                     result.append(sep).append(mem);
@@ -491,7 +493,7 @@ public class ParserGenerator {
         } catch(Exception exc) {
             // ignore
         }
-        if (succ > 0) {
+        if (true || succ > 0) {
             result.append(" -> ").append(succ);
         }
         return result.toString();
