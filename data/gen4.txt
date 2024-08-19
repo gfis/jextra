@@ -1,0 +1,390 @@
+/* printGrammar */
+[  A = c
+  .B = c
+  .S = A a | B b | d A b | d B a
+  .axiom = S
+  .hyper_axiom = axiom eof
+]
+
+/* dumpGrammar */
+[  [1] hyper_axiom = [2] axiom [3] eof [4] -2
+  .[5] axiom = [6] S [7] -1
+  .[8] S = [9] A [10] a [11] -2
+  .[12] S = [13] B [14] b [15] -2
+  .[16] S = [17] d [18] A [19] b [20] -3
+  .[21] S = [22] d [23] B [24] a [25] -3
+  .[26] A = [27] c [28] -1
+  .[29] B = [30] c [31] -1
+]
+
+   5 rules
+  32 members in productions
+   0 states
+   0 successor states
+   0 predecessor states
+   0 potential conflicts
+   0 symStates
+   4 symDone
+   0 itemStates
+   0 itemDone
+
+  enqueueProds(left=axiom, state=2)
+    enqueue item: axiom =   6: @S (axiom,1) -> -1
+/* initTable, acceptState=4 */
+
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+state [  3]   3: =.
+symbol axiom in states	2
+
+/* walkGrammar */
+----------------
+dequeue item: axiom =   6: @S (axiom,1) -> -1
+insert prods(axiom) into 2
+walkLane from state 2 follow item   6: @S (axiom,1) -> -1
+  enqueueProds(left=S, state=2)
+    enqueue item: S =   9: @A a (S,2) -> -1
+    enqueue item: S =  13: @B b (S,2) -> -1
+    enqueue item: S =  17: @d A b (S,3) -> -1
+    enqueue item: S =  22: @d B a (S,3) -> -1
+  found no item 6 in states[2][1] => 0
+  enqueueProds(left=-1, state=4)
+  found no item 7 in states[4][0] => 0
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+              6: =.
+state [  3]   3: =.
+state [  4]   7: =: (axiom,1) -> 0
+preds [  4]   6: @S (axiom,1) -> 2
+symbol -1 in states	4
+symbol S in states	2
+symbol axiom in states	2
+
+----------------
+dequeue item: S =   9: @A a (S,2) -> -1
+insert prods(S) into 2
+walkLane from state 2 follow item   9: @A a (S,2) -> -1
+  enqueueProds(left=A, state=2)
+    enqueue item: A =  27: @c (A,1) -> -1
+  found no item 9 in states[2][2] => 0
+  enqueueProds(left=a, state=5)
+  found no item 10 in states[5][0] => 0
+  enqueueProds(left=-2, state=6)
+  found no item 11 in states[6][0] => 0
+walkLane from state 2 follow item  13: @B b (S,2) -> -1
+  enqueueProds(left=B, state=2)
+    enqueue item: B =  30: @c (B,1) -> -1
+  found no item 13 in states[2][3] => 0
+  enqueueProds(left=b, state=7)
+  found no item 14 in states[7][0] => 0
+  enqueueProds(left=-2, state=8)
+  found no item 15 in states[8][0] => 0
+walkLane from state 2 follow item  17: @d A b (S,3) -> -1
+  enqueueProds(left=d, state=2)
+  found no item 17 in states[2][4] => 0
+  enqueueProds(left=A, state=9)
+    enqueue item: A =  27: @c (A,1) -> -1
+  found no item 18 in states[9][0] => 0
+  enqueueProds(left=b, state=10)
+  found no item 19 in states[10][0] => 0
+  enqueueProds(left=-3, state=11)
+  found no item 20 in states[11][0] => 0
+walkLane from state 2 follow item  22: @d B a (S,3) -> -1
+  enqueueProds(left=d, state=2)
+    found state 2 in symStates{d}[0]
+  found member d in states[2][4] => 9
+  enqueueProds(left=B, state=9)
+    enqueue item: B =  30: @c (B,1) -> -1
+  found no item 23 in states[9][1] => 0
+  enqueueProds(left=a, state=12)
+  found no item 24 in states[12][0] => 0
+  enqueueProds(left=-3, state=13)
+  found no item 25 in states[13][0] => 0
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+              6: =.
+              9: @A a (S,2) -> 5
+             13: @B b (S,2) -> 7
+             17: @d A b (S,3) -> 9
+             22: @d B a (S,3) -> 9
+state [  3]   3: =.
+state [  4]   7: =: (axiom,1) -> 0
+state [  5]  10: @a (S,2) -> 6
+state [  6]  11: =: (S,2) -> 0
+state [  7]  14: @b (S,2) -> 8
+state [  8]  15: =: (S,2) -> 0
+state [  9]  18: @A b (S,3) -> 10
+             23: @B a (S,3) -> 12
+state [ 10]  19: @b (S,3) -> 11
+state [ 11]  20: =: (S,3) -> 0
+state [ 12]  24: @a (S,3) -> 13
+state [ 13]  25: =: (S,3) -> 0
+preds [  4]   6: @S (axiom,1) -> 2
+preds [  5]   9: @A a (S,2) -> 2
+preds [  6]  10: @a (S,2) -> 5
+preds [  7]  13: @B b (S,2) -> 2
+preds [  8]  14: @b (S,2) -> 7
+preds [  9]  17: @d A b (S,3) -> 2
+             22: @d B a (S,3) -> 2
+preds [ 10]  18: @A b (S,3) -> 9
+preds [ 11]  19: @b (S,3) -> 10
+preds [ 12]  23: @B a (S,3) -> 9
+preds [ 13]  24: @a (S,3) -> 12
+symbol -1 in states	4
+symbol -2 in states	6, 8
+symbol -3 in states	11, 13
+symbol A in states	2, 9
+symbol B in states	2, 9
+symbol S in states	2
+symbol a in states	5, 12
+symbol axiom in states	2
+symbol b in states	7, 10
+symbol d in states	2
+
+----------------
+dequeue item: S =  13: @B b (S,2) -> -1
+  already done
+----------------
+dequeue item: S =  17: @d A b (S,3) -> -1
+  already done
+----------------
+dequeue item: S =  22: @d B a (S,3) -> -1
+  already done
+----------------
+dequeue item: A =  27: @c (A,1) -> -1
+insert prods(A) into 2
+walkLane from state 2 follow item  27: @c (A,1) -> -1
+  enqueueProds(left=c, state=2)
+  found no item 27 in states[2][6] => 0
+  enqueueProds(left=-1, state=14)
+  found no item 28 in states[14][0] => 0
+insert prods(A) into 9
+walkLane from state 9 follow item  27: @c (A,1) -> -1
+  enqueueProds(left=c, state=9)
+  found no item 27 in states[9][2] => 0
+  enqueueProds(left=-1, state=15)
+  found no item 28 in states[15][0] => 0
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+              6: =.
+              9: @A a (S,2) -> 5
+             13: @B b (S,2) -> 7
+             17: @d A b (S,3) -> 9
+             22: @d B a (S,3) -> 9
+             27: @c (A,1) -> 14
+state [  3]   3: =.
+state [  4]   7: =: (axiom,1) -> 0
+state [  5]  10: @a (S,2) -> 6
+state [  6]  11: =: (S,2) -> 0
+state [  7]  14: @b (S,2) -> 8
+state [  8]  15: =: (S,2) -> 0
+state [  9]  18: @A b (S,3) -> 10
+             23: @B a (S,3) -> 12
+             27: @c (A,1) -> 15
+state [ 10]  19: @b (S,3) -> 11
+state [ 11]  20: =: (S,3) -> 0
+state [ 12]  24: @a (S,3) -> 13
+state [ 13]  25: =: (S,3) -> 0
+state [ 14]  28: =: (A,1) -> 0
+state [ 15]  28: =: (A,1) -> 0
+preds [  4]   6: @S (axiom,1) -> 2
+preds [  5]   9: @A a (S,2) -> 2
+preds [  6]  10: @a (S,2) -> 5
+preds [  7]  13: @B b (S,2) -> 2
+preds [  8]  14: @b (S,2) -> 7
+preds [  9]  17: @d A b (S,3) -> 2
+             22: @d B a (S,3) -> 2
+preds [ 10]  18: @A b (S,3) -> 9
+preds [ 11]  19: @b (S,3) -> 10
+preds [ 12]  23: @B a (S,3) -> 9
+preds [ 13]  24: @a (S,3) -> 12
+preds [ 14]  27: @c (A,1) -> 2
+preds [ 15]  27: @c (A,1) -> 9
+symbol -1 in states	4, 14, 15
+symbol -2 in states	6, 8
+symbol -3 in states	11, 13
+symbol A in states	2, 9
+symbol B in states	2, 9
+symbol S in states	2
+symbol a in states	5, 12
+symbol axiom in states	2
+symbol b in states	7, 10
+symbol c in states	2, 9
+symbol d in states	2
+
+----------------
+dequeue item: B =  30: @c (B,1) -> -1
+insert prods(B) into 2
+walkLane from state 2 follow item  30: @c (B,1) -> -1
+  enqueueProds(left=c, state=2)
+    found state 2 in symStates{c}[0]
+  found member c in states[2][6] => 14
+  enqueueProds(left=-1, state=14)
+    found state 14 in symStates{-1}[1]
+  found member -1 in states[14][0] => 15
+insert prods(B) into 9
+walkLane from state 9 follow item  30: @c (B,1) -> -1
+  enqueueProds(left=c, state=9)
+    found state 9 in symStates{c}[1]
+  found member c in states[9][2] => 15
+  enqueueProds(left=-1, state=15)
+    found state 15 in symStates{-1}[2]
+  found member -1 in states[15][0] => 16
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+              6: =.
+              9: @A a (S,2) -> 5
+             13: @B b (S,2) -> 7
+             17: @d A b (S,3) -> 9
+             22: @d B a (S,3) -> 9
+             27: @c (A,1) -> 14
+             30: @c (B,1) -> 14
+state [  3]   3: =.
+state [  4]   7: =: (axiom,1) -> 0
+state [  5]  10: @a (S,2) -> 6
+state [  6]  11: =: (S,2) -> 0
+state [  7]  14: @b (S,2) -> 8
+state [  8]  15: =: (S,2) -> 0
+state [  9]  18: @A b (S,3) -> 10
+             23: @B a (S,3) -> 12
+             27: @c (A,1) -> 15
+             30: @c (B,1) -> 15
+state [ 10]  19: @b (S,3) -> 11
+state [ 11]  20: =: (S,3) -> 0
+state [ 12]  24: @a (S,3) -> 13
+state [ 13]  25: =: (S,3) -> 0
+state [ 14]  28: =: (A,1) -> 0
+             31: =: (B,1) -> 0
+            ==> potential conflict
+state [ 15]  28: =: (A,1) -> 0
+             31: =: (B,1) -> 0
+            ==> potential conflict
+preds [  4]   6: @S (axiom,1) -> 2
+preds [  5]   9: @A a (S,2) -> 2
+preds [  6]  10: @a (S,2) -> 5
+preds [  7]  13: @B b (S,2) -> 2
+preds [  8]  14: @b (S,2) -> 7
+preds [  9]  17: @d A b (S,3) -> 2
+             22: @d B a (S,3) -> 2
+preds [ 10]  18: @A b (S,3) -> 9
+preds [ 11]  19: @b (S,3) -> 10
+preds [ 12]  23: @B a (S,3) -> 9
+preds [ 13]  24: @a (S,3) -> 12
+preds [ 14]  27: @c (A,1) -> 2
+             30: @c (B,1) -> 2
+preds [ 15]  27: @c (A,1) -> 9
+             30: @c (B,1) -> 9
+symbol -1 in states	4, 14, 15
+symbol -2 in states	6, 8
+symbol -3 in states	11, 13
+symbol A in states	2, 9
+symbol B in states	2, 9
+symbol S in states	2
+symbol a in states	5, 12
+symbol axiom in states	2
+symbol b in states	7, 10
+symbol c in states	2, 9
+symbol d in states	2
+
+----------------
+dequeue item: A =  27: @c (A,1) -> -1
+  already done
+----------------
+dequeue item: B =  30: @c (B,1) -> -1
+  already done
+   5 rules
+  32 members in productions
+  16 states
+  16 successor states
+  16 predecessor states
+   2 potential conflicts
+  11 symStates
+   4 symDone
+   0 itemStates
+  20 itemDone
+
+/* addLAheads */
+/* walkBack(item=28, state=14, stix=0) */
+  predecessor 2 found for item 27 in preits[14]
+  delta(mem=A, state=2) -> state 5
+  walkBack found pred=2, left=A, succ=5
+    addLAheads(succ=5, state=14, stix=0) [2]:  a ... [3] -14
+/* walkBack(item=31, state=14, stix=1) */
+  predecessor 2 found for item 30 in preits[14]
+  delta(mem=B, state=2) -> state 7
+  walkBack found pred=2, left=B, succ=7
+    addLAheads(succ=7, state=14, stix=1) [4]:  b ... [5] -14
+/* walkBack(item=28, state=15, stix=0) */
+  predecessor 9 found for item 27 in preits[15]
+  delta(mem=A, state=9) -> state 10
+  walkBack found pred=9, left=A, succ=10
+    addLAheads(succ=10, state=15, stix=0) [6]:  b ... [7] -15
+/* walkBack(item=31, state=15, stix=1) */
+  predecessor 9 found for item 30 in preits[15]
+  delta(mem=B, state=9) -> state 12
+  walkBack found pred=9, left=B, succ=12
+    addLAheads(succ=12, state=15, stix=1) [8]:  a ... [9] -15
+/* dumpTable */
+state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+              6: =.
+              9: @A a (S,2) -> 5
+             13: @B b (S,2) -> 7
+             17: @d A b (S,3) -> 9
+             22: @d B a (S,3) -> 9
+             27: @c (A,1) -> 14
+             30: @c (B,1) -> 14
+state [  3]   3: =.
+state [  4]   7: =: (axiom,1) -> 0
+state [  5]  10: @a (S,2) -> 6
+state [  6]  11: =: (S,2) -> 0
+state [  7]  14: @b (S,2) -> 8
+state [  8]  15: =: (S,2) -> 0
+state [  9]  18: @A b (S,3) -> 10
+             23: @B a (S,3) -> 12
+             27: @c (A,1) -> 15
+             30: @c (B,1) -> 15
+state [ 10]  19: @b (S,3) -> 11
+state [ 11]  20: =: (S,3) -> 0
+state [ 12]  24: @a (S,3) -> 13
+state [ 13]  25: =: (S,3) -> 0
+state [ 14]  28: a=: (A,1) -> 0
+             31: b=: (B,1) -> 0
+            ==> potential conflict
+state [ 15]  28: b=: (A,1) -> 0
+             31: a=: (B,1) -> 0
+            ==> potential conflict
+preds [  4]   6: @S (axiom,1) -> 2
+preds [  5]   9: @A a (S,2) -> 2
+preds [  6]  10: @a (S,2) -> 5
+preds [  7]  13: @B b (S,2) -> 2
+preds [  8]  14: @b (S,2) -> 7
+preds [  9]  17: @d A b (S,3) -> 2
+             22: @d B a (S,3) -> 2
+preds [ 10]  18: @A b (S,3) -> 9
+preds [ 11]  19: @b (S,3) -> 10
+preds [ 12]  23: @B a (S,3) -> 9
+preds [ 13]  24: @a (S,3) -> 12
+preds [ 14]  27: @c (A,1) -> 2
+             30: @c (B,1) -> 2
+preds [ 15]  27: @c (A,1) -> 9
+             30: @c (B,1) -> 9
+symbol -1 in states	4, 14, 15
+symbol -2 in states	6, 8
+symbol -3 in states	11, 13
+symbol A in states	2, 9
+symbol B in states	2, 9
+symbol S in states	2
+symbol a in states	5, 12
+symbol axiom in states	2
+symbol b in states	7, 10
+symbol c in states	2, 9
+symbol d in states	2
+lookahead lists:
+ <- state 1
+ <- state 1
+ a <- state 14
+ b <- state 14
+ b <- state 15
+ a <- state 15
+
+

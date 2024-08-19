@@ -18,6 +18,16 @@ my $axiom;  # first left side of the user's grammar
 my $left;   # symbol on the left side
 my $right;  # a right side, several productions
 
+while (scalar(@ARGV) > 0 and ($ARGV[0] =~ m{\A[\-\+]})) {
+    my $opt = shift(@ARGV);
+    if (0) {
+    } elsif ($opt  =~ m{d}) {
+        $debug     =  shift(@ARGV);
+    } else {
+        die "invalid option \"$opt\"\n";
+    }
+} # while $opt
+
 sub initGrammar() {
     push(@prods, 0); # [0] is not used
     $rules{$hyper} = scalar(@prods);
@@ -113,6 +123,9 @@ sub dumpGrammar() { # expand the grammar tree
                 if (defined($rules{$mem}) && ! defined($symDone{$mem})) {
                     push(@symQueue, $mem);
                     $symDone{$mem} = 1;
+                    if ($debug > 1) {
+                        print "\n\tsymDone{" . $mem . "} = true\n";
+                    }
                 }
                 $iprod ++;
             } # while
@@ -368,13 +381,15 @@ sub enqueueProds() {
     print "  enqueueProds(left=$left, state=$state)\n";
     my $busy = 1;
     my $syix = 0;
-    while ($busy == 1 && $syix <= $#{$symStates{$left}}) { # while not found
-        if ($state == $symStates{$left}[$syix]) { # found
-            $busy = 0;
-            print "    found state $state in symStates{$left}[$syix]\n";
-        }
-        $syix ++;
-    } # while
+    if (defined($symStates{$left})) {
+        while ($busy == 1 && $syix <= $#{$symStates{$left}}) { # while not found
+            if ($state == $symStates{$left}[$syix]) { # found
+                $busy = 0;
+                print "    found state $state in symStates{$left}[$syix]\n";
+            }
+            $syix ++;
+        } # while
+    } # defined
     if ($busy == 1) { # not found
         $symStates{$left}[$syix] = $state;
     }

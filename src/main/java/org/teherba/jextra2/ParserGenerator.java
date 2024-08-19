@@ -1,5 +1,5 @@
 /*
-    ParserGenerator.java: all-in-one LR(1) parser generator
+    ParserGenerator.java: All-in-one LR(1) parser generator
     @(#) $Id$
     2024-08-19, Georg Fischer: reattempt
     2023-12-30 automatically translated from gen4.pl
@@ -24,17 +24,17 @@ public class ParserGenerator {
     private static String left; // symbol on the left side
     private static String right; // a right side, several productions
     private static List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
-    private static Map<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
+    private static HashMap<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
     private static List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
     private static List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
     private static List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
     private static List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
     private static List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
-    private static Map<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
+    private static HashMap<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
     private static int acceptState; // the parser accepts the sentence when it reaches this state
-    private static Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+    private static HashMap<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
     private static List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    private static Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
+    private static HashMap<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
 
     /**
      * Main program 
@@ -67,7 +67,7 @@ public class ParserGenerator {
         readGrammar(fileName);
         printGrammar();
         symQueue.add(hyper);
-        symDone.put(hyper, true);
+        // symDone.put(hyper, true);
         dumpGrammar();
         statistics();
         initTable();
@@ -187,26 +187,6 @@ public class ParserGenerator {
         } // catch
     } // readGrammar
 
-    private static void appendToProds(String left, String right) {
-        String[] rights = right.split("\\|");
-        for (String prod : rights) {
-            int iprod = prods.size();
-            if (rules.containsKey(left)) {
-                List<Integer> indexes = rules.get(left);
-                indexes.add(iprod);
-            } else {
-                rules.put(left, new ArrayList<>(List.of(iprod)));
-            }
-            prods.add(left);
-            prod = prod.trim();
-            String[] mems = prod.split("\\s+");
-            for (String mem : mems) {
-                prods.add(mem);
-            }
-            prods.add(String.valueOf(-mems.length));
-        }
-    }
-
     private static void printGrammar() {
         System.out.println("/* printGrammar */");
         String dot = "[  ";
@@ -249,6 +229,9 @@ public class ParserGenerator {
                     if (rules.containsKey(mem) && !symDone.containsKey(mem)) {
                         symQueue.add(mem);
                         symDone.put(mem, true);
+                        if (debug > 1) {
+                            System.out.println("\n\tsymDone{" + mem + "} = true");
+                        }
                     }
                     iprod++;
                 }
@@ -297,15 +280,19 @@ public class ParserGenerator {
         System.out.println("  enqueueProds(left=" + left + ", state=" + state + ")");
         boolean busy = true;
         int syix = 0;
-        while (busy && syix < symStates.get(left).size()) {
-            if (state == symStates.get(left).get(syix)) {
-                busy = false;
-                System.out.println("    found state " + state + " in symStates{" + left + "}[" + syix + "]");
+        if (symStates.get(left) != null) {
+            while (busy && syix < symStates.get(left).size()) {
+                if (state == symStates.get(left).get(syix)) {
+                    busy = false;
+                    System.out.println("    found state " + state + " in symStates{" + left + "}[" + syix + "]");
+                }
+                syix++;
+            } // while busy
+            if (busy) {
+                symStates.get(left).add(state);
             }
-            syix++;
-        }
-        if (busy) {
-            symStates.get(left).add(state);
+        } else { // no such symState so far
+            symStates.put(left, new ArrayList<>(List.of(state)));
         }
         if (rules.containsKey(left)) {
             for (int item : rules.get(left)) {
