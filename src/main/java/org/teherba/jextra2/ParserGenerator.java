@@ -6,44 +6,30 @@
 */
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.List;
 import java.util.Map;
 
 public class ParserGenerator {
     private static int debug = 1;
-    private static Map<String, List<Integer>> rules = new HashMap<>(); // left -> list of indexes in prod
+    private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
     private static List<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
     private static String hyper = "hyper_axiom"; // artificial first left side
     private static String axiom; // first left side of the user's grammar
     private static String left; // symbol on the left side
     private static String right; // a right side, several productions
-
-/*
-# An item is an index into @prods.
-# The marker "@" is thought to be before the member prods[item].
-my @states    = (); # state number -> array of items; [0] and [1] are not used.
-my @succs     = (); # state number -> array of successor states
-my @preits    = (); # state number -> array of items
-my @preds     = (); # state number -> array of predecessor states
-my @itemQueue = (); # List of items with symbols that must be expanded.
-my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
-my $acceptState;    # the parser accepts the sentence when it reachs this state
-my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-my @laheads   = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-my %conStates = (); # states with conflicts: they get lookaheads for all reduce items
-*/
-    private List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
-    private Map<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
-    private List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
-    private List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
-    private List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
-    private List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
-    private List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
-    private Map<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
-    private int acceptState; // the parser accepts the sentence when it reaches this state
-    private Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-    private List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    private Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
+    private static List<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
+    private static Map<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
+    private static List<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
+    private static List<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
+    private static List<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
+    private static List<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
+    private static List<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
+    private static Map<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
+    private static int acceptState; // the parser accepts the sentence when it reaches this state
+    private static Map<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+    private static List<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    private static Map<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
  
     public static void main(String[] args) {
         initGrammar();
@@ -90,7 +76,7 @@ my %conStates = (); # states with conflicts: they get lookaheads for all reduce 
         prods.add(hyper);
         prods.add(axiom);
         prods.add("eof");
-        prods.add(-2);
+        prods.add(String.valueOf(-2));
     }
 
     private static void appendToProds(String left, String right) {
@@ -109,14 +95,14 @@ my %conStates = (); # states with conflicts: they get lookaheads for all reduce 
             for (String mem : mems) {
                 prods.add(mem);
             }
-            prods.add(-mems.length);
+            prods.add(String.valueOf(-mems.length));
         }
     }
 
     private static void printGrammar() {
         System.out.println("/* printGrammar */");
         String dot = "[  ";
-        for (String left : rules.keySet().stream().sorted().toList()) {
+        for (String left : rules.keySet()) {
             System.out.print(dot + left);
             dot = "  .";
             String sep = " =";
@@ -388,18 +374,22 @@ my %conStates = (); # states with conflicts: they get lookaheads for all reduce 
         } else {
             sep = " @";
         }
-        boolean busy = true;
-        while (busy) {
-            String mem = prods.get(item);
-            if (isEOP(item)) {
-                String left = prods.get(item + mem - 1);
-                result.append(sep).append("(").append(left).append(",").append(-mem).append(")");
-                busy = false;
-            } else {
-                result.append(sep).append(mem);
+        try {
+            boolean busy = true;
+            while (busy) {
+                int mem = Integer.parseInt(prods.get(item));
+                if (isEOP(item)) {
+                    String left = prods.get(item + mem - 1);
+                    result.append(sep).append("(").append(left).append(",").append(-mem).append(")");
+                    busy = false;
+                } else {
+                    result.append(sep).append(mem);
+                }
+                sep = " ";
+                item++;
             }
-            sep = " ";
-            item++;
+        } catch(Exception exc) {
+            // ignore
         }
         if (succ > 0) {
             result.append(" -> ").append(succ);
@@ -454,14 +444,18 @@ my %conStates = (); # states with conflicts: they get lookaheads for all reduce 
         succs.get(state).set(stix, -ilah);
         System.out.print("    addLAheads(succ=" + succ + ", state=" + state + ", stix=" + stix + ") [" + ilah + "]: ");
         int teix = 0;
-        while (teix < states.get(succ).size()) {
-            int item = states.get(succ).get(teix);
-            String mem = prods.get(item);
-            if (!rules.containsKey(mem)) {
-                laheads.add(mem);
-                System.out.print(" " + mem);
-            }
-            teix++;
+        try {
+            while (teix < states.get(succ).size()) {
+                int item = states.get(succ).get(teix);
+                int mem = Integer.parseInt(prods.get(item));
+                if (!rules.containsKey(mem)) {
+                    laheads.add(mem);
+                    System.out.print(" " + mem);
+                }
+                teix++;
+            } // while teix
+        } catch(Exception exc) {
+            // ignore
         }
         laheads.set(ilah, -state);
         System.out.println(" ... [" + ilah + "] " + laheads.get(ilah));
@@ -469,7 +463,12 @@ my %conStates = (); # states with conflicts: they get lookaheads for all reduce 
 
     private static void walkBack(int item, int state, int stix) {
         System.out.println("/* walkBack(item=" + item + ", state=" + state + ", stix=" + stix + ") */");
-        int prodLen = -prods.get(item);
+        int prodLen = 0;
+        try {
+            prodLen = -Integer.parseInt(prods.get(item));
+        } catch(Exception exc) {
+            // ignore
+        }
         int iprod = prodLen;
         int pred = state;
         boolean busy = true;
