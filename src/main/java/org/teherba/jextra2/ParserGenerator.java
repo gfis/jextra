@@ -8,33 +8,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.InputStreamReader;
 
 public class ParserGenerator {
-    private static int debug;
-    private static ArrayList<String> prods = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
-    private static TreeMap<String, List<Integer>> rules = new TreeMap<>(); // left -> list of indexes in prod
-    private static String hyper = "hyper_axiom"; // artificial first left side
-    private static String axiom; // first left side of the user's grammar
-    private static String left; // symbol on the left side
-    private static String right; // a right side, several productions
-    private static ArrayList<String> symQueue = new ArrayList<>(); // queue of (non-terminal, defined in %rules) symbols to be expanded
-    private static HashMap<String, Boolean> symDone = new HashMap<>(); // history of @symQueue: defined iff symbol is already expanded
-    private static ArrayList<List<Integer>> states = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
-    private static ArrayList<List<Integer>> succs = new ArrayList<>(); // state number -> array of successor states
-    private static ArrayList<List<Integer>> preits = new ArrayList<>(); // state number -> array of items
-    private static ArrayList<List<Integer>> preds = new ArrayList<>(); // state number -> array of predecessor states
-    private static ArrayList<Integer> itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
-    private static HashMap<String, List<Integer>> symStates = new HashMap<>(); // symbol -> list of states with an item that has the marker before this symbol
-    private static int acceptState; // the parser accepts the sentence when it reaches this state
-    private static HashMap<Integer, Boolean> itemDone = new HashMap<>(); // history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-    private static ArrayList<Integer> laheads = new ArrayList<>(); // $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    private static HashMap<Integer, Boolean> conStates = new HashMap<>(); // states with conflicts: they get lookaheads for all reduce items
+    private int debug;       // debugging mode: 0=none, 1=some, 2=more
+    private String hyper;    // artificial first left side
+    private String axiom;    // first left side of the user's grammar
+    private int acceptState; // the parser accepts the sentence when it reaches this state
+    private ArrayList<String>              prods     = new ArrayList<>(); // flattened: left, mem1, mem2, ... memk, -k
+    private TreeMap<String, List<Integer>> rules     = new TreeMap<>();   // left -> list of indexes in prod
+    private ArrayList<String>              symQueue  = new ArrayList<>(); // queue of (non-terminal, defined in rules) symbols to be expanded
+    private HashMap<String, Boolean>       symDone   = new HashMap<>();   // history of @symQueue: defined iff symbol is already expanded
+    private HashMap<String, List<Integer>> symStates = new HashMap<>();   // symbol -> list of states with an item that has the marker before this symbol
+    private ArrayList<List<Integer>>       states    = new ArrayList<>(); // state number -> array of items; [0] and [1] are not used.
+    private ArrayList<List<Integer>>       succs     = new ArrayList<>(); // state number -> array of successor states
+    private ArrayList<List<Integer>>       preits    = new ArrayList<>(); // state number -> array of items
+    private ArrayList<List<Integer>>       preds     = new ArrayList<>(); // state number -> array of predecessor states
+    private ArrayList<Integer>             itemQueue = new ArrayList<>(); // List of items with symbols that must be expanded.
+    private HashMap<Integer, Boolean>      itemDone  = new HashMap<>();   // history of itemQueue: defined iff the item was already enqueued (in this iteration)
+    private ArrayList<Integer>             laheads   = new ArrayList<>(); // succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    private HashMap<Integer, Boolean>      conStates = new HashMap<>();   // states with conflicts: they get lookaheads for all reduce items
 
     /**
      * Main program 
@@ -45,8 +39,9 @@ public class ParserGenerator {
      */
     public static void main(String[] args) {
         // evaluate commandline arguments
+        ParserGenerator pg = new ParserGenerator();
         String fileName = null;
-        debug = 0;
+        pg.debug = 0;
         int iarg = 0;
         try {
             // evaluate any commandline arguments
@@ -54,7 +49,7 @@ public class ParserGenerator {
                 String arg = args[iarg ++];
                 if (false) {
                 } else if (arg.equals("-d")) {
-                    debug    = Integer.parseInt(args[iarg ++]);
+                    pg.debug    = Integer.parseInt(args[iarg ++]);
                 } else if (arg.equals("-f")) {
                     fileName = args[iarg ++];
                 }
@@ -64,24 +59,25 @@ public class ParserGenerator {
             exc.printStackTrace();;
         } // catch
             
-        readGrammar(fileName);
-        printGrammar();
-        symQueue.add(hyper);
+        pg.readGrammar(fileName);
+        pg.printGrammar();
+        pg.symQueue.add(pg.hyper);
         // symDone.put(hyper, true);
-        dumpGrammar();
-        statistics();
-        initTable();
-        dumpTable();
-        walkGrammar();
-        statistics();
-        addLAheads();
-        dumpTable();
+        pg.dumpGrammar();
+        pg.statistics();
+        pg.initTable();
+        pg.dumpTable();
+        pg.walkGrammar();
+        pg.statistics();
+        pg.addLAheads();
+        pg.dumpTable();
     } // main
     
     /**
      * Initialize the grammar with the first rule for the {@link #hyper_axiom}
      */
-    private static void initGrammar() {
+    private void initGrammar() {
+        hyper = "hyper_axiom";
         prods.add("null"); // [0] is not used
         rules.put(hyper, List.of(prods.size())); // the first production will start thereafter
         prods.add(hyper); 
@@ -94,18 +90,16 @@ public class ParserGenerator {
      * Read the grammar from a file and build the structures for rules and productions.
      * @param fileName input file
      */
-    private static void readGrammar(String fileName) {
+    private void readGrammar(String fileName) {
         final int IN_HEAD = 1;    // looking for first "["
         final int IN_LEFT = 2;    // expecting the left side of a rule
         final int IN_RULE = 3;    // expecting "="
         final int IN_PROD = 4;    // expecting "="
         final int IN_TAIL = 5;    // after "]"d of a rule
-        String srcEncoding = "UTF-8"; // Encoding of the input file
         try {
             Scanner sc = (fileName == null || fileName.length() <= 0 || fileName.equals("-")) 
                 ? new Scanner(System.in)
-                : new Scanner(new File(fileName), srcEncoding);
-            // sc.useDelimiter("\\b");
+                : new Scanner(new File(fileName), "UTF-8");
             int state = IN_HEAD;
             String left = null;
             int iprod = prods.size();
@@ -132,12 +126,10 @@ public class ParserGenerator {
                             left = part; 
                             iprod = prods.size();
                             prods.add(left);
-                            if (rules.containsKey(left)) { // there was already a rule with this left side
-                                List<Integer> indexes = rules.get(left);
-                                indexes.add(iprod);
-                            } else { // new left side
-                                rules.put(left, new ArrayList<>(List.of(iprod)));
+                            if (!rules.containsKey(left)) { // there is no rule yet with this left side
+                                rules.put(left, new ArrayList<>());
                             }
+                            rules.get(left).add(iprod);
                             state = IN_RULE;
                         } else {
                             System.err.println("part=\"" + part + "\" is no valid left side");
@@ -165,12 +157,10 @@ public class ParserGenerator {
                             } else { // continue with same rule
                                 iprod = prods.size();
                                 prods.add(left);
-                                if (rules.containsKey(left)) {
-                                    List<Integer> indexes = rules.get(left);
-                                    indexes.add(iprod);
-                                } else {
-                                    rules.put(left, new ArrayList<>(List.of(iprod)));
+                                if (!rules.containsKey(left)) { // there is no rule yet with this left side
+                                    rules.put(left, new ArrayList<>());
                                 }
+                                rules.get(left).add(iprod);
                                 state = IN_PROD;
                             }
                         } else {
@@ -187,7 +177,7 @@ public class ParserGenerator {
         } // catch
     } // readGrammar
 
-    private static void printGrammar() {
+    private void printGrammar() {
         System.out.println("/* printGrammar */");
         String dot = "[  ";
         for (String left : rules.keySet()) {
@@ -214,7 +204,7 @@ public class ParserGenerator {
         System.out.println("]\n");
     }
 
-    private static void dumpGrammar() {
+    private void dumpGrammar() {
         System.out.println("/* dumpGrammar */");
         String dot = "[  ";
         while (!symQueue.isEmpty()) {
@@ -242,11 +232,11 @@ public class ParserGenerator {
         System.out.println("]\n");
     }
 
-    private static boolean isEOP(int item) {
+    private boolean isEOP(int item) {
         return prods.get(item).startsWith("-");
     }
 
-    private static void statistics() {
+    private void statistics() {
         System.out.printf("%4d rules\n", rules.size());
         System.out.printf("%4d members in productions\n", prods.size());
         System.out.printf("%4d states\n", states.size());
@@ -259,7 +249,7 @@ public class ParserGenerator {
         System.out.printf("%4d itemDone\n\n", itemDone.size());
     }
 
-    private static void initTable() {
+    private void initTable() {
         acceptState = 4;
         states.add(List.of(0, 0));
         states.add(List.of(0));
@@ -277,7 +267,7 @@ public class ParserGenerator {
         laheads.add(-1);
     }
 
-    private static void enqueueProds(String left, int state) {
+    private void enqueueProds(String left, int state) {
         System.out.println("  enqueueProds(left=" + left + ", state=" + state + ")");
         boolean busy = true;
         int syix = 0;
@@ -306,7 +296,7 @@ public class ParserGenerator {
         }
     }
 
-    private static void walkGrammar() {
+    private void walkGrammar() {
         System.out.println("/* walkGrammar */");
         itemDone.clear();
         while (!itemQueue.isEmpty()) {
@@ -326,7 +316,7 @@ public class ParserGenerator {
         }
     }
 
-    private static void insertProdsIntoState(String left, int state) {
+    private void insertProdsIntoState(String left, int state) {
         System.out.println("insert prods(" + left + ") into " + state);
         for (int item : rules.get(left)) {
             item++;
@@ -334,7 +324,7 @@ public class ParserGenerator {
         }
     }
 
-    private static void walkLane(int item, int state) {
+    private void walkLane(int item, int state) {
         System.out.println("walkLane from state " + state + " follow item " + markedItem(item, -1));
         int stix;
         int succ;
@@ -358,7 +348,7 @@ public class ParserGenerator {
         }
     }
 
-    private static int findSuccessor(int item, int state) {
+    private int findSuccessor(int item, int state) {
         String mem = prods.get(item);
         int result = 0;
         int stix = 0;
@@ -384,19 +374,20 @@ public class ParserGenerator {
         return result;
     }
 
-    private static int chainStates(int item, int state, int succ) {
+    private int chainStates(int item, int state, int succ) {
         int stix = states.get(state).size();
-        states.get(state).add(item);
-        succs.get(state).add(succ);
+        List<Integer> 
+        temp = states.get(state); temp.add(item); // states.get(state).add(item);
+        temp = succs.get(state); temp.add(succ);
         if (!isEOP(item)) {
             int ptix = preds.get(succ).size();
-            preits.get(succ).add(item);
-            preds.get(succ).add(state);
+            temp = preits.get(succ); temp.add(item);  // preits.get(succ).add(item);
+            temp = preds.get(succ);  temp.add(state); // preds.get(succ).add(state);
         }
         return succ;
     }
 
-    private static void dumpTable() {
+    private void dumpTable() {
         System.out.println("/* dumpTable */");
         for (int state = 2; state < states.size(); state++) {
             int reduCount = 0;
@@ -455,7 +446,7 @@ public class ParserGenerator {
         System.out.println();
     }
 
-    private static String markedItem(int item, int succ) {
+    private String markedItem(int item, int succ) {
         StringBuilder result = new StringBuilder(String.format("%3d:", item));
         String sep;
         if (isEOP(item)) {
@@ -499,7 +490,7 @@ public class ParserGenerator {
         return result.toString();
     }
 
-    private static int findPredecessor(int item, int state) {
+    private int findPredecessor(int item, int state) {
         int result = 0;
         int ptix = 0;
         boolean busy = true;
@@ -519,7 +510,7 @@ public class ParserGenerator {
         return result;
     }
 
-    private static int delta(String mem, int state) {
+    private int delta(String mem, int state) {
         int result = 0;
         int stix = 0;
         boolean busy = true;
@@ -541,7 +532,7 @@ public class ParserGenerator {
         return result;
     }
 
-    private static void linkToLAList(int succ, int state, int stix) {
+    private void linkToLAList(int succ, int state, int stix) {
         int ilah = laheads.size();
         succs.get(state).set(stix, -ilah);
         System.out.print("    addLAheads(succ=" + succ + ", state=" + state + ", stix=" + stix + ") [" + ilah + "]: ");
@@ -563,7 +554,7 @@ public class ParserGenerator {
         System.out.println(" ... [" + ilah + "] " + laheads.get(ilah));
     }
 
-    private static void walkBack(int item, int state, int stix) {
+    private void walkBack(int item, int state, int stix) {
         System.out.println("/* walkBack(item=" + item + ", state=" + state + ", stix=" + stix + ") */");
         int prodLen = 0;
         try {
@@ -593,7 +584,7 @@ public class ParserGenerator {
         }
     }
 
-    private static void addLAheads() {
+    private void addLAheads() {
         System.out.println("/* addLAheads */");
         for (int state : conStates.keySet()) {
             int stix = 0;
