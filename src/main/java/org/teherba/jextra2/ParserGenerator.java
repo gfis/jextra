@@ -364,7 +364,7 @@ public class ParserGenerator {
         int result = 0;
         int stix = 0;
         boolean busy = true;
-        if (state < states.size()) {
+        if (state < states.size()) { // !!!
             while (busy && stix < states.get(state).size()) {
                 int item2 = states.get(state).get(stix);
                 String mem2 = prods.get(item2);
@@ -383,6 +383,9 @@ public class ParserGenerator {
         if (busy) {
             result = 0;
             System.out.println("  found no item " + item + " in states[" + state + "][" + stix + "] => " + result);
+        }
+        if (state >= states.size()) { // !!!
+            states.add(new ArrayList<Integer>());
         }
         System.out.print("    findSuccessor: scalar(states)=" + states.size() + "\n");
         return result;
