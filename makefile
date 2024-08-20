@@ -66,6 +66,7 @@ rmbak:
 D=0
 jegen: # run the standalone generator
 	ant dist
-	java -cp dist/jextra.jar ParserGenerator -d $(D) -f data/ex421.grm 2>&1 | tee jegen.txt
-	diff -y --suppress-common-lines --width=140 -w data/gen4.txt jegen.txt | head -n16
-
+	java -cp dist/jextra.jar ParserGenerator -d $(D) -f data/ex421.grm 2>&1 | tr -d "\r" | tee jegen.txt
+	diff -y --suppress-common-lines --width=140 -w data/gen4.txt jegen.txt | head -n32
+dif:
+	diff -y --width=140 -w data/gen4.txt jegen.txt | less

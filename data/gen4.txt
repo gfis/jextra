@@ -7,10 +7,18 @@
 ]
 
 /* dumpGrammar */
-[  [1] hyper_axiom = [2] axiom [3] eof [4] -2
-  .[5] axiom = [6] S [7] -1
-  .[8] S = [9] A [10] a [11] -2
-  .[12] S = [13] B [14] b [15] -2
+[  [1] hyper_axiom = [2] axiom
+	symDone{axiom} = true
+ [3] eof [4] -2
+  .[5] axiom = [6] S
+	symDone{S} = true
+ [7] -1
+  .[8] S = [9] A
+	symDone{A} = true
+ [10] a [11] -2
+  .[12] S = [13] B
+	symDone{B} = true
+ [14] b [15] -2
   .[16] S = [17] d [18] A [19] b [20] -3
   .[21] S = [22] d [23] B [24] a [25] -3
   .[26] A = [27] c [28] -1
@@ -33,7 +41,9 @@
 /* initTable, acceptState=4 */
 
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
 symbol axiom in states	2
 
@@ -51,9 +61,13 @@ walkLane from state 2 follow item   6: @S (axiom,1) -> -1
   enqueueProds(left=-1, state=4)
   found no item 7 in states[4][0] => 0
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
+cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 symbol -1 in states	4
@@ -101,23 +115,41 @@ walkLane from state 2 follow item  22: @d B a (S,3) -> -1
   enqueueProds(left=-3, state=13)
   found no item 25 in states[13][0] => 0
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
+cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
+cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
+cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
+cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
+cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
+cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
+cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
+cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
+cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
+cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
+cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
+cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
+cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
+cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
+cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 preds [  5]   9: @A a (S,2) -> 2
@@ -165,27 +197,49 @@ walkLane from state 9 follow item  27: @c (A,1) -> -1
   enqueueProds(left=-1, state=15)
   found no item 28 in states[15][0] => 0
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
+cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
+cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
+cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
+cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
+cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
+cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
+cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
+cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
+cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
+cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
+cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
+cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
+cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
+cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
+cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
+cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
+cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
+cp4: state=14, stix=0, succs[state][stix]=15
 state [ 14]  28: =: (A,1) -> 0
+cp4: state=15, stix=0, succs[state][stix]=16
 state [ 15]  28: =: (A,1) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 preds [  5]   9: @A a (S,2) -> 2
@@ -231,32 +285,58 @@ walkLane from state 9 follow item  30: @c (B,1) -> -1
     found state 15 in symStates{-1}[2]
   found member -1 in states[15][0] => 16
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
+cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
+cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
+cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
+cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
+cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
+cp4: state=2, stix=7, succs[state][stix]=14
              30: @c (B,1) -> 14
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
+cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
+cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
+cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
+cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
+cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
+cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
+cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
+cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
+cp4: state=9, stix=3, succs[state][stix]=15
              30: @c (B,1) -> 15
+cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
+cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
+cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
+cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
+cp4: state=14, stix=0, succs[state][stix]=15
 state [ 14]  28: =: (A,1) -> 0
+cp4: state=14, stix=1, succs[state][stix]=15
              31: =: (B,1) -> 0
             ==> potential conflict
+cp4: state=15, stix=0, succs[state][stix]=16
 state [ 15]  28: =: (A,1) -> 0
+cp4: state=15, stix=1, succs[state][stix]=16
              31: =: (B,1) -> 0
             ==> potential conflict
 preds [  4]   6: @S (axiom,1) -> 2
@@ -303,54 +383,80 @@ dequeue item: B =  30: @c (B,1) -> -1
    0 itemStates
   20 itemDone
 
-/* addLAheads */
+/* addLookAheads */
 /* walkBack(item=28, state=14, stix=0) */
   predecessor 2 found for item 27 in preits[14]
   delta(mem=A, state=2) -> state 5
   walkBack found pred=2, left=A, succ=5
-    addLAheads(succ=5, state=14, stix=0) [2]:  a ... [3] -14
+    addLookAheads(succ=5, state=14, stix=0) [2]:  a ... [3] -14
 /* walkBack(item=31, state=14, stix=1) */
   predecessor 2 found for item 30 in preits[14]
   delta(mem=B, state=2) -> state 7
   walkBack found pred=2, left=B, succ=7
-    addLAheads(succ=7, state=14, stix=1) [4]:  b ... [5] -14
+    addLookAheads(succ=7, state=14, stix=1) [4]:  b ... [5] -14
 /* walkBack(item=28, state=15, stix=0) */
   predecessor 9 found for item 27 in preits[15]
   delta(mem=A, state=9) -> state 10
   walkBack found pred=9, left=A, succ=10
-    addLAheads(succ=10, state=15, stix=0) [6]:  b ... [7] -15
+    addLookAheads(succ=10, state=15, stix=0) [6]:  b ... [7] -15
 /* walkBack(item=31, state=15, stix=1) */
   predecessor 9 found for item 30 in preits[15]
   delta(mem=B, state=9) -> state 12
   walkBack found pred=9, left=B, succ=12
-    addLAheads(succ=12, state=15, stix=1) [8]:  a ... [9] -15
+    addLookAheads(succ=12, state=15, stix=1) [8]:  a ... [9] -15
 /* dumpTable */
+cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
+cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
+cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
+cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
+cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
+cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
+cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
+cp4: state=2, stix=7, succs[state][stix]=14
              30: @c (B,1) -> 14
+cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
+cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
+cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
+cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
+cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
+cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
+cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
+cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
+cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
+cp4: state=9, stix=3, succs[state][stix]=15
              30: @c (B,1) -> 15
+cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
+cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
+cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
+cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
+cp4: state=14, stix=0, succs[state][stix]=-2
 state [ 14]  28: a=: (A,1) -> 0
+cp4: state=14, stix=1, succs[state][stix]=-4
              31: b=: (B,1) -> 0
             ==> potential conflict
+cp4: state=15, stix=0, succs[state][stix]=-6
 state [ 15]  28: b=: (A,1) -> 0
+cp4: state=15, stix=1, succs[state][stix]=-8
              31: a=: (B,1) -> 0
             ==> potential conflict
 preds [  4]   6: @S (axiom,1) -> 2

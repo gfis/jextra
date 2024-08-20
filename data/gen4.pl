@@ -2,6 +2,7 @@
 
 # Prototype parser generator, version 4: read input file
 # @(#) $Id$
+# 2024-08-20: reordered subroutines
 # 2022-02-12: LR(1) after 41 years?!
 # 2022-02-11: walkLane
 # 2022-02-10, Georg Fischer
@@ -17,6 +18,20 @@ my $hyper   = "hyper_axiom";  # artificial first left side
 my $axiom;  # first left side of the user's grammar
 my $left;   # symbol on the left side
 my $right;  # a right side, several productions
+# An item is an index into @prods.
+# The marker "@" is thought to be before the member prods[item].
+my @states    = (); # state number -> array of items; [0] and [1] are not used.
+my @succs     = (); # state number -> array of successor states
+my @preits    = (); # state number -> array of items
+my @preds     = (); # state number -> array of predecessor states
+my @itemQueue = (); # List of items with symbols that must be expanded.
+my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
+my $acceptState;    # the parser accepts the sentence when it reachs this state
+my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+my @laheads   = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+my %conStates = (); # states with conflicts: they get lookaheads for all reduce items
+my @symQueue = ($hyper); # queue of (non-terminal, defined in %rules) symbols to be expanded
+my %symDone  = (); # history of @symQueue: defined iff symbol is already expanded
 
 while (scalar(@ARGV) > 0 and ($ARGV[0] =~ m{\A[\-\+]})) {
     my $opt = shift(@ARGV);
@@ -27,15 +42,6 @@ while (scalar(@ARGV) > 0 and ($ARGV[0] =~ m{\A[\-\+]})) {
         die "invalid option \"$opt\"\n";
     }
 } # while $opt
-
-sub initGrammar() {
-    push(@prods, 0); # [0] is not used
-    $rules{$hyper} = scalar(@prods);
-    push(@prods, $hyper);
-    push(@prods, $axiom);
-    push(@prods, "eof");
-    push(@prods, -2);
-} # initGrammar
 
 while (<>) {
     my $line = $_;
@@ -56,7 +62,8 @@ while (<>) {
         last;
     }
 } # while <>
-
+# end main
+#----------------
 sub appendToProds() {
     my ($left, $right) = @_;
     my @rights = split(/ *\| */, $right);
@@ -79,6 +86,15 @@ sub appendToProds() {
     } # foreach $prod
     # print "rules{$left} = $rules{$left}\n" if ($debug > 0);
 } # appendToProds
+
+sub initGrammar() {
+    push(@prods, 0); # [0] is not used
+    $rules{$hyper} = scalar(@prods);
+    push(@prods, $hyper);
+    push(@prods, $axiom);
+    push(@prods, "eof");
+    push(@prods, -2);
+} # initGrammar
 
 sub printGrammar() { # write the grammar in alphabetical order of the left sides
     print "/* printGrammar */\n";
@@ -103,9 +119,6 @@ sub printGrammar() { # write the grammar in alphabetical order of the left sides
 } # printGrammar
 
 &printGrammar();
-
-my @symQueue = ($hyper); # queue of (non-terminal, defined in %rules) symbols to be expanded
-my %symDone  = (); # history of @symQueue: defined iff symbol is already expanded
 
 sub dumpGrammar() { # expand the grammar tree
     my $mem;
@@ -137,19 +150,6 @@ sub dumpGrammar() { # expand the grammar tree
 } # dumpGrammar
 
 &dumpGrammar();
-
-# An item is an index into @prods.
-# The marker "@" is thought to be before the member prods[item].
-my @states    = (); # state number -> array of items; [0] and [1] are not used.
-my @succs     = (); # state number -> array of successor states
-my @preits    = (); # state number -> array of items
-my @preds     = (); # state number -> array of predecessor states
-my @itemQueue = (); # List of items with symbols that must be expanded.
-my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
-my $acceptState;    # the parser accepts the sentence when it reachs this state
-my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-my @laheads   = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-my %conStates = (); # states with conflicts: they get lookaheads for all reduce items
 
 sub statistics() { # print counts of data structures
     print sprintf("%4d rules"                 , scalar(keys(%rules)      )) . "\n";
@@ -224,6 +224,9 @@ sub dumpTable() { # expand the grammar tree
             if (&isEOP($item)) {
                 $reduCount ++;
             }
+            if ($debug == 4) {
+                print "cp4: state=$state, stix=$stix, succs[state][stix]=$succs[$state][$stix]\n";
+            }
             if (0) {
             } elsif ($succs[$state][$stix] == $acceptState) {
                 print "$sep" . sprintf("%3d:", $item) . " =.\n";
@@ -238,7 +241,7 @@ sub dumpTable() { # expand the grammar tree
             print sprintf("%-12s","") . "==> potential conflict\n";
         }
     } # for @states
-    #---- preits
+    #---- succs
     for my $succ  (4 .. $#preds ) { # over all predecessors
         my $sep = sprintf("%-12s", sprintf("preds [%3d]", $succ ));
         my $ptix = 0;
@@ -357,9 +360,9 @@ sub walkLane() { # follow a production starting at $item, insert $item in $state
         &enqueueProds($prods[$item], $state);
         $succ = &findSuccessor($item, $state); # > for symbol, < 0 for item, = 0 nothing found
         if (0) {
-        } elsif ($succ > 0) { # marked symbol found, but not the item: insert item anyway and follow to successor
+        } elsif ($succ >  0) { # marked symbol found, but not the item: insert item anyway and follow to successor
             $state = &chainStates($item, $state, $succ);
-        } elsif ($succ < 0) { # same item found
+        } elsif ($succ <  0) { # same item found
             $busy = 0; # break loop, quit lane
         } elsif ($succ == 0) { # $succ == 0: allocate new state
             $succ = scalar(@states); # new state
@@ -488,7 +491,7 @@ sub linkToLAList() {
     my ($succ, $state, $stix) = @_;
     my $ilah = scalar(@laheads);
     $succs[$state][$stix] = - $ilah;
-    print "    addLAheads(succ=$succ, state=$state, stix=$stix) [$ilah]: ";
+    print "    addLookAheads(succ=$succ, state=$state, stix=$stix) [$ilah]: ";
     my $teix = 0;
     while ($teix <= $#{$states[$succ]}) {
         my $item = $states[$succ][$teix];
@@ -529,8 +532,8 @@ sub walkBack() { # for a reduce item, determine the state that follows on the sh
     }
 } # walkBack
 
-sub addLAheads() { # for each state with potential conflicts: assign lookahead symbols to all reduce items
-    print "/* addLAheads */\n";
+sub addLookAheads() { # for each state with potential conflicts: assign lookahead symbols to all reduce items
+    print "/* addLookAheads */\n";
     foreach my $state (sort(keys(%conStates))) {
         my $stix = 0;
         while ($stix <= $#{$states[$state]}) { # while not found
@@ -541,9 +544,9 @@ sub addLAheads() { # for each state with potential conflicts: assign lookahead s
             $stix ++;
         } # while $stix
     }
-} # addLAheads
+} # addLookAheads
 
-&addLAheads();
+&addLookAheads();
 &dumpTable();
 #----------------
 __DATA__
