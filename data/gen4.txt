@@ -7,18 +7,10 @@
 ]
 
 /* dumpGrammar */
-[  [1] hyper_axiom = [2] axiom
-	symDone{axiom} = true
- [3] eof [4] -2
-  .[5] axiom = [6] S
-	symDone{S} = true
- [7] -1
-  .[8] S = [9] A
-	symDone{A} = true
- [10] a [11] -2
-  .[12] S = [13] B
-	symDone{B} = true
- [14] b [15] -2
+[  [1] hyper_axiom = [2] axiom [3] eof [4] -2
+  .[5] axiom = [6] S [7] -1
+  .[8] S = [9] A [10] a [11] -2
+  .[12] S = [13] B [14] b [15] -2
   .[16] S = [17] d [18] A [19] b [20] -3
   .[21] S = [22] d [23] B [24] a [25] -3
   .[26] A = [27] c [28] -1
@@ -42,9 +34,7 @@
 /* initTable, acceptState=4, scalar(states)=4 */
 
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
 symbol axiom in states	2
 
@@ -61,28 +51,16 @@ walkLane from state 2 follow item   6: @S (axiom,1) -> -1
     enqueueProds: scalar(states)=4
   found no item 6 in states[2][1] => 0
     findSuccessor: scalar(states)=4
-# walkLane1: item=6, state=2, succ=0, busy=1
-# walkLane2: item=6, state=2, succ=4, busy=1
-# chainStates(6, 2, 4)
     chainStates: scalar(states)=4
-# walkLane3: item=6, state=4, succ=4, busy=1
   enqueueProds(left=-1, state=4)
     enqueueProds: scalar(states)=4
   found no item 7 in states[4][0] => 0
     findSuccessor: scalar(states)=5
-# walkLane1: item=7, state=4, succ=0, busy=1
-# walkLane2: item=7, state=4, succ=5, busy=1
-# chainStates(7, 4, 5)
     chainStates: scalar(states)=5
-# walkLane3: item=7, state=5, succ=5, busy=0
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
-# cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 symbol -1 in states	4
@@ -98,170 +76,97 @@ walkLane from state 2 follow item   9: @A a (S,2) -> -1
     enqueueProds: scalar(states)=5
   found no item 9 in states[2][2] => 0
     findSuccessor: scalar(states)=5
-# walkLane1: item=9, state=2, succ=0, busy=1
-# walkLane2: item=9, state=2, succ=5, busy=1
-# chainStates(9, 2, 5)
     chainStates: scalar(states)=5
-# walkLane3: item=9, state=5, succ=5, busy=1
   enqueueProds(left=a, state=5)
     enqueueProds: scalar(states)=5
   found no item 10 in states[5][0] => 0
     findSuccessor: scalar(states)=6
-# walkLane1: item=10, state=5, succ=0, busy=1
-# walkLane2: item=10, state=5, succ=6, busy=1
-# chainStates(10, 5, 6)
     chainStates: scalar(states)=6
-# walkLane3: item=10, state=6, succ=6, busy=1
   enqueueProds(left=-2, state=6)
     enqueueProds: scalar(states)=6
   found no item 11 in states[6][0] => 0
     findSuccessor: scalar(states)=7
-# walkLane1: item=11, state=6, succ=0, busy=1
-# walkLane2: item=11, state=6, succ=7, busy=1
-# chainStates(11, 6, 7)
     chainStates: scalar(states)=7
-# walkLane3: item=11, state=7, succ=7, busy=0
 walkLane from state 2 follow item  13: @B b (S,2) -> -1
   enqueueProds(left=B, state=2)
     enqueue item: B =  30: @c (B,1) -> -1
     enqueueProds: scalar(states)=7
   found no item 13 in states[2][3] => 0
     findSuccessor: scalar(states)=7
-# walkLane1: item=13, state=2, succ=0, busy=1
-# walkLane2: item=13, state=2, succ=7, busy=1
-# chainStates(13, 2, 7)
     chainStates: scalar(states)=7
-# walkLane3: item=13, state=7, succ=7, busy=1
   enqueueProds(left=b, state=7)
     enqueueProds: scalar(states)=7
   found no item 14 in states[7][0] => 0
     findSuccessor: scalar(states)=8
-# walkLane1: item=14, state=7, succ=0, busy=1
-# walkLane2: item=14, state=7, succ=8, busy=1
-# chainStates(14, 7, 8)
     chainStates: scalar(states)=8
-# walkLane3: item=14, state=8, succ=8, busy=1
   enqueueProds(left=-2, state=8)
     enqueueProds: scalar(states)=8
   found no item 15 in states[8][0] => 0
     findSuccessor: scalar(states)=9
-# walkLane1: item=15, state=8, succ=0, busy=1
-# walkLane2: item=15, state=8, succ=9, busy=1
-# chainStates(15, 8, 9)
     chainStates: scalar(states)=9
-# walkLane3: item=15, state=9, succ=9, busy=0
 walkLane from state 2 follow item  17: @d A b (S,3) -> -1
   enqueueProds(left=d, state=2)
     enqueueProds: scalar(states)=9
   found no item 17 in states[2][4] => 0
     findSuccessor: scalar(states)=9
-# walkLane1: item=17, state=2, succ=0, busy=1
-# walkLane2: item=17, state=2, succ=9, busy=1
-# chainStates(17, 2, 9)
     chainStates: scalar(states)=9
-# walkLane3: item=17, state=9, succ=9, busy=1
   enqueueProds(left=A, state=9)
     enqueue item: A =  27: @c (A,1) -> -1
     enqueueProds: scalar(states)=9
   found no item 18 in states[9][0] => 0
     findSuccessor: scalar(states)=10
-# walkLane1: item=18, state=9, succ=0, busy=1
-# walkLane2: item=18, state=9, succ=10, busy=1
-# chainStates(18, 9, 10)
     chainStates: scalar(states)=10
-# walkLane3: item=18, state=10, succ=10, busy=1
   enqueueProds(left=b, state=10)
     enqueueProds: scalar(states)=10
   found no item 19 in states[10][0] => 0
     findSuccessor: scalar(states)=11
-# walkLane1: item=19, state=10, succ=0, busy=1
-# walkLane2: item=19, state=10, succ=11, busy=1
-# chainStates(19, 10, 11)
     chainStates: scalar(states)=11
-# walkLane3: item=19, state=11, succ=11, busy=1
   enqueueProds(left=-3, state=11)
     enqueueProds: scalar(states)=11
   found no item 20 in states[11][0] => 0
     findSuccessor: scalar(states)=12
-# walkLane1: item=20, state=11, succ=0, busy=1
-# walkLane2: item=20, state=11, succ=12, busy=1
-# chainStates(20, 11, 12)
     chainStates: scalar(states)=12
-# walkLane3: item=20, state=12, succ=12, busy=0
 walkLane from state 2 follow item  22: @d B a (S,3) -> -1
   enqueueProds(left=d, state=2)
     found state 2 in symStates{d}[0]
     enqueueProds: scalar(states)=12
   found member d in states[2][4] => 9
     findSuccessor: scalar(states)=12
-# walkLane1: item=22, state=2, succ=9, busy=1
-# chainStates(22, 2, 9)
     chainStates: scalar(states)=12
-# walkLane3: item=22, state=9, succ=9, busy=1
   enqueueProds(left=B, state=9)
     enqueue item: B =  30: @c (B,1) -> -1
     enqueueProds: scalar(states)=12
   found no item 23 in states[9][1] => 0
     findSuccessor: scalar(states)=12
-# walkLane1: item=23, state=9, succ=0, busy=1
-# walkLane2: item=23, state=9, succ=12, busy=1
-# chainStates(23, 9, 12)
     chainStates: scalar(states)=12
-# walkLane3: item=23, state=12, succ=12, busy=1
   enqueueProds(left=a, state=12)
     enqueueProds: scalar(states)=12
   found no item 24 in states[12][0] => 0
     findSuccessor: scalar(states)=13
-# walkLane1: item=24, state=12, succ=0, busy=1
-# walkLane2: item=24, state=12, succ=13, busy=1
-# chainStates(24, 12, 13)
     chainStates: scalar(states)=13
-# walkLane3: item=24, state=13, succ=13, busy=1
   enqueueProds(left=-3, state=13)
     enqueueProds: scalar(states)=13
   found no item 25 in states[13][0] => 0
     findSuccessor: scalar(states)=14
-# walkLane1: item=25, state=13, succ=0, busy=1
-# walkLane2: item=25, state=13, succ=14, busy=1
-# chainStates(25, 13, 14)
     chainStates: scalar(states)=14
-# walkLane3: item=25, state=14, succ=14, busy=0
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
-# cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
-# cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
-# cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
-# cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
-# cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
-# cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
-# cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
-# cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
-# cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
-# cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
-# cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
-# cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
-# cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
-# cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
-# cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 preds [  5]   9: @A a (S,2) -> 2
@@ -302,84 +207,46 @@ walkLane from state 2 follow item  27: @c (A,1) -> -1
     enqueueProds: scalar(states)=14
   found no item 27 in states[2][6] => 0
     findSuccessor: scalar(states)=14
-# walkLane1: item=27, state=2, succ=0, busy=1
-# walkLane2: item=27, state=2, succ=14, busy=1
-# chainStates(27, 2, 14)
     chainStates: scalar(states)=14
-# walkLane3: item=27, state=14, succ=14, busy=1
   enqueueProds(left=-1, state=14)
     enqueueProds: scalar(states)=14
   found no item 28 in states[14][0] => 0
     findSuccessor: scalar(states)=15
-# walkLane1: item=28, state=14, succ=0, busy=1
-# walkLane2: item=28, state=14, succ=15, busy=1
-# chainStates(28, 14, 15)
     chainStates: scalar(states)=15
-# walkLane3: item=28, state=15, succ=15, busy=0
 insert prods(A) into 9
 walkLane from state 9 follow item  27: @c (A,1) -> -1
   enqueueProds(left=c, state=9)
     enqueueProds: scalar(states)=15
   found no item 27 in states[9][2] => 0
     findSuccessor: scalar(states)=15
-# walkLane1: item=27, state=9, succ=0, busy=1
-# walkLane2: item=27, state=9, succ=15, busy=1
-# chainStates(27, 9, 15)
     chainStates: scalar(states)=15
-# walkLane3: item=27, state=15, succ=15, busy=1
   enqueueProds(left=-1, state=15)
     enqueueProds: scalar(states)=15
   found no item 28 in states[15][0] => 0
     findSuccessor: scalar(states)=16
-# walkLane1: item=28, state=15, succ=0, busy=1
-# walkLane2: item=28, state=15, succ=16, busy=1
-# chainStates(28, 15, 16)
     chainStates: scalar(states)=16
-# walkLane3: item=28, state=16, succ=16, busy=0
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
-# cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
-# cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
-# cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
-# cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
-# cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
-# cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
-# cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
-# cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
-# cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
-# cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
-# cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
-# cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
-# cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
-# cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
-# cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
-# cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
-# cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
-# cp4: state=14, stix=0, succs[state][stix]=15
 state [ 14]  28: =: (A,1) -> 0
-# cp4: state=15, stix=0, succs[state][stix]=16
 state [ 15]  28: =: (A,1) -> 0
 preds [  4]   6: @S (axiom,1) -> 2
 preds [  5]   9: @A a (S,2) -> 2
@@ -415,19 +282,13 @@ walkLane from state 2 follow item  30: @c (B,1) -> -1
     enqueueProds: scalar(states)=16
   found member c in states[2][6] => 14
     findSuccessor: scalar(states)=16
-# walkLane1: item=30, state=2, succ=14, busy=1
-# chainStates(30, 2, 14)
     chainStates: scalar(states)=16
-# walkLane3: item=30, state=14, succ=14, busy=1
   enqueueProds(left=-1, state=14)
     found state 14 in symStates{-1}[1]
     enqueueProds: scalar(states)=16
   found member -1 in states[14][0] => 15
     findSuccessor: scalar(states)=16
-# walkLane1: item=31, state=14, succ=15, busy=1
-# chainStates(31, 14, 15)
     chainStates: scalar(states)=16
-# walkLane3: item=31, state=15, succ=15, busy=0
 insert prods(B) into 9
 walkLane from state 9 follow item  30: @c (B,1) -> -1
   enqueueProds(left=c, state=9)
@@ -435,72 +296,40 @@ walkLane from state 9 follow item  30: @c (B,1) -> -1
     enqueueProds: scalar(states)=16
   found member c in states[9][2] => 15
     findSuccessor: scalar(states)=16
-# walkLane1: item=30, state=9, succ=15, busy=1
-# chainStates(30, 9, 15)
     chainStates: scalar(states)=16
-# walkLane3: item=30, state=15, succ=15, busy=1
   enqueueProds(left=-1, state=15)
     found state 15 in symStates{-1}[2]
     enqueueProds: scalar(states)=16
   found member -1 in states[15][0] => 16
     findSuccessor: scalar(states)=16
-# walkLane1: item=31, state=15, succ=16, busy=1
-# chainStates(31, 15, 16)
     chainStates: scalar(states)=16
-# walkLane3: item=31, state=16, succ=16, busy=0
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
-# cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
-# cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
-# cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
-# cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
-# cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
-# cp4: state=2, stix=7, succs[state][stix]=14
              30: @c (B,1) -> 14
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
-# cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
-# cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
-# cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
-# cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
-# cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
-# cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
-# cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
-# cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
-# cp4: state=9, stix=3, succs[state][stix]=15
              30: @c (B,1) -> 15
-# cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
-# cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
-# cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
-# cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
-# cp4: state=14, stix=0, succs[state][stix]=15
 state [ 14]  28: =: (A,1) -> 0
-# cp4: state=14, stix=1, succs[state][stix]=15
              31: =: (B,1) -> 0
             ==> potential conflict
-# cp4: state=15, stix=0, succs[state][stix]=16
 state [ 15]  28: =: (A,1) -> 0
-# cp4: state=15, stix=1, succs[state][stix]=16
              31: =: (B,1) -> 0
             ==> potential conflict
 preds [  4]   6: @S (axiom,1) -> 2
@@ -569,58 +398,32 @@ dequeue item: B =  30: @c (B,1) -> -1
   walkBack found pred=9, left=B, succ=12
     addLookAheads(succ=12, state=15, stix=1) [8]:  a ... [9] -15
 /* dumpTable */
-# cp4: state=2, stix=0, succs[state][stix]=3
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
-# cp4: state=2, stix=1, succs[state][stix]=4
               6: =.
-# cp4: state=2, stix=2, succs[state][stix]=5
               9: @A a (S,2) -> 5
-# cp4: state=2, stix=3, succs[state][stix]=7
              13: @B b (S,2) -> 7
-# cp4: state=2, stix=4, succs[state][stix]=9
              17: @d A b (S,3) -> 9
-# cp4: state=2, stix=5, succs[state][stix]=9
              22: @d B a (S,3) -> 9
-# cp4: state=2, stix=6, succs[state][stix]=14
              27: @c (A,1) -> 14
-# cp4: state=2, stix=7, succs[state][stix]=14
              30: @c (B,1) -> 14
-# cp4: state=3, stix=0, succs[state][stix]=4
 state [  3]   3: =.
-# cp4: state=4, stix=0, succs[state][stix]=5
 state [  4]   7: =: (axiom,1) -> 0
-# cp4: state=5, stix=0, succs[state][stix]=6
 state [  5]  10: @a (S,2) -> 6
-# cp4: state=6, stix=0, succs[state][stix]=7
 state [  6]  11: =: (S,2) -> 0
-# cp4: state=7, stix=0, succs[state][stix]=8
 state [  7]  14: @b (S,2) -> 8
-# cp4: state=8, stix=0, succs[state][stix]=9
 state [  8]  15: =: (S,2) -> 0
-# cp4: state=9, stix=0, succs[state][stix]=10
 state [  9]  18: @A b (S,3) -> 10
-# cp4: state=9, stix=1, succs[state][stix]=12
              23: @B a (S,3) -> 12
-# cp4: state=9, stix=2, succs[state][stix]=15
              27: @c (A,1) -> 15
-# cp4: state=9, stix=3, succs[state][stix]=15
              30: @c (B,1) -> 15
-# cp4: state=10, stix=0, succs[state][stix]=11
 state [ 10]  19: @b (S,3) -> 11
-# cp4: state=11, stix=0, succs[state][stix]=12
 state [ 11]  20: =: (S,3) -> 0
-# cp4: state=12, stix=0, succs[state][stix]=13
 state [ 12]  24: @a (S,3) -> 13
-# cp4: state=13, stix=0, succs[state][stix]=14
 state [ 13]  25: =: (S,3) -> 0
-# cp4: state=14, stix=0, succs[state][stix]=-2
 state [ 14]  28: a=: (A,1) -> 0
-# cp4: state=14, stix=1, succs[state][stix]=-4
              31: b=: (B,1) -> 0
             ==> potential conflict
-# cp4: state=15, stix=0, succs[state][stix]=-6
 state [ 15]  28: b=: (A,1) -> 0
-# cp4: state=15, stix=1, succs[state][stix]=-8
              31: a=: (B,1) -> 0
             ==> potential conflict
 preds [  4]   6: @S (axiom,1) -> 2

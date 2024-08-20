@@ -66,7 +66,7 @@ rmbak:
 run:
 	ant dist
 	make jegen
-D=4
+D=0
 jegen: # run the standalone generator
 	cd data ; make gen4 D=$(D)
 	java -cp dist/jextra.jar ParserGenerator -d $(D) -f data/ex421.grm 2>&1 | tr -d "\r" | tee jegen.txt

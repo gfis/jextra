@@ -252,7 +252,7 @@ public class ParserGenerator {
             sep = " ";
             if (succ < 0) {
                 int ilah = -succ;
-                while (!lookAheads.get(ilah).equals("-")) {
+                while (ilah < lookAheads.size() && lookAheads.get(ilah) >= 0) {
                     sep += "," + lookAheads.get(ilah);
                     ilah++;
                 }
@@ -572,18 +572,22 @@ public class ParserGenerator {
             while (teix  < states.get(succ).size()) {
                 int item = states.get(succ).get(teix);
                 int mem = Integer.parseInt(prods.get(item));
-                if (!rules.containsKey(mem)) {
+                if (!rules.containsKey(mem)) { // is terminal
                     lookAheads.add(mem);
                     System.out.print(" " + mem);
-                }
+                } // terminal
                 teix++;
             } // while teix
         } catch(Exception exc) {
             // ignore
         }
-        lookAheads.set(ilah, -state);
+        if (ilah < lookAheads.size()) { // !!!
+            lookAheads.set(ilah, -state); // end of sublist
+        } else {
+            lookAheads.add(-state);
+        }
         System.out.println(" ... [" + ilah + "] " + lookAheads.get(ilah));
-    }
+    } // linkToLAList
 
     private int findPredecessor(int item, int state) {
         int result = 0;
