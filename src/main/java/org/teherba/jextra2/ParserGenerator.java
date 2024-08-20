@@ -31,7 +31,7 @@ public class ParserGenerator {
     private HashMap<Integer, Boolean>      conStates  = new HashMap<>();   // states with conflicts: they get lookaheads for all reduce items
 
     /**
-     * Main program 
+     * Main program
      * @param args commandline arguments: [-d mode] [-f fileName|-]
      * <ul>
      * <li>-d debug mode</li>
@@ -58,7 +58,7 @@ public class ParserGenerator {
             System.err.println(exc.getMessage());
             exc.printStackTrace();;
         } // catch
-            
+
         pg.readGrammar(fileName);
         pg.printGrammar();
         pg.symQueue.add(pg.hyper);
@@ -71,7 +71,7 @@ public class ParserGenerator {
         pg.addLookAheads();
         pg.dumpTable();
     } // main
-    
+
     /**
      * Read the grammar from a file and build the structures for rules and productions.
      * @param fileName input file
@@ -83,13 +83,13 @@ public class ParserGenerator {
         final int IN_PROD = 4;    // expecting "="
         final int IN_TAIL = 5;    // after "]"d of a rule
         try {
-            Scanner sc = (fileName == null || fileName.length() <= 0 || fileName.equals("-")) 
+            Scanner sc = (fileName == null || fileName.length() <= 0 || fileName.equals("-"))
                 ? new Scanner(System.in)
                 : new Scanner(new File(fileName), "UTF-8");
             int state = IN_HEAD;
             String left = null;
             int iprod = prods.size();
-            while (sc.hasNext()) {  
+            while (sc.hasNext()) {
                 String part = sc.next().trim();
                 if (debug > 0 && debug < 4) {
                     System.out.println("part=\"" + part + "\", state=" + state);
@@ -109,7 +109,7 @@ public class ParserGenerator {
                                 axiom = part;
                                 initGrammar();
                             }
-                            left = part; 
+                            left = part;
                             iprod = prods.size();
                             prods.add(left);
                             if (!rules.containsKey(left)) { // there is no rule yet with this left side
@@ -171,7 +171,7 @@ public class ParserGenerator {
         prods.add("null"); // [0] is not used
         rules.put(hyper, new ArrayList<>());
         rules.get(hyper).add(prods.size()); // the first production will start thereafter
-        prods.add(hyper); 
+        prods.add(hyper);
         prods.add(axiom); // hyper_axiom = axiom eof . (length 2)
         prods.add("eof");
         prods.add(String.valueOf(-2));
@@ -295,6 +295,7 @@ public class ParserGenerator {
 
     private void dumpTable() {
         System.out.println("/* dumpTable */");
+        //---- states
         for (int state = 2; state < states.size(); state++) {
             int reductionCount = 0;
             String sep = String.format("%-12s", String.format("state [%3d]", state));
@@ -305,7 +306,7 @@ public class ParserGenerator {
                     reductionCount++;
                 }
                 if (debug == 4) {
-                    System.out.println("cp4: state=" + state + ", stix= " + stix + ", succs[state][stix]=" + succs.get(state).get(stix));
+                    System.out.println("# cp4: state=" + state + ", stix= " + stix + ", succs[state][stix]=" + succs.get(state).get(stix));
                 }
                 if (succs.get(state).get(stix) == acceptState) {
                     System.out.println(sep + String.format("%3d:", item) + " =.");
@@ -320,6 +321,7 @@ public class ParserGenerator {
                 System.out.println(String.format("%-12s", "") + "==> potential conflict");
             }
         }
+        //----- succs
         for (int succ = 4; succ < preds.size(); succ++) {
             String sep = String.format("%-12s", String.format("preds [%3d]", succ));
             int ptix = 0;
@@ -330,6 +332,7 @@ public class ParserGenerator {
                 ptix++;
             }
         }
+        //---- symStates
         for (String sym : symStates.keySet()) {
             String sep = "\t";
             System.out.print("symbol " + sym + " in states");
@@ -339,6 +342,7 @@ public class ParserGenerator {
             }
             System.out.println();
         }
+        //---- lookAheads
         int nlah = lookAheads.size();
         if (nlah > 2) {
             System.out.println("lookahead lists:");
@@ -354,7 +358,7 @@ public class ParserGenerator {
         }
         System.out.println();
     } // dumpTable
-    
+
     private int findSuccessor(int item, int state) {
         String mem = prods.get(item);
         int result = 0;
@@ -380,30 +384,14 @@ public class ParserGenerator {
             result = 0;
             System.out.println("  found no item " + item + " in states[" + state + "][" + stix + "] => " + result);
         }
+        System.out.print("    findSuccessor: scalar(states)=" + states.size() + "\n");
         return result;
     } // findSuccessor
 
-    private int findPredecessor(int item, int state) {
-        int result = 0;
-        int ptix = 0;
-        boolean busy = true;
-        while (busy && ptix < preits.get(state).size()) {
-            if (item == preits.get(state).get(ptix)) {
-                busy = false;
-                result = preds.get(state).get(ptix);
-            }
-            ptix++;
-        }
-        if (busy) {
-            result = 0;
-            System.out.println("  no predecessor found for item " + item + " in preits[" + state + "]");
-        } else {
-            System.out.println("  predecessor " + result + " found for item " + item + " in preits[" + state + "]");
-        }
-        return result;
-    } // findPredecessor
-
     private int chainStates(int item, int state, int succ) {
+        if (debug == 4) {
+            System.out.print("# chainStates(" + item + ", " + state + ", " + succ + ")\n");
+        }
         while (states.size() <= state) {
             states.add(new ArrayList<Integer>());
         }
@@ -412,7 +400,7 @@ public class ParserGenerator {
             succs .add(new ArrayList<Integer>());
         }
         succs .get(state).add(succ);
-        if (!isEOP(item)) {
+        if (!isEOP(item)) { // succ is not valid otherwise
             while (preits.size() <= succ) {
                 preits.add(new ArrayList<Integer>());
             }
@@ -422,9 +410,16 @@ public class ParserGenerator {
             }
             preds .get(succ).add(state);
         }
+        System.out.print("    chainStates: scalar(states)=" + states.size() + "\n");
         return succ;
     } // chainStates
 
+    /**
+     * Follow a production starting at item, 
+     * insert item in state and/or follow the lane.
+     * @param item start at this item
+     * @param state in this state
+     */
     private void walkLane(int item, int state) {
         System.out.println("walkLane from state " + state + " follow item " + markedItem(item, -1));
         int stix;
@@ -432,24 +427,38 @@ public class ParserGenerator {
         boolean busy = true;
         while (busy) {
             enqueueProds(prods.get(item), state);
-            succ = findSuccessor(item, state);
+            succ = findSuccessor(item, state); // > for symbol, < 0 for item, = 0 nothing found
+            if (debug == 4) {
+                System.out.print("# walkLane1: item=" + item + ", state=" + state + ", succ=" + succ + ", busy=" + (busy ? 1 : 0) + "\n");
+            }
             if (false) {
-            } else if (succ >  0) {
+            } else if (succ >  0) { // marked symbol found, but not the item: insert item anyway and follow to successor
                 state = chainStates(item, state, succ);
-            } else if (succ <  0) {
+            } else if (succ <  0) { // same item found
                 busy = false;
-            } else if (succ == 0) {
-                succ = states.size();
+            } else { // succ == 0: allocate new state
+                succ = states.size(); 
+                if (debug == 4) {
+                    System.out.print("# walkLane2: item=" + item + ", state=" + state + ", succ=" + succ + ", busy=" + (busy ? 1 : 0) + "\n");
+                }
                 state = chainStates(item, state, succ);
             }
             if (isEOP(item)) {
                 busy = false;
+            }
+            if (debug == 4) {
+                System.out.print("# walkLane3: item=" + item + ", state=" + state + ", succ=" + succ + ", busy=" + (busy ? 1 : 0) + "\n");
             }
             itemDone.put(item, true);
             item++;
         }
     } // walkLane
 
+    /**
+     * enqueue items for all productions of $left with the marker at the beginning,
+     * and insert them in $state
+     * insert $state into $symStates[$left] if not yet present
+     */
     private void enqueueProds(String left, int state) {
         System.out.println("  enqueueProds(left=" + left + ", state=" + state + ")");
         boolean busy = true;
@@ -462,7 +471,7 @@ public class ParserGenerator {
                 }
                 syix++;
             } // while busy
-            if (busy) {
+            if (busy) { // not found
                 symStates.get(left).add(state);
             }
         } else { // no such symState so far
@@ -477,12 +486,13 @@ public class ParserGenerator {
                 }
             }
         }
+        System.out.print("    enqueueProds: scalar(states)=" + states.size() + "\n");
     } // enqueueProds
 
     private void initTable() {
         // states 0, 1 are not used
         int state = 0;
-        states.add(new ArrayList<Integer>()); states.get(state).add(0); 
+        states.add(new ArrayList<Integer>()); states.get(state).add(0);
         succs .add(new ArrayList<Integer>()); succs .get(state).add(0);
         state++; // 1
         states.add(new ArrayList<Integer>()); states.get(state).add(0);
@@ -490,12 +500,12 @@ public class ParserGenerator {
         state++; // 2
         states.add(new ArrayList<Integer>()); states.get(state).add(state); // @axiom
         enqueueProds(axiom, state);
-        state ++; // 3
+        state++; // 3
         succs .add(new ArrayList<Integer>()); succs .get(succs .size() - 1).add(state); // 2 -> 3
-        states.add(new ArrayList<Integer>()); states.get(states.size() - 1).add(state ++);
+        states.add(new ArrayList<Integer>()); states.get(states.size() - 1).add(state++);
         acceptState = state; // 4
         succs .add(new ArrayList<Integer>()); succs .get(succs .size() - 1).add(acceptState); // 4
-        System.out.println("/* initTable, acceptState=" + acceptState + " */\n");
+        System.out.println("/* initTable, acceptState=" + acceptState + ", scalar(states)= " + states.size() + " */\n");
         lookAheads.add(-1);
         lookAheads.add(-1);
     } // initTable
@@ -572,6 +582,26 @@ public class ParserGenerator {
         System.out.println(" ... [" + ilah + "] " + lookAheads.get(ilah));
     }
 
+    private int findPredecessor(int item, int state) {
+        int result = 0;
+        int ptix = 0;
+        boolean busy = true;
+        while (busy && ptix < preits.get(state).size()) {
+            if (item == preits.get(state).get(ptix)) {
+                busy = false;
+                result = preds.get(state).get(ptix);
+            }
+            ptix++;
+        }
+        if (busy) {
+            result = 0;
+            System.out.println("  no predecessor found for item " + item + " in preits[" + state + "]");
+        } else {
+            System.out.println("  predecessor " + result + " found for item " + item + " in preits[" + state + "]");
+        }
+        return result;
+    } // findPredecessor
+
     private void walkBack(int item, int state, int stix) {
         System.out.println("/* walkBack(item=" + item + ", state=" + state + ", stix=" + stix + ") */");
         int prodLen = 0;
@@ -615,6 +645,6 @@ public class ParserGenerator {
             }
         }
     } // addLookAheads
-} // class ParserGenerator
 
+} // class ParserGenerator
 
