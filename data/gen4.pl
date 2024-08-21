@@ -97,7 +97,6 @@ use integer;
     } # initGrammar
     
     sub printGrammar() { # write the grammar in alphabetical order of the left sides
-        print "/* printGrammar */\n";
         my $dot = "[  ";
         foreach my $left(sort(keys(%rules))) {
             print "$dot$left";
@@ -115,49 +114,66 @@ use integer;
             } # foreach $iprod
             print "\n";
         } # foreach $left
-        print "]\n\n";
+        print "]\n";
     } # printGrammar
     
-    &printGrammar();
+    if ($debug >= 2) {
+        &printGrammar();
+    }
     &dumpGrammar();
-    &statistics();
+    if ($debug >= 2) {
+        &statistics();
+    }
     &initTable();
-    &dumpTable();
+    if ($debug >= 2) {
+        &dumpTable();
+    }
     &walkGrammar();
-    &statistics();
+    if ($debug >= 2) {
+        &statistics();
+    }
     &addLookAheads();
     &dumpTable();
+    &statistics();
     
     sub dumpGrammar() { # expand the grammar tree
         my $mem;
-        print "/* dumpGrammar */\n";
         my $dot = "[  ";
         while (scalar(@symQueue) > 0) { # queue not empty
             my $left = shift(@symQueue);
             foreach my $iprod (split(/\,/, $rules{$left})) {
-                print "${dot}[$iprod] $left =";
+                if ($debug >= 2) {
+                    print "${dot}[$iprod] $left =";
+                }
                 $dot = "  .";
                 $iprod ++;
                 while (! &isEOP($iprod)) {
                     $mem = $prods[$iprod];
-                    print " [$iprod] $mem";
+                    if ($debug >= 2) {
+                        print " [$iprod] $mem";
+                    }
                     if (defined($rules{$mem}) && ! defined($symDone{$mem})) {
                         push(@symQueue, $mem);
                         $symDone{$mem} = 1;
-                        if ($debug > 1) {
+                        if ($debug >= 2) {
                             print "\n\tsymDone{" . $mem . "} = true\n";
                         }
                     }
                     $iprod ++;
                 } # while
                 $mem = $prods[$iprod];
-                print " [$iprod] $mem\n";
+                if ($debug >= 2) {
+                    print " [$iprod] $mem\n";
+                }
             } # foreach $iprod
         } # while queue not empty
-        print "]\n\n";
+        if ($debug >= 2) {
+            print "]\n";
+        }
     } # dumpGrammar
     
     sub statistics() { # print counts of data structures
+        print "Statistics:\n";
         print sprintf("%4d rules"                 , scalar(keys(%rules)      )) . "\n";
         print sprintf("%4d members in productions", scalar(     @prods       )) . "\n";
         print sprintf("%4d states"                , scalar(     @states      )) . "\n";
@@ -217,7 +233,7 @@ use integer;
     } # isEOP
     
     sub dumpTable() { # expand the grammar tree
-        print "/* dumpTable */\n";
+        print "dumpTable:\n";
         #---- states
         for my $state (2 .. $#states) { # over all states
             my $reduCount = 0; # number of reductions in this state
@@ -300,19 +316,27 @@ use integer;
             } elsif ($item == $item2) { # same item found
                 $busy = 0;
                 $result = - $succs[$state][$stix]; # negative successor
-                print "  found item $item2 in states[$state][$stix] => $result\n";
+                if ($debug >= 2) {
+                    print "  found item $item2 in states[$state][$stix] => $result\n";
+                }
             } elsif ($mem eq $mem2) { # marked symbol found
                 $busy = 0;
                 $result = $succs[$state][$stix]; # positive successor
-                print "  found member $mem2 in states[$state][$stix] => $result\n";
+                if ($debug >= 2) {
+                    print "  found member $mem2 in states[$state][$stix] => $result\n";
+                }
             }
             $stix ++;
         } # while $stix
         if ($busy == 1) {
             $result = 0; # successor = 0
-            print "  found no item $item in states[$state][$stix] => $result\n";
+            if ($debug >= 2) {
+                print "  found no item $item in states[$state][$stix] => $result\n";
+            }
         }
-        print "    findSuccessor: scalar(states)=" . scalar(@states) ."\n";
+        if ($debug >= 2) {
+            print "    findSuccessor: scalar(states)=" . scalar(@states) ."\n";
+        }
         return $result;
     } # findSuccessor
     
@@ -329,13 +353,17 @@ use integer;
             $preits[$succ ][$ptix] = $item;
             $preds [$succ ][$ptix] = $state;
         }
-        print "    chainStates: scalar(states)=" . scalar(@states) ."\n";
+        if ($debug >= 2) {
+            print "    chainStates: scalar(states)=" . scalar(@states) ."\n";
+        }
         return $succ;
     } # chainStates
     
     sub walkLane() { # follow a production starting at $item, insert $item in $state and/or follow the lane
         my ($item, $state) = @_;
-        print "walkLane from state $state follow item " . &markedItem($item, -1) . "\n";
+        if ($debug >= 1) {
+            print "walkLane from state $state follow item " . &markedItem($item, -1) . "\n";
+        }
         my $stix;
         my $succ;
         my $busy = 1;
@@ -370,14 +398,18 @@ use integer;
         # and insert them in $state
         # insert $state into $symStates[$left] if not yet present
         my ($left, $state) = @_;
-        print "  enqueueProds(left=$left, state=$state)\n";
+        if ($debug >= 2) {
+            print "  enqueueProds(left=$left, state=$state)\n";
+        }
         my $busy = 1;
         my $syix = 0;
         if (defined($symStates{$left})) {
             while ($busy == 1 && $syix <= $#{$symStates{$left}}) { # while not found
                 if ($state == $symStates{$left}[$syix]) { # found
                     $busy = 0;
-                    print "    found state $state in symStates{$left}[$syix]\n";
+                    if ($debug >= 2) {
+                        print "    found state $state in symStates{$left}[$syix]\n";
+                    }
                 }
                 $syix ++;
             } # while
@@ -390,13 +422,17 @@ use integer;
             foreach my $item (split(/\,/, $rules{$left})) { # $iprod and $item coincide
                 $item ++; # skip over left side
                 if (! defined($itemDone{$item})) { # not yet enqueued
-                    print "    enqueue item: $left = " . &markedItem($item, -1) . "\n";
+                    if ($debug >= 2) {
+                        print "    enqueue item: $left = " . &markedItem($item, -1) . "\n";
+                    }
                     push(@itemQueue, $item);
                     #$itemDone{$item} = 1;
                 } # not yet enqueued
             } # foreach $item
         } # if non-terminal
-        print "    enqueueProds: scalar(states)=" . scalar(@states) ."\n";
+        if ($debug >= 2) {
+            print "    enqueueProds: scalar(states)=" . scalar(@states) ."\n";
+        }
     } # enqueueProds
     
     sub initTable() { # initialize the state table 
@@ -410,13 +446,17 @@ use integer;
         push(@succs,  [$state]); # ... -> 3
         push(@states, [$state ++]); # @eof
         push(@succs,  [$acceptState]); # ... "-> 4" = accept
-        print "/* initTable, acceptState=$acceptState, scalar(states)=" . scalar(@states) . " */\n\n";
+        if ($debug >= 1) {
+            print "initTable, acceptState=$acceptState, scalar(states)=" . scalar(@states) . "\n";
+        }
         @lookAheads = (-1, -1);
     } # initTable
     
     sub insertProdsIntoState() {
         my ($left, $state) = @_;
-        print "insert prods($left) into $state\n";
+        if ($debug >= 2) {
+            print "insert prods($left) into $state\n";
+        }
         foreach my $item (split(/\,/, $rules{$left})) { # $iprod and $item coincide
             $item ++; # skip over left side
             &walkLane($item, $state);
@@ -425,13 +465,17 @@ use integer;
     
     sub walkGrammar() { # expand the grammar tree by inserting items from the queue
         my $mem;
-        print "/* walkGrammar */\n";
+        if ($debug >= 1) {
+            print "walkGrammar\n";
+        }
         %itemDone = (); # clear history of %itemQueue
         while (scalar(@itemQueue) > 0) { # queue not empty
             my $item = shift(@itemQueue);
             my $left = $prods[$item - 1];
-            print "----------------\n";
-            print "dequeue item: $left = " . &markedItem($item, -1) . "\n";
+            if ($debug >= 2) {
+                print "----------------\n";
+                print "dequeue item: $left = " . &markedItem($item, -1) . "\n";
+            }
             if (! defined($itemDone{$item})) {
                 # now insert the start of all productions of $left into all states where $left is marked in an item
                 # follow those productions and eventually generate successor states
@@ -439,9 +483,13 @@ use integer;
                     my $state = $symStates{$left}[$stix];
                     &insertProdsIntoState($left, $state);
                 } # for $stix
-                &dumpTable();
+                if ($debug >= 3) {
+                    &dumpTable();
+                }
             } else {
-                print "  already done\n";
+                if ($debug >= 2) {
+                    print "  already done\n";
+                }
             }
         } # while queue not empty
     } # walkGrammar
@@ -464,9 +512,13 @@ use integer;
         } # while $stix
         if ($busy == 1) {
             $result = 0; # successor = 0
-            print "  delta found no symbol $mem in states[$state]\n";
+            if ($debug >= 2) {
+                print "  delta found no symbol $mem in states[$state]\n";
+            }
         } else {
-            print "  delta(mem=$mem, state=$state) -> state $result\n";
+            if ($debug >= 2) {
+                print "  delta(mem=$mem, state=$state) -> state $result\n";
+            }
         }
         return $result;
     } # delta
@@ -475,19 +527,25 @@ use integer;
         my ($succ, $state, $stix) = @_;
         my $ilah = scalar(@lookAheads);
         $succs[$state][$stix] = - $ilah;
-        print "    addLookAheads(succ=$succ, state=$state, stix=$stix) [$ilah]: ";
+        if ($debug >= 2) {
+            print "    addLookAheads(succ=$succ, state=$state, stix=$stix) [$ilah]: ";
+        }
         my $teix = 0;
         while ($teix <= $#{$states[$succ]}) {
             my $item = $states[$succ][$teix];
             my $mem = $prods[$item];
             if (! defined($rules{$mem})) { # is terminal
                 $lookAheads[$ilah ++] = $mem;
-                print "** $mem";
+                if ($debug >= 2) {
+                    print " $mem";
+                }
             } # terminal
             $teix ++;
         } # while $teix
         $lookAheads[$ilah] = -$state; # end of sublist
-        print " ... [$ilah] $lookAheads[$ilah]\n"
+        if ($debug >= 2) {
+            print " ... [$ilah] $lookAheads[$ilah]\n"
+        }
     } # linkToLAList
     
     sub findPredecessor() { # Determine the previous state that reached the marked symbol.
@@ -504,16 +562,22 @@ use integer;
         } # while $ptix
         if ($busy == 1) {
             $result = 0; # successor = 0
-            print "  no predecessor found for item $item in preits[$state]\n";
+            if ($debug >= 2) {
+                print "  no predecessor found for item $item in preits[$state]\n";
+            }
         } else {
-            print "  predecessor $result found for item $item in preits[$state]\n";
+            if ($debug >= 2) {
+                print "  predecessor $result found for item $item in preits[$state]\n";
+            }
         }
         return $result;
     } # findPredecessor
     
     sub walkBack() { # for a reduce item, determine the state that follows on the shift of the left side: the lookaheads are all terminals in that state
         my ($item, $state, $stix) = @_; # $item is a reduce item, member is negative length of the right side, $succs is 0
-        print "/* walkBack(item=$item, state=$state, stix=$stix) */\n";
+        if ($debug >= 1) {
+            print "walkBack(item=$item, state=$state, stix=$stix)\n";
+        }
         my $prodLen = - $prods[$item];
         my $iprod = $prodLen;
         my $pred = $state;
@@ -530,7 +594,9 @@ use integer;
             $item --;
             my $left = $prods[$item];
             my $succ = &delta($left, $pred);
-            print "  walkBack found pred=$pred, left=$left, succ=$succ\n";
+            if ($debug >= 2) {
+                print "  walkBack found pred=$pred, left=$left, succ=$succ\n";
+            }
             if ($succ > 0) {
                 &linkToLAList($succ, $state, $stix);
             }
@@ -538,7 +604,9 @@ use integer;
     } # walkBack
     
     sub addLookAheads() { # for each state with potential conflicts: assign lookahead symbols to all reduce items
-        print "/* addLookAheads */\n";
+        if ($debug >= 1) {
+            print "addLookAheads\n";
+        }
         foreach my $state (sort(keys(%conStates))) {
             my $stix = 0;
             while ($stix <= $#{$states[$state]}) { # while not found

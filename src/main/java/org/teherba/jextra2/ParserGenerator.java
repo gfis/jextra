@@ -15,7 +15,7 @@ import java.util.Scanner;
 import java.io.File;
 
 public class ParserGenerator {
-    private int debug;       // debugging mode: 0=none, 1=some, 2=more
+    protected int debug;     // debugging mode: 0=none, 1=some, 2=more
     private String hyper;    // artificial first left side
     private String axiom;    // first left side of the user's grammar
     private int acceptState; // the parser accepts the sentence when it reaches this state
@@ -62,16 +62,26 @@ public class ParserGenerator {
         } // catch
 
         pg.readGrammar(fileName);
-        pg.printGrammar();
+        if (pg.debug >= 2) {
+            pg.printGrammar();
+        }
         pg.symQueue.add(pg.hyper);
         pg.dumpGrammar();
-        pg.statistics();
+        if (pg.debug >= 2) {
+            pg.statistics();
+        }
         pg.initTable();
-        pg.dumpTable();
+        if (pg.debug >= 2) {
+            pg.dumpTable();
+        }
         pg.walkGrammar();
-        pg.statistics();
+        if (pg.debug >= 2) {
+            pg.statistics();
+        }
         pg.addLookAheads();
+
         pg.dumpTable();
+        pg.statistics();
     } // main
 
     /**
@@ -183,7 +193,6 @@ public class ParserGenerator {
      * Write the grammar in alphabetical order of the left sides.
      */
     private void printGrammar() {
-        System.out.println("/* printGrammar */");
         String dot = "[  ";
         for (String left : rules.keySet()) {
             System.out.print(dot + left);
@@ -206,24 +215,27 @@ public class ParserGenerator {
             } // for iprod
             System.out.println();
         } // for left
-        System.out.println("]\n");
+        System.out.println("]");
     } // printGrammar
 
     /**
      * Expand the grammar tree.
      */
     private void dumpGrammar() {
-        System.out.println("/* dumpGrammar */");
         String dot = "[  ";
         while (!symQueue.isEmpty()) {
             String left = symQueue.remove(0);
             for (int iprod : rules.get(left)) {
-                System.out.print(dot + "[" + iprod + "] " + left + " =");
+                if (debug >= 2) {
+                    System.out.print(dot + "[" + iprod + "] " + left + " =");
+                }
                 dot = "  .";
                 iprod++;
                 while (!isEOP(iprod)) {
                     String mem = prods.get(iprod);
-                    System.out.print(" [" + iprod + "] " + mem);
+                    if (debug >= 2) {
+                        System.out.print(" [" + iprod + "] " + mem);
+                    }
                     if (rules.containsKey(mem) && !symDone.containsKey(mem)) {
                         symQueue.add(mem);
                         symDone.put(mem, true);
@@ -234,16 +246,21 @@ public class ParserGenerator {
                     iprod++;
                 } // while ! EOP
                 String mem = prods.get(iprod);
-                System.out.println(" [" + iprod + "] " + mem);
+                if (debug >= 2) {
+                    System.out.println(" [" + iprod + "] " + mem);
+                }
             } // for iprod
         } // while queue not empty
-        System.out.println("]\n");
+        if (debug >= 2) {
+            System.out.println("]");
+        }
     } // dumpGrammar
 
     /**
      * Print counts of data structures.
      */
     private void statistics() {
+        System.out.println("Statistics:");
         System.out.printf("%4d rules\n", rules.size());
         System.out.printf("%4d members in productions\n", prods.size());
         System.out.printf("%4d states\n", states.size());
@@ -258,7 +275,7 @@ public class ParserGenerator {
     } // statistics
 
     /**
-     * Return a human legible item: the marker and the portion behind it, 
+     * Return a human legible item: the marker and the portion behind it,
      * or a reduction.
      */
     private String markedItem(int item, int succ) {
@@ -316,7 +333,7 @@ public class ParserGenerator {
      * Expand the grammar tree.
      */
     private void dumpTable() {
-        System.out.println("/* dumpTable */");
+        System.out.println("dumpTable:");
         //---- states
         for (int state = 2; state < states.size(); state++) { // over all states
             int reduceCount = 0; // number of reductions in this state
@@ -380,8 +397,8 @@ public class ParserGenerator {
     /**
      * Determine the next state reached by the marked symbol in an item.
      * @return
-     * &lt; 0 if item already present (negative successor), 
-     * &gt; 0 if marked symbol found, but not the item, 
+     * &lt; 0 if item already present (negative successor),
+     * &gt; 0 if marked symbol found, but not the item,
      * = 0 if nothing was found,
      * and stix = index where to enter this item in states[state].
      */
@@ -397,28 +414,36 @@ public class ParserGenerator {
                 if (item == item2) { // same item found
                     busy = false;
                     result = -succs.get(state).get(stix); // negative successor
-                    System.out.println("  found item " + item2 + " in states[" + state + "][" + stix + "] => " + result);
+                    if (debug >= 2) {
+                        System.out.println("  found item " + item2 + " in states[" + state + "][" + stix + "] => " + result);
+                    }
                 } else if (mem.equals(mem2)) { // marked symbol found
                     busy = false;
                     result = succs.get(state).get(stix); // positive successor
-                    System.out.println("  found member " + mem2 + " in states[" + state + "][" + stix + "] => " + result);
+                    if (debug >= 2) {
+                        System.out.println("  found member " + mem2 + " in states[" + state + "][" + stix + "] => " + result);
+                    }
                 }
                 stix++;
             } // while busy, stix
         }
         if (busy) {
             result = 0; // successor := 0
-            System.out.println("  found no item " + item + " in states[" + state + "][" + stix + "] => " + result);
+            if (debug >= 2) {
+                System.out.println("  found no item " + item + " in states[" + state + "][" + stix + "] => " + result);
+            }
         }
         if (state >= states.size()) { // !!!
             states.add(new ArrayList<Integer>());
         }
-        System.out.print("    findSuccessor: scalar(states)=" + states.size() + "\n");
+        if (debug >= 2) {
+            System.out.print("    findSuccessor: scalar(states)=" + states.size() + "\n");
+        }
         return result;
     } // findSuccessor
 
     /**
-     * 
+     *
      */
     private int chainStates(int item, int state, int succ) {
         if (debug >= 4) {
@@ -442,18 +467,22 @@ public class ParserGenerator {
             }
             preds .get(succ).add(state);
         }
-        System.out.print("    chainStates: scalar(states)=" + states.size() + "\n");
+        if (debug >= 2) {
+            System.out.print("    chainStates: scalar(states)=" + states.size() + "\n");
+        }
         return succ;
     } // chainStates
 
     /**
-     * Follow a production starting at item, 
+     * Follow a production starting at item,
      * insert item in state and/or follow the lane.
      * @param item start at this item
      * @param state in this state
      */
     private void walkLane(int item, int state) {
-        System.out.println("walkLane from state " + state + " follow item " + markedItem(item, -1));
+        if (debug >= 1) {
+            System.out.println("walkLane from state " + state + " follow item " + markedItem(item, -1));
+        }
         int stix;
         int succ;
         boolean busy = true;
@@ -469,7 +498,7 @@ public class ParserGenerator {
             } else if (succ <  0) { // same item found
                 busy = false; // break loop, quit lane
             } else { // succ == 0: allocate new state
-                succ = states.size(); 
+                succ = states.size();
                 state = chainStates(item, state, succ);
             }
             if (isEOP(item)) {
@@ -489,14 +518,18 @@ public class ParserGenerator {
      * Insert <em>state</em> into <em>symStates[left]</em> if not yet present.
      */
     private void enqueueProds(String left, int state) {
-        System.out.println("  enqueueProds(left=" + left + ", state=" + state + ")");
+        if (debug >= 2) {
+            System.out.println("  enqueueProds(left=" + left + ", state=" + state + ")");
+        }
         boolean busy = true;
         int syix = 0;
         if (symStates.get(left) != null) {
             while (busy && syix < symStates.get(left).size()) {
                 if (state == symStates.get(left).get(syix)) {
                     busy = false;
-                    System.out.println("    found state " + state + " in symStates{" + left + "}[" + syix + "]");
+                    if (debug >= 2) {
+                        System.out.println("    found state " + state + " in symStates{" + left + "}[" + syix + "]");
+                    }
                 }
                 syix++;
             } // while busy
@@ -505,19 +538,23 @@ public class ParserGenerator {
             }
         } else { // no such symState so far
             symStates.put(left, new ArrayList<>()); symStates.get(left).add(state);
-        } 
+        }
         // now loop over the rule
         if (rules.containsKey(left)) { // is really a non-terminal
             for (int item : rules.get(left)) { // $iprod and $item coincide
                 item++; // skip over left side
                 if (!itemDone.containsKey(item)) { // not yet enqueued
-                    System.out.println("    enqueue item: " + left + " = " + markedItem(item, -1));
-                    itemQueue.add(item); 
-                    // itemDone{$item} = true; 
+                    if (debug >= 2) {
+                        System.out.println("    enqueue item: " + left + " = " + markedItem(item, -1));
+                    }
+                    itemQueue.add(item);
+                    // itemDone{$item} = true;
                 } // not yet enqueued
             } // for item
         } // if non-terminal
-        System.out.print("    enqueueProds: scalar(states)=" + states.size() + "\n");
+        if (debug >= 2) {
+            System.out.print("    enqueueProds: scalar(states)=" + states.size() + "\n");
+        }
     } // enqueueProds
 
     /**
@@ -539,13 +576,17 @@ public class ParserGenerator {
         states.add(new ArrayList<Integer>()); states.get(states.size() - 1).add(state++);
         acceptState = state; // 4
         succs .add(new ArrayList<Integer>()); succs .get(succs .size() - 1).add(acceptState); // 4
-        System.out.println("/* initTable, acceptState=" + acceptState + ", scalar(states)= " + states.size() + " */\n");
+        if (debug >= 1) {
+            System.out.println("initTable, acceptState=" + acceptState + ", scalar(states)= " + states.size());
+        }
         lookAheads.add("-1");
         lookAheads.add("-1");
     } // initTable
 
     private void insertProdsIntoState(String left, int state) {
-        System.out.println("insert prods(" + left + ") into " + state);
+        if (debug >= 2) {
+            System.out.println("insert prods(" + left + ") into " + state);
+        }
         for (int item : rules.get(left)) { // iprod and item coincide
             item++; // skip over left side
             walkLane(item, state);
@@ -556,13 +597,17 @@ public class ParserGenerator {
      * Expand the grammar tree by inserting items from the queue.
      */
     private void walkGrammar() {
-        System.out.println("/* walkGrammar */");
+        if (debug >= 2) {
+            System.out.println("walkGrammar");
+        }
         itemDone.clear(); // clear history of %itemQueue
         while (!itemQueue.isEmpty()) {
             int item = itemQueue.remove(0);
             String left = prods.get(item - 1);
-            System.out.println("----------------");
-            System.out.println("dequeue item: " + left + " = " + markedItem(item, -1));
+            if (debug >= 2) {
+                System.out.println("----------------");
+                System.out.println("dequeue item: " + left + " = " + markedItem(item, -1));
+            }
             if (!itemDone.containsKey(item)) {
                 // now insert the start of all productions of $left into all states where $left is marked in an item
                 // follow those productions and eventually generate successor states
@@ -570,15 +615,19 @@ public class ParserGenerator {
                     int state = symStates.get(left).get(stix);
                     insertProdsIntoState(left, state);
                 } // for stix
-                dumpTable();
+                if (debug >= 3) {
+                    dumpTable();
+                }
             } else {
-                System.out.println("  already done");
+                if (debug >= 2) {
+                    System.out.println("  already done");
+                }
             }
         } // while queue not empty
     } // walkGrammar
 
     /**
-     * Determine the next state reached by a symbol. 
+     * Determine the next state reached by a symbol.
      * Assume a completed table.
      * @return &gt; 0 if marked symbol found, but not the item;
      * = 0 if nothing was found
@@ -598,9 +647,13 @@ public class ParserGenerator {
         } // while stix
         if (busy) {
             result = 0; // successor = 0
-            System.out.println("  delta found no symbol " + mem + " in states[" + state + "]");
+            if (debug >= 2) {
+                System.out.println("  delta found no symbol " + mem + " in states[" + state + "]");
+            }
         } else {
-            System.out.println("  delta(mem=" + mem + ", state=" + state + ") -> state " + result);
+            if (debug >= 2) {
+                System.out.println("  delta(mem=" + mem + ", state=" + state + ") -> state " + result);
+            }
         }
         return result;
     } // delta
@@ -611,15 +664,19 @@ public class ParserGenerator {
     private void linkToLAList(int succ, int state, int stix) {
         int ilah = lookAheads.size();
         succs.get(state).set(stix, -ilah);
-        System.out.print("    addLookAheads(succ=" + succ + ", state=" + state + ", stix=" + stix + ") [" + ilah + "]: ");
+        if (debug >= 2) {
+            System.out.print("    addLookAheads(succ=" + succ + ", state=" + state + ", stix=" + stix + ") [" + ilah + "]: ");
+        }
         int teix = 0;
         while (teix  < states.get(succ).size()) {
             int item = states.get(succ).get(teix);
             String mem = prods.get(item);
             if (!rules.containsKey(mem)) { // is terminal
                 lookAheads.add(mem);
-                ilah++;
-                System.out.print("** " + mem);
+                ilah = lookAheads.size();
+                if (debug >= 2) {
+                    System.out.print(" " + mem);
+                }
             } // terminal
             teix++;
         } // while teix
@@ -628,12 +685,14 @@ public class ParserGenerator {
         } else {
             lookAheads.add(String.valueOf(-state));
         }
-        System.out.println(" ... [" + ilah + "] " + lookAheads.get(ilah));
+        if (debug >= 2) {
+            System.out.println(" ... [" + ilah + "] " + lookAheads.get(ilah));
+        }
     } // linkToLAList
 
     /**
      * Determine the previous state that reached the marked symbol.
-     * If the item is a reduce item, succ is the negative length of the right side, 
+     * If the item is a reduce item, succ is the negative length of the right side,
      * succs is 0
      */
     private int findPredecessor(int item, int state) {
@@ -649,20 +708,26 @@ public class ParserGenerator {
         } // while ptix
         if (busy) {
             result = 0; // successor = 0
-            System.out.println("  no predecessor found for item " + item + " in preits[" + state + "]");
+            if (debug >= 2) {
+                System.out.println("  no predecessor found for item " + item + " in preits[" + state + "]");
+            }
         } else {
-            System.out.println("  predecessor " + result + " found for item " + item + " in preits[" + state + "]");
+            if (debug >= 2) {
+                System.out.println("  predecessor " + result + " found for item " + item + " in preits[" + state + "]");
+            }
         }
         return result;
     } // findPredecessor
 
     /**
-     * For a reduce item, determine the state that follows on the shift of the left side: 
+     * For a reduce item, determine the state that follows on the shift of the left side:
      * the lookaheads are all terminals in that state.
      * item is a reduce item, member is negative length of the right side, succs is 0
      */
     private void walkBack(int item, int state, int stix) {
-        System.out.println("/* walkBack(item=" + item + ", state=" + state + ", stix=" + stix + ") */");
+        if (debug >= 1) {
+            System.out.println("walkBack(item=" + item + ", state=" + state + ", stix=" + stix + ")");
+        }
         int prodLen = 0;
         try {
             prodLen = -Integer.parseInt(prods.get(item));
@@ -684,7 +749,9 @@ public class ParserGenerator {
             item--;
             String left = prods.get(item);
             int succ = delta(left, pred);
-            System.out.println("  walkBack found pred=" + pred + ", left=" + left + ", succ=" + succ);
+            if (debug >= 2) {
+                System.out.println("  walkBack found pred=" + pred + ", left=" + left + ", succ=" + succ);
+            }
             if (succ > 0) {
                 linkToLAList(succ, state, stix);
             }
@@ -692,11 +759,13 @@ public class ParserGenerator {
     } // walkBack
 
     /**
-     * For each state with potential conflicts: 
+     * For each state with potential conflicts:
      * assign lookahead symbols to all reduce items.
      */
     private void addLookAheads() {
-        System.out.println("/* addLookAheads */");
+        if (debug >= 1) {
+            System.out.println("addLookAheads");
+        }
         for (int state : conStates.keySet()) {
             int stix = 0;
             while (stix  < states.get(state).size()) { // while not found
