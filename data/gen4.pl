@@ -20,18 +20,18 @@ use integer;
     my $right;  # a right side, several productions
     # An item is an index into @prods.
     # The marker "@" is thought to be before the member prods[item].
-    my @states    = (); # state number -> array of items; [0] and [1] are not used.
-    my @succs     = (); # state number -> array of successor states
-    my @preits    = (); # state number -> array of items
-    my @preds     = (); # state number -> array of predecessor states
-    my @itemQueue = (); # List of items with symbols that must be expanded.
-    my %symStates = (); # symbol -> list of states with an item that has the marker before this symbol
+    my @states     = (); # state number -> array of items; [0] and [1] are not used.
+    my @succs      = (); # state number -> array of successor states
+    my @preits     = (); # state number -> array of items
+    my @preds      = (); # state number -> array of predecessor states
+    my @itemQueue  = (); # List of items with symbols that must be expanded.
+    my %symStates  = (); # symbol -> list of states with an item that has the marker before this symbol
     my $acceptState;    # the parser accepts the sentence when it reachs this state
-    my %itemDone  = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
-    my @laheads   = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    my %conStates = (); # states with conflicts: they get lookaheads for all reduce items
-    my @symQueue = ($hyper); # queue of (non-terminal, defined in %rules) symbols to be expanded
-    my %symDone  = (); # history of @symQueue: defined iff symbol is already expanded
+    my %itemDone   = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
+    my @lookAheads = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    my %conStates  = (); # states with conflicts: they get lookaheads for all reduce items
+    my @symQueue   = ($hyper); # queue of (non-terminal, defined in %rules) symbols to be expanded
+    my %symDone    = (); # history of @symQueue: defined iff symbol is already expanded
     
     while (scalar(@ARGV) > 0 and ($ARGV[0] =~ m{\A[\-\+]})) {
         my $opt = shift(@ARGV);
@@ -179,8 +179,8 @@ use integer;
             $sep = " ";
             if ($succ < 0) {
                 my $ilah = - $succ;
-                while ($laheads[$ilah] !~ m{\A\-}) {
-                    $sep .= ",$laheads[$ilah]";
+                while ($lookAheads[$ilah] !~ m{\A\-}) {
+                    $sep .= ",$lookAheads[$ilah]";
                     $ilah ++;
                 } # while $ilah
                 if (length($sep) >= 2) {
@@ -228,9 +228,6 @@ use integer;
                 if (&isEOP($item)) {
                     $reduCount ++;
                 }
-                if ($debug == 4) {
-                    print "# cp4: state=$state, stix=$stix, succs[state][stix]=$succs[$state][$stix]\n";
-                }
                 if (0) {
                 } elsif ($succs[$state][$stix] == $acceptState) {
                     print "$sep" . sprintf("%3d:", $item) . " =.\n";
@@ -270,11 +267,11 @@ use integer;
             print "\n";
         } # foreach $sym
         #----lookAheads
-        my $nlah = scalar(@laheads);
+        my $nlah = scalar(@lookAheads);
         if ($nlah > 2) {
             print "lookahead lists:\n";
             for (my $ilah = 0; $ilah < $nlah; $ilah ++) {
-                my $term = $laheads[$ilah];
+                my $term = $lookAheads[$ilah];
                 if ($term =~ m{\A\-}) { # negative: end of list
                     print " <- state " . (- $term) . "\n";
                 } else {
@@ -283,8 +280,6 @@ use integer;
             } # for $ilah
             print "\n";
         } # $nlah > 2
-        #----finally
-        print "\n";
     } # dumpTable
     
     sub findSuccessor() { # Determine the next state reached by the marked symbol in an item.
@@ -323,7 +318,7 @@ use integer;
     
     sub chainStates() {
         my ($item, $state, $succ) = @_;
-        if ($debug == 4) {
+        if ($debug >= 4) {
             print "# chainStates($item, $state, $succ)\n";
         }
         my $stix = $#{$states[$state]} + 1;
@@ -347,7 +342,7 @@ use integer;
         while ($busy) {
             &enqueueProds($prods[$item], $state);
             $succ = &findSuccessor($item, $state); # > for symbol, < 0 for item, = 0 nothing found
-            if ($debug == 4) {
+            if ($debug >= 4) {
                 print "# walkLane1: item=$item, state=$state, succ=$succ, busy=$busy\n";
             }
             if (0) {
@@ -357,15 +352,12 @@ use integer;
                 $busy = 0; # break loop, quit lane
             } else { # succ == 0: allocate new state
                 $succ = scalar(@states); 
-                if ($debug == 4) {
-                    print "# walkLane2: item=$item, state=$state, succ=$succ, busy=$busy\n";
-                }
                 $state = &chainStates($item, $state, $succ);
             }
             if (&isEOP($item)) {
                 $busy = 0;
             }
-            if ($debug == 4) {
+            if ($debug >= 4) {
                 print "# walkLane3: item=$item, state=$state, succ=$succ, busy=$busy\n";
             }
             $itemDone{$item} = 1;
@@ -407,7 +399,7 @@ use integer;
         print "    enqueueProds: scalar(states)=" . scalar(@states) ."\n";
     } # enqueueProds
     
-    sub initTable() { # initialize the state table with
+    sub initTable() { # initialize the state table 
         $acceptState = 4;
         push(@states, [0], [0]); # states 0, 1 are not used
         push(@succs , [0], [0]); # states 0, 1 are not used
@@ -419,7 +411,7 @@ use integer;
         push(@states, [$state ++]); # @eof
         push(@succs,  [$acceptState]); # ... "-> 4" = accept
         print "/* initTable, acceptState=$acceptState, scalar(states)=" . scalar(@states) . " */\n\n";
-        @laheads = (-1, -1);
+        @lookAheads = (-1, -1);
     } # initTable
     
     sub insertProdsIntoState() {
@@ -481,7 +473,7 @@ use integer;
     
     sub linkToLAList() {
         my ($succ, $state, $stix) = @_;
-        my $ilah = scalar(@laheads);
+        my $ilah = scalar(@lookAheads);
         $succs[$state][$stix] = - $ilah;
         print "    addLookAheads(succ=$succ, state=$state, stix=$stix) [$ilah]: ";
         my $teix = 0;
@@ -489,13 +481,13 @@ use integer;
             my $item = $states[$succ][$teix];
             my $mem = $prods[$item];
             if (! defined($rules{$mem})) { # is terminal
-                $laheads[$ilah ++] = $mem;
-                print " $mem";
+                $lookAheads[$ilah ++] = $mem;
+                print "?? $mem";
             } # terminal
             $teix ++;
         } # while $teix
-        $laheads[$ilah] = -$state; # end of sublist
-        print " ... [$ilah] $laheads[$ilah]\n"
+        $lookAheads[$ilah] = -$state; # end of sublist
+        print " ... [$ilah] $lookAheads[$ilah]\n"
     } # linkToLAList
     
     sub findPredecessor() { # Determine the previous state that reached the marked symbol.
