@@ -27,7 +27,7 @@
    4 symDone
    0 itemStates
    0 itemDone
-
+   0 lookAheads
   enqueueProds(left=axiom, state=2)
     enqueue item: axiom =   6: @S (axiom,1) -> -1
     enqueueProds: scalar(states)=3
@@ -370,28 +370,28 @@ dequeue item: B =  30: @c (B,1) -> -1
    4 symDone
    0 itemStates
   20 itemDone
-
+   2 lookAheads
 /* addLookAheads */
 /* walkBack(item=28, state=14, stix=0) */
   predecessor 2 found for item 27 in preits[14]
   delta(mem=A, state=2) -> state 5
   walkBack found pred=2, left=A, succ=5
-    addLookAheads(succ=5, state=14, stix=0) [2]: ?? a ... [3] -14
+    addLookAheads(succ=5, state=14, stix=0) [2]: ** a ... [3] -14
 /* walkBack(item=31, state=14, stix=1) */
   predecessor 2 found for item 30 in preits[14]
   delta(mem=B, state=2) -> state 7
   walkBack found pred=2, left=B, succ=7
-    addLookAheads(succ=7, state=14, stix=1) [4]: ?? b ... [5] -14
+    addLookAheads(succ=7, state=14, stix=1) [4]: ** b ... [5] -14
 /* walkBack(item=28, state=15, stix=0) */
   predecessor 9 found for item 27 in preits[15]
   delta(mem=A, state=9) -> state 10
   walkBack found pred=9, left=A, succ=10
-    addLookAheads(succ=10, state=15, stix=0) [6]: ?? b ... [7] -15
+    addLookAheads(succ=10, state=15, stix=0) [6]: ** b ... [7] -15
 /* walkBack(item=31, state=15, stix=1) */
   predecessor 9 found for item 30 in preits[15]
   delta(mem=B, state=9) -> state 12
   walkBack found pred=9, left=B, succ=12
-    addLookAheads(succ=12, state=15, stix=1) [8]: ?? a ... [9] -15
+    addLookAheads(succ=12, state=15, stix=1) [8]: ** a ... [9] -15
 /* dumpTable */
 state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
               6: =.

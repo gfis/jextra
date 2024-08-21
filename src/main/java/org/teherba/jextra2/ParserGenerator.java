@@ -30,7 +30,7 @@ public class ParserGenerator {
     private ArrayList<List<Integer>>       preds      = new ArrayList<>(); // state number -> array of predecessor states
     private ArrayList<Integer>             itemQueue  = new ArrayList<>(); // List of items with symbols that must be expanded.
     private HashMap<Integer, Boolean>      itemDone   = new HashMap<>();   // history of itemQueue: defined iff the item was already enqueued (in this iteration)
-    private ArrayList<Integer>             lookAheads = new ArrayList<>(); // succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
+    private ArrayList<String>              lookAheads = new ArrayList<>(); // succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
     private HashMap<Integer, Boolean>      conStates  = new HashMap<>();   // states with conflicts: they get lookaheads for all reduce items
 
     /**
@@ -253,7 +253,8 @@ public class ParserGenerator {
         System.out.printf("%4d symStates\n", symStates.size());
         System.out.printf("%4d symDone\n", symDone.size());
         System.out.printf("%4d itemStates\n", itemQueue.size());
-        System.out.printf("%4d itemDone\n\n", itemDone.size());
+        System.out.printf("%4d itemDone\n", itemDone.size());
+        System.out.printf("%4d lookAheads\n", lookAheads.size());
     } // statistics
 
     /**
@@ -267,7 +268,7 @@ public class ParserGenerator {
             sep = " ";
             if (succ < 0) {
                 int ilah = -succ;
-                while (ilah < lookAheads.size() && lookAheads.get(ilah) >= 0) {
+                while (ilah < lookAheads.size() && !lookAheads.get(ilah).startsWith("-")) {
                     sep += "," + lookAheads.get(ilah);
                     ilah++;
                 } // while ilah
@@ -365,9 +366,9 @@ public class ParserGenerator {
         if (nlah > 2) {
             System.out.println("lookahead lists:");
             for (int ilah = 0; ilah < nlah; ilah++) {
-                int term = lookAheads.get(ilah);
-                if (term < 0) { // negative: end of list
-                    System.out.println(" <- state " + (-term));
+                String term = lookAheads.get(ilah);
+                if (term.startsWith("-")) { // negative: end of list
+                    System.out.println(" <- state " + (term.substring(1)));
                 } else {
                     System.out.print(" " + term);
                 }
@@ -539,8 +540,8 @@ public class ParserGenerator {
         acceptState = state; // 4
         succs .add(new ArrayList<Integer>()); succs .get(succs .size() - 1).add(acceptState); // 4
         System.out.println("/* initTable, acceptState=" + acceptState + ", scalar(states)= " + states.size() + " */\n");
-        lookAheads.add(-1);
-        lookAheads.add(-1);
+        lookAheads.add("-1");
+        lookAheads.add("-1");
     } // initTable
 
     private void insertProdsIntoState(String left, int state) {
@@ -612,23 +613,20 @@ public class ParserGenerator {
         succs.get(state).set(stix, -ilah);
         System.out.print("    addLookAheads(succ=" + succ + ", state=" + state + ", stix=" + stix + ") [" + ilah + "]: ");
         int teix = 0;
-        try {
-            while (teix  < states.get(succ).size()) {
-                int item = states.get(succ).get(teix);
-                int mem = Integer.parseInt(prods.get(item));
-                if (!rules.containsKey(mem)) { // is terminal
-                    lookAheads.add(mem);
-                    System.out.print(" ??" + mem);
-                } // terminal
-                teix++;
-            } // while teix
-        } catch(Exception exc) {
-            // ignore
-        }
+        while (teix  < states.get(succ).size()) {
+            int item = states.get(succ).get(teix);
+            String mem = prods.get(item);
+            if (!rules.containsKey(mem)) { // is terminal
+                lookAheads.add(mem);
+                ilah++;
+                System.out.print("** " + mem);
+            } // terminal
+            teix++;
+        } // while teix
         if (ilah < lookAheads.size()) { // !!!
-            lookAheads.set(ilah, -state); // end of sublist
+            lookAheads.set(ilah, String.valueOf(-state)); // end of sublist
         } else {
-            lookAheads.add(-state);
+            lookAheads.add(String.valueOf(-state));
         }
         System.out.println(" ... [" + ilah + "] " + lookAheads.get(ilah));
     } // linkToLAList

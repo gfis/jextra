@@ -168,7 +168,7 @@ use integer;
         print sprintf("%4d symDone"               , scalar(keys(%symDone)    )) . "\n";
         print sprintf("%4d itemStates"            , scalar(     @itemQueue   )) . "\n";
         print sprintf("%4d itemDone"              , scalar(keys(%itemDone)   )) . "\n";
-        print "\n";
+        print sprintf("%4d lookAheads"            , scalar(     @lookAheads  )) . "\n";
     } # statistics
     
     sub markedItem() { # legible item: the marker and the portion behind it, or a reduction
@@ -482,7 +482,7 @@ use integer;
             my $mem = $prods[$item];
             if (! defined($rules{$mem})) { # is terminal
                 $lookAheads[$ilah ++] = $mem;
-                print "?? $mem";
+                print "** $mem";
             } # terminal
             $teix ++;
         } # while $teix
