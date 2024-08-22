@@ -8,25 +8,25 @@ state [  2]   2: @axiom eof (hyper_axiom,2) -> 3
              27: @c (A,1) -> 14
              30: @c (B,1) -> 14
 state [  3]   3: =.
-state [  4]   7: =: (axiom,1) -> 0
+state [  4]   7: =: (axiom,1)
 state [  5]  10: @a (S,2) -> 6
-state [  6]  11: =: (S,2) -> 0
+state [  6]  11: =: (S,2)
 state [  7]  14: @b (S,2) -> 8
-state [  8]  15: =: (S,2) -> 0
+state [  8]  15: =: (S,2)
 state [  9]  18: @A b (S,3) -> 10
              23: @B a (S,3) -> 12
              27: @c (A,1) -> 15
              30: @c (B,1) -> 15
 state [ 10]  19: @b (S,3) -> 11
-state [ 11]  20: =: (S,3) -> 0
+state [ 11]  20: =: (S,3)
 state [ 12]  24: @a (S,3) -> 13
-state [ 13]  25: =: (S,3) -> 0
-state [ 14]  28: =: (A,1) -> 0
-             31: =: (B,1) -> 0
-            ==> potential conflict
-state [ 15]  28: =: (A,1) -> 0
-             31: =: (B,1) -> 0
-            ==> potential conflict
+state [ 13]  25: =: (S,3)
+state [ 14]  28: a=: (A,1)
+             31: b=: (B,1)
+            ==> conflict
+state [ 15]  28: b=: (A,1)
+             31: a=: (B,1)
+            ==> conflict
 preds [  4]   6: @S (axiom,1) -> 2
 preds [  5]   9: @A a (S,2) -> 2
 preds [  6]  10: @a (S,2) -> 5
@@ -53,15 +53,23 @@ symbol axiom in states	2
 symbol b in states	7, 10
 symbol c in states	2, 9
 symbol d in states	2
-Statistics:
+lookahead lists:
+ <- state 1
+ <- state 1
+ a <- state 14
+ b <- state 14
+ b <- state 15
+ a <- state 15
+
+statistics:
    5 rules
   32 members in productions
   16 states
   16 successor states
   16 predecessor states
-   2 potential conflicts
+   2 conflicts
   11 symStates
    4 symDone
    0 itemStates
   20 itemDone
-   2 lookAheads
+  10 lookAheads

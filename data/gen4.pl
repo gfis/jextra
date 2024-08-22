@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use integer;
 
-    my $debug   = 1;
+    my $debug   = 0;
     my %rules   = (); # left -> list of indexes in prod
     my @prods   = (); # flattened: left, mem1, mem2, ... memk, -k
     my $hyper   = "hyper_axiom";  # artificial first left side
@@ -29,7 +29,7 @@ use integer;
     my $acceptState;    # the parser accepts the sentence when it reachs this state
     my %itemDone   = (); # history of %itemQueue: defined iff the item was already enqueued (in this iteration)
     my @lookAheads = (); # $succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    my %conStates  = (); # states with conflicts: they get lookaheads for all reduce items
+    my %confStates = (); # states with conflicts: they get lookaheads for all reduce items
     my @symQueue   = ($hyper); # queue of (non-terminal, defined in %rules) symbols to be expanded
     my %symDone    = (); # history of @symQueue: defined iff symbol is already expanded
     
@@ -132,6 +132,7 @@ use integer;
     if ($debug >= 2) {
         &statistics();
     }
+    &checkConflicts();
     &addLookAheads();
     &dumpTable();
     &statistics();
@@ -173,13 +174,13 @@ use integer;
     } # dumpGrammar
     
     sub statistics() { # print counts of data structures
-        print "Statistics:\n";
+        print "statistics:\n";
         print sprintf("%4d rules"                 , scalar(keys(%rules)      )) . "\n";
         print sprintf("%4d members in productions", scalar(     @prods       )) . "\n";
         print sprintf("%4d states"                , scalar(     @states      )) . "\n";
         print sprintf("%4d successor states"      , scalar(     @succs       )) . "\n";
-        print sprintf("%4d predecessor states"    , scalar(     @succs       )) . "\n";
-        print sprintf("%4d potential conflicts"   , scalar(keys(%conStates)  )) . "\n";
+        print sprintf("%4d predecessor states"    , scalar(     @preds       )) . "\n";
+        print sprintf("%4d conflicts"             , scalar(keys(%confStates) )) . "\n";
         print sprintf("%4d symStates"             , scalar(keys(%symStates)  )) . "\n";
         print sprintf("%4d symDone"               , scalar(keys(%symDone)    )) . "\n";
         print sprintf("%4d itemStates"            , scalar(     @itemQueue   )) . "\n";
@@ -221,7 +222,7 @@ use integer;
             $sep = " ";
             $item ++;
         } # while $busy
-        if (1 || $succ > 0) {
+        if ($succ > 0) {
             $result .= " -> $succ";
         }
         return $result;
@@ -232,17 +233,37 @@ use integer;
         return ($prods[$item] =~ m{\A\-}) ? 1 : 0;
     } # isEOP
     
+    sub checkConflicts() { # test all states for potential conflicts
+        if ($debug >= 1) {
+            print "checkConflicts:\n";
+        }
+        for my $state (2 .. $#states) { # over all states
+            my $reduceCount = 0; # number of reductions in this state
+            my $stix = 0;
+            while ($stix <= $#{$states[$state]}) {
+                my $item = $states[$state][$stix];
+                if (&isEOP($item)) {
+                    $reduceCount ++;
+                }
+                $stix ++;
+            } # while $stix
+            if ($reduceCount > 0 && $stix > 1) {
+                $confStates{$state} = 1;
+            }
+        } # for @states
+    } # checkConflicts
+
     sub dumpTable() { # expand the grammar tree
         print "dumpTable:\n";
         #---- states
         for my $state (2 .. $#states) { # over all states
-            my $reduCount = 0; # number of reductions in this state
+            my $reduceCount = 0; # number of reductions in this state
             my $sep = sprintf("%-12s", sprintf("state [%3d]", $state));
             my $stix = 0;
             while ($stix <= $#{$states[$state]}) {
                 my $item = $states[$state][$stix];
                 if (&isEOP($item)) {
-                    $reduCount ++;
+                    $reduceCount ++;
                 }
                 if (0) {
                 } elsif ($succs[$state][$stix] == $acceptState) {
@@ -253,9 +274,8 @@ use integer;
                 $sep = sprintf("%-12s", "");
                 $stix ++;
             } # while $stix
-            if ($reduCount > 0 && $stix > 1) {
-                $conStates{$state} = 1;
-                print sprintf("%-12s","") . "==> potential conflict\n";
+            if ($reduceCount > 0 && $stix > 1) {
+                print sprintf("%-12s","") . "==> conflict\n";
             }
         } # for @states
         #---- succs
@@ -607,7 +627,7 @@ use integer;
         if ($debug >= 1) {
             print "addLookAheads\n";
         }
-        foreach my $state (sort(keys(%conStates))) {
+        foreach my $state (sort(keys(%confStates))) {
             my $stix = 0;
             while ($stix <= $#{$states[$state]}) { # while not found
                 my $item = $states[$state][$stix];

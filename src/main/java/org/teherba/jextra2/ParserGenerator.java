@@ -31,7 +31,7 @@ public class ParserGenerator {
     private ArrayList<Integer>             itemQueue  = new ArrayList<>(); // List of items with symbols that must be expanded.
     private HashMap<Integer, Boolean>      itemDone   = new HashMap<>();   // history of itemQueue: defined iff the item was already enqueued (in this iteration)
     private ArrayList<String>              lookAheads = new ArrayList<>(); // succs(reduce item) -> index of (lalist, -1) when lookahead symbols are needed
-    private HashMap<Integer, Boolean>      conStates  = new HashMap<>();   // states with conflicts: they get lookaheads for all reduce items
+    private HashMap<Integer, Boolean>      confStates = new HashMap<>();   // states with conflicts: they get lookaheads for all reduce items
 
     /**
      * Main program
@@ -78,6 +78,7 @@ public class ParserGenerator {
         if (pg.debug >= 2) {
             pg.statistics();
         }
+        pg.checkConflicts();
         pg.addLookAheads();
 
         pg.dumpTable();
@@ -89,11 +90,11 @@ public class ParserGenerator {
      * @param fileName input file
      */
     private void readGrammar(String fileName) {
-        final int IN_HEAD = 1;    // looking for first "["
-        final int IN_LEFT = 2;    // expecting the left side of a rule
-        final int IN_RULE = 3;    // expecting "="
-        final int IN_PROD = 4;    // expecting "="
-        final int IN_TAIL = 5;    // after "]"d of a rule
+        final int IN_HEAD = 1; // looking for first "["
+        final int IN_LEFT = 2; // expecting the left side of a rule
+        final int IN_RULE = 3; // expecting "="
+        final int IN_PROD = 4; // expecting "="
+        final int IN_TAIL = 5; // after "]"d of a rule
         try {
             Scanner sc = (fileName == null || fileName.length() <= 0 || fileName.equals("-"))
                 ? new Scanner(System.in)
@@ -103,7 +104,7 @@ public class ParserGenerator {
             int iprod = prods.size();
             while (sc.hasNext()) {
                 String part = sc.next().trim();
-                if (debug > 0 && debug < 4) {
+                if (debug >= 3) {
                     System.out.println("part=\"" + part + "\", state=" + state);
                 }
                 switch(state) {
@@ -260,18 +261,18 @@ public class ParserGenerator {
      * Print counts of data structures.
      */
     private void statistics() {
-        System.out.println("Statistics:");
-        System.out.printf("%4d rules\n", rules.size());
-        System.out.printf("%4d members in productions\n", prods.size());
-        System.out.printf("%4d states\n", states.size());
-        System.out.printf("%4d successor states\n", succs.size());
-        System.out.printf("%4d predecessor states\n", succs.size());
-        System.out.printf("%4d potential conflicts\n", conStates.size());
-        System.out.printf("%4d symStates\n", symStates.size());
-        System.out.printf("%4d symDone\n", symDone.size());
-        System.out.printf("%4d itemStates\n", itemQueue.size());
-        System.out.printf("%4d itemDone\n", itemDone.size());
-        System.out.printf("%4d lookAheads\n", lookAheads.size());
+        System.out.println("statistics:");
+        System.out.printf("%4d rules\n"                 , rules     .size());
+        System.out.printf("%4d members in productions\n", prods     .size());
+        System.out.printf("%4d states\n"                , states    .size());
+        System.out.printf("%4d successor states\n"      , succs     .size());
+        System.out.printf("%4d predecessor states\n"    , preds     .size());
+        System.out.printf("%4d conflicts\n"             , confStates.size());
+        System.out.printf("%4d symStates\n"             , symStates .size());
+        System.out.printf("%4d symDone\n"               , symDone   .size());
+        System.out.printf("%4d itemStates\n"            , itemQueue .size());
+        System.out.printf("%4d itemDone\n"              , itemDone  .size());
+        System.out.printf("%4d lookAheads\n"            , lookAheads.size());
     } // statistics
 
     /**
@@ -316,7 +317,7 @@ public class ParserGenerator {
         } catch(Exception exc) {
             // ignore
         }
-        if (true || succ > 0) {
+        if (succ > 0) {
             result.append(" -> ").append(succ);
         }
         return result.toString();
@@ -328,6 +329,30 @@ public class ParserGenerator {
     private boolean isEOP(int item) {
         return prods.get(item).startsWith("-");
     } // isEOP
+
+    /**
+     * Check all states for potential conflicts.
+     */
+    private void checkConflicts() {
+        if (debug >= 1) {
+            System.out.println("checkConflicts:");
+        }
+        for (int state = 2; state < states.size(); state++) { // over all states
+            int reduceCount = 0; // number of reductions in this state
+            String sep = String.format("%-12s", String.format("state [%3d]", state));
+            int stix = 0;
+            while (stix  < states.get(state).size()) {
+                int item = states.get(state).get(stix);
+                if (isEOP(item)) {
+                    reduceCount++;
+                }
+                stix++;
+            } // while stix
+            if (reduceCount > 0 && stix > 1) {
+                confStates.put(state, true);
+            }
+        } // for states
+    } // checkConflicts
 
     /**
      * Expand the grammar tree.
@@ -353,8 +378,7 @@ public class ParserGenerator {
                 stix++;
             } // while stix
             if (reduceCount > 0 && stix > 1) {
-                conStates.put(state, true);
-                System.out.println(String.format("%-12s", "") + "==> potential conflict");
+                System.out.println(String.format("%-12s", "") + "==> conflict");
             }
         } // for states
         //----- succs
@@ -597,7 +621,7 @@ public class ParserGenerator {
      * Expand the grammar tree by inserting items from the queue.
      */
     private void walkGrammar() {
-        if (debug >= 2) {
+        if (debug >= 1) {
             System.out.println("walkGrammar");
         }
         itemDone.clear(); // clear history of %itemQueue
@@ -766,7 +790,7 @@ public class ParserGenerator {
         if (debug >= 1) {
             System.out.println("addLookAheads");
         }
-        for (int state : conStates.keySet()) {
+        for (int state : confStates.keySet()) {
             int stix = 0;
             while (stix  < states.get(state).size()) { // while not found
                 int item = states.get(state).get(stix);
